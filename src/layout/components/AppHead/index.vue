@@ -70,7 +70,7 @@
     justify-content: space-between;
     align-items: center;
     background-color: $headBg;
-    z-index: 99999;
+    z-index: 999;
 
     .logo{
       margin-left: 20px;

@@ -78,13 +78,13 @@
             <div class="title">
               <h3>图文详情</h3>
             </div>
-            <el-form-item prop="graphicDetails">
+            <el-form-item prop="sceneryDescribeList">
               <div class="graphic">
                 <span>*</span>
                 <el-button size="medium" @click="addGraphic">添加详情</el-button>
               </div>
               <el-table
-                :data="form.graphicDetails"
+                :data="form.sceneryDescribeList"
                 border
                 fit
                 highlight-current-row
@@ -187,7 +187,9 @@
             sceneryRoadtrip: '', // 自驾游
             sceneryCoordinate: {}, // 地图经纬
             sceneryFacilities: [], // 包含设施
-            graphicDetails: [], // 图文详情
+            sceneryDescribeList: [{
+              describeContent:'123'
+            }], // 图文详情
             sceneryRelease: false
           },
           // 表单验证
@@ -211,7 +213,7 @@
             sceneryPrice: [
               { required: true, message: '请填写价格说明', trigger: 'blur' }
             ],
-            /*graphicDetails: [
+            /*sceneryDescribeList: [
               { required: true, message: '请至少添加一个图文详情', trigger: 'change' }
             ],*/
           },
@@ -235,7 +237,6 @@
       mounted() {
         this.init()
 
-        console.log(this.$message('123'))
       },
       methods: {
         // 调用地图
@@ -299,13 +300,18 @@
         // 发送请求
         addScenery(){
           let data = JSON.parse(JSON.stringify(this.form))
-          data.graphicDetails = this.jsonToString(this.form.graphicDetails)
+          data.sceneryDescribeList = this.form.sceneryDescribeList
           data.sceneryCoordinate = this.jsonToString(this.form.sceneryCoordinate)
           data.sceneryFacilities = this.jsonToString(this.form.sceneryFacilities)
           data.sceneryRelease = this.form.sceneryRelease ? '1' : '0'
           addScenery(data)
             .then( res => {
-              console.log(res)
+              if (res.code == 1){
+                this.$message({
+                  message: res.data.msg,
+                  type: 'success'
+                })
+              }
             })
             .catch( err => {
               console.log(err)
@@ -383,7 +389,7 @@
       left: 0;
       padding: 0 70px;
       background-color: rgba(0, 0, 0, .2);
-      z-index: 9999;
+      z-index: 99;
 
       .addMain{
         background-color: #ffffff;

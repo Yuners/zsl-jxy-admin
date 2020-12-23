@@ -1,6 +1,5 @@
 import service from "../utils/request";
 let host = ''
-console.log(process.env)
 if (process.env.NODE_ENV == 'development'){
   host = 'http://192.168.31.252:10206/'
 }else {

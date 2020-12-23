@@ -11,7 +11,7 @@
           </div>
           <el-form-item label="选择分类：" prop="sceneryType">
             <el-radio-group v-model="form.sceneryType">
-              <el-radio v-for="item in classifyList" :label="item"/>
+              <el-radio v-for="item in classifyList" :label="item.dictionaryId">{{ item.dictionaryName }}</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="景区名称：" prop="sceneryName">
@@ -55,7 +55,27 @@
             <el-input type="textarea" v-model="form.sceneryRoadtrip"></el-input>
           </el-form-item>
           <el-form-item label="地图标注：" prop="sceneryCoordinate">
-            <el-button type="text" @click="openMap">选择地点</el-button>
+            <div class="mark">
+              <el-button type="primary" size="medium" @click="openMap">选择地点</el-button>
+              <div class="markMain">
+                <div class="item">
+                  <div class="text">
+                    经纬度
+                  </div>
+                  <div class="content">
+                    {{ form.sceneryCoordinate ? form.sceneryCoordinate.lng + ',' + form.sceneryCoordinate.lat : '' }}
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="text">
+                    地址
+                  </div>
+                  <div class="content">
+                    {{ lnglatCache.address }}
+                  </div>
+                </div>
+              </div>
+            </div>
             <el-dialog
               title="请点击地图"
               :visible.sync="mapShow"
@@ -81,8 +101,8 @@
                   </div>
                 </div>
                 <div>
-                  <el-button @click="mapShow = false">取 消</el-button>
-                  <el-button type="primary" @click="mapShow = false">确 定</el-button>
+                  <el-button @click="mapCanl">取 消</el-button>
+                  <el-button type="primary" @click="mapSub">确 定</el-button>
                 </div>
               </span>
             </el-dialog>
@@ -145,26 +165,30 @@
                 width="150"
               >
                 <template slot-scope="scope">
-                  <el-button type="text">编辑</el-button>
-                  <el-button type="text">删除</el-button>
+                  <el-button type="text" @click="dataEdit(scope.$index,scope.row)">编辑</el-button>
+                  <el-button type="text" @click="dataDelete(scope.$index)">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
           </el-form-item>
         </div>
         <el-form-item>
-          <el-switch
-            v-model="form.sceneryRelease"
-            active-color="#13ce66"
-            inactive-color="#eeeeee">
-          </el-switch>
-          <el-button size="medium" type="primary" @click="submitForm('ruleForm')">保 存</el-button>
-          <el-button size="medium" @click="resetForm('ruleForm')">取 消</el-button>
+          <div style="display: flex;">
+            <el-switch
+              v-model="form.sceneryRelease"
+              active-color="#13ce66"
+              inactive-color="#eeeeee">
+            </el-switch>
+            <div class="handleSave">
+              <el-button size="medium" type="primary" @click="submitForm('ruleForm')">保 存</el-button>
+              <el-button size="medium" @click="resetForm('ruleForm')">取 消</el-button>
+            </div>
+          </div>
         </el-form-item>
       </el-form>
     </div>
 
-    <div class="addGraphic" v-show="addShow">
+    <!--<div class="addGraphic" v-show="addShow">
       <div class="addMain" ref="addMain">
         <el-form :model="graphic" :rules="graphicRules" ref="graphicForm" label-width="110px" class="demo-ruleForm">
           <el-form-item label="上传图片：" prop="fileList">
@@ -225,15 +249,16 @@
           </el-form-item>
         </el-form>
       </div>
-    </div>
+    </div>-->
+    <graphic v-if="addShow" :graphicData="graphicData" @submit="bySaving" @close="cancel"></graphic>
   </div>
 </template>
 
 <script>
   import {MapLoader} from '@/utils/AMap.js'
   import {isMobile} from '@/utils/validate'
-  import {addScenery} from '@/api/Releases'
-  import FileApi from "@/api/FileApi"
+  import { addScenery, getDictionary} from '@/api/Releases'
+  import Graphic from '@/components/graphic'
 
   export default {
     data() {
@@ -257,7 +282,7 @@
           sceneryReminder: '', // 温馨提示
           sceneryIndependenttravel: '', // 自助游
           sceneryRoadtrip: '', // 自驾游
-          sceneryCoordinate: {}, // 地图经纬
+          sceneryCoordinate: '', // 地图经纬
           sceneryFacilities: [], // 包含设施
           sceneryDescribeList: [], // 图文详情
           sceneryRelease: false
@@ -300,16 +325,41 @@
             {required: true, message: '请填写文字描述', trigger: 'blur'}
           ]
         },
-        classifyList: ['自然风景', '人文景观', '采摘', '垂钓', '烧烤', '亲子', '露营', '体验农活'],
+        classifyList: [],
         addShow: false,
         mapShow: false,
         lnglat:'',
         site:'',
+        lnglatCache:{
+          gnote:{},
+          address:''
+        }, // 选择位置缓存
+        graphicData: '',
+        sceneryId:'',// 景区id
       }
     },
-    mounted() {
+    components:{
+      Graphic
+    },
+    created() {
+      this.getDictionary()
+      this.sceneryId = this.$route.query.sceneryId
+
     },
     methods: {
+      // 获取景区分类
+      getDictionary(){
+        let params = {
+          dictionaryPcode:"SHOW_TYPE_PLAY"
+        }
+        getDictionary(params)
+          .then( res => {
+            if (res.data.data.code == 200){
+              let data = res.data.data.data
+              this.classifyList = data
+            }
+          })
+      },
       // 打开地图
       openMap(){
         this.mapShow = true
@@ -317,61 +367,19 @@
           this.init()
         })
       },
-      // 移除图片
-      handleRemove(inx) {
-        console.log(inx)
-        this.graphic.fileList.splice(inx, 1)
+      // 确认地图经纬
+      mapSub(){
+        this.form.sceneryCoordinate = this.lnglatCache.gnote
+        this.lnglatCache.address = this.site
+        this.mapShow = false
+        console.log(this.form)
       },
-      //上传图片超出3个时
-      handleExceed(files, fileList) {
-        this.$message({
-          message: "只能上传3张图片",
-          type: "warning",
-        });
-        // this.disabledShow = true
-      },
-      //上传图片前判断
-      beforeAvatarUpload(file) {
-        let haha = ["image/jpeg", "image/jpg", "image/png", "image/gif"];
-        let isJPG;
-        if (haha.indexOf(file.type) >= 0) {
-          isJPG = true;
-        } else {
-          isJPG = false;
-        }
-        const isLt2M = file.size / 1024 / 1024 < 2;
-        if (!isJPG) {
-          this.$message.error("请上传图片文件!");
-        } else if (!isLt2M) {
-          this.$message.error("上传图片大小不能超过 2MB!");
-        }
-        return isJPG && isLt2M;
-      },
-      // 上传图片
-      imagesUpload(param) {
-        console.log(param)
-        FileApi.uploadImage(param)
-          .then(res => {
-            if (res.data) {
-              let data = res.data
-              let params = {
-                fileHeight: data.height, // 图片高度
-                fileLable: data.ext, // 图片标签
-                fileName: data.name, // 附件名称
-                fileOldName: data.name, // 文件原名称
-                fileType: "image/jpeg", // 文件类型（图片、视频）
-                fileUrl: data.url, // 文件url
-                fileWidth: data.width // 图片宽度
-              }
-              this.graphic.fileList.push(params)
-              console.log(this.graphic)
-            } else {
-              this.$message.error('上传失败')
-            }
-          })
-          .catch(err => {
-            console.log(err)
-          })
+      // 取消选择地图
+      mapCanl(){
+        this.mapShow = false
+        this.lnglat = ''
+        this.site = ''
+        this.lnglatCache = {}
       },
       // 调用地图
       init() {
@@ -424,9 +432,9 @@
               lng: e.lnglat.getLng(),
               lat: e.lnglat.getLat()
             }
+            _this.lnglatCache.gnote = data
             _this.lnglat = `${data.lng}` + ',' + `${data.lat}`
             regeoCode(`${data.lng}` + ',' + `${data.lat}`)
-            _this.form.sceneryCoordinate = data
           })
 
         })
@@ -445,18 +453,25 @@
       },
 
       // 提交
-      bySaving(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            let data = JSON.parse(JSON.stringify(this.graphic))
+      bySaving(data) {
+          if (this.graphicData.type === 'add'){
             this.form.sceneryDescribeList.push(data)
-            this.$refs[formName].resetFields();
-            this.addShow = false
-          } else {
-            console.log('error submit!!');
-            return false;
+            this.$message({
+              type: 'success',
+              message: '添加成功!'
+            });
+          } else if (this.graphicData.type === 'edit'){
+            this.form.sceneryDescribeList[this.graphicData.index] = data
+            this.$message({
+              type: 'success',
+              message: '修改成功!'
+            });
           }
-        });
+          this.addShow = false
+      },
+      // 取消图文详情添加
+      cancel() {
+        this.addShow = false
       },
       // 转换类型
       jsonToString(a) {
@@ -476,6 +491,7 @@
                 message: res.data.msg,
                 type: 'success'
               })
+              this.$router.back()
             }
           })
           .catch(err => {
@@ -487,17 +503,47 @@
       resetForm(formName) {
         this.$refs[formName].resetFields();
       },
-      // 打开添加详情
-      addGraphic() {
+      // 修改图文详情
+      dataEdit(index,data){
+        this.graphicData = {
+          type: 'edit',
+          index: index,
+          data
+        }
         this.addShow = true
         this.$nextTick(() => {
           window.scrollTo(0, 170)
         })
       },
-      // 取消图文详情添加
-      cancel(formName) {
-        this.$refs[formName].resetFields();
-        this.addShow = false
+      // 打开添加详情
+      addGraphic() {
+        this.graphicData = {
+          type: 'add',
+          index: null
+        }
+        this.addShow = true
+        this.$nextTick(() => {
+          window.scrollTo(0, 170)
+        })
+      },
+      // 删除图文详情
+      dataDelete(index){
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.form.sceneryDescribeList.splice( index, 1)
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       },
       handlePictureCardPreview(file) {
         console.log(file)
@@ -529,6 +575,11 @@
     .compileMain {
       padding: 50px;
 
+      .handleSave{
+        flex: 1;
+        text-align: center;
+      }
+
       .feature {
         display: flex;
       }
@@ -545,18 +596,12 @@
         }
       }
 
-      #map {
-        width: 100%;
-        height: 300px;
-      }
-
-      .dialog-footer{
+      .mark{
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        align-items: self-start;
 
-        .main{
-          flex: 0.8;
+        .markMain{
+          margin-left: 30px;
 
           .item{
             display: flex;
@@ -575,6 +620,52 @@
               box-sizing: border-box;
               padding: 0 15px;
               background-color: #e9ecef;
+              border-radius: 10px 0 0 10px;
+            }
+
+            .content{
+              width: 300px;
+              font-size: 12px;
+              color: #333333;
+              padding-left: 10px;
+              text-align: left;
+            }
+          }
+        }
+      }
+
+      #map {
+        width: 100%;
+        height: 300px;
+      }
+
+      .dialog-footer{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .main{
+          width: 360px;
+          margin-right: 8px;
+
+          .item{
+            display: flex;
+            align-items: center;
+            border: 1px solid #ced4da;
+            border-radius: 10px;
+
+            &:first-child{
+              margin-bottom: 10px;
+            }
+
+            .text{
+              text-align: justify;
+              text-align-last: justify;
+              width: 80px;
+              box-sizing: border-box;
+              padding: 0 15px;
+              background-color: #e9ecef;
+              border-radius: 10px 0 0 10px;
             }
 
             .content{
@@ -583,6 +674,8 @@
               color: #333333;
               padding-left: 10px;
               text-align: left;
+              overflow: hidden;
+              white-space:nowrap;
             }
           }
         }

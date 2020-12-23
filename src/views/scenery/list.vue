@@ -56,7 +56,7 @@
       >
         <template slot-scope="scope">
           <el-button v-if="scope.row.sceneryRelease === 0" type="text" size="small">发布</el-button>
-          <el-button type="text" size="small">编辑</el-button>
+          <el-button type="text" size="small" @click="editScenery(scope.row.sceneryId)">编辑</el-button>
           <el-button type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
@@ -115,6 +115,7 @@
         getScenery(params).then( res => {
           if (res.code == 1){
             let data = res.data
+            console.log(data)
             this.list = data.data
             this.total = data.page.total
             this.listLoading = false
@@ -135,6 +136,14 @@
       routingHop(path){
         this.$router.push({
           path
+        })
+      },
+      editScenery(sceneryId){
+        this.$router.push({
+          path:'/releases/scenery/compile',
+          query:{
+            sceneryId
+          }
         })
       }
     }

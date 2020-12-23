@@ -1,5 +1,11 @@
 import service from "../utils/request";
-
+let host = ''
+console.log(process.env)
+if (process.env.NODE_ENV == 'development'){
+  host = 'http://192.168.31.252:10206/'
+}else {
+  host = 'file/'
+}
 
 let uploadAudio = (file,name,output,quality) => {
     let formData=new FormData();
@@ -7,17 +13,18 @@ let uploadAudio = (file,name,output,quality) => {
     formData.append('file',file);
     formData.append('output',output||'mpeg');
     formData.append('quality',quality||'original');
-    return service.post('/file/upload/audio/binary',file,{
+    return service.post(host + 'upload/audio/binary',file,{
         'Content-Type':'multipart/form-data',
         timeout:100000000,
     });
 };
 
 let uploadImage = (file,compress) => {
+  console.log(file)
     let formData=new FormData();
     formData.append('compress',compress||true);
     formData.append('file',file.file);
-    return service.post('/file/upload/image/binary',formData,{
+    return service.post(host + 'upload/image/binary',formData,{
         'Content-Type':'multipart/form-data',
         timeout:100000000,
     });
@@ -26,7 +33,7 @@ let uploadImage = (file,compress) => {
 let uploadFile = (file) => {
     let formData=new FormData();
     formData.append('file',file);
-    return service.post('/file/upload/file/binary',formData,{
+    return service.post(host + 'upload/file/binary',formData,{
         'Content-Type':'multipart/form-data',
         timeout:100000000,
     });
@@ -35,7 +42,7 @@ let uploadFile = (file) => {
 let uploadTmp = (file) => {
     let formData=new FormData();
     formData.append('file',file);
-    return service.post('/file/upload/tmp/binary',formData,{
+    return service.post(host + 'upload/tmp/binary',formData,{
         'Content-Type':'multipart/form-data',
         timeout:100000000,
     });
@@ -46,7 +53,7 @@ let uploadVideo = (file,name,output,quality) => {
     formData.append('file',file);
     formData.append('output',output||'mpeg');
     formData.append('quality',quality||'original');
-    return service.post('/file/upload/video/binary',formData,{
+    return service.post(host + 'upload/video/binary',formData,{
         'Content-Type':'multipart/form-data',
         timeout:100000000,
     });

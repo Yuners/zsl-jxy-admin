@@ -11,19 +11,21 @@
           </div>
           <el-form-item label="选择分类：" prop="sceneryType">
             <el-radio-group v-model="form.sceneryType">
-              <el-radio v-for="item in classifyList" :label="item.dictionaryId">{{ item.dictionaryName }}</el-radio>
+              <el-radio v-for="item in classifyList" :key="item.dictionaryId" :label="item.dictionaryId">{{
+                item.dictionaryName }}
+              </el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="景区名称：" prop="sceneryName">
-            <el-input style="width: 350px" v-model="form.sceneryName"></el-input>
+            <el-input maxlength="20" style="width: 350px" v-model="form.sceneryName"></el-input>
           </el-form-item>
           <div class="clearfix feature">
             <el-form-item label="特色一：" prop="sceneryLabelOne">
-              <el-input style="width: 350px" v-model="form.sceneryLabelOne"></el-input>
+              <el-input maxlength="10" style="width: 350px" v-model="form.sceneryLabelOne"></el-input>
             </el-form-item>
             <div style="width: 100px"></div>
             <el-form-item label="特色二：" prop="sceneryLabelTwo">
-              <el-input style="width: 350px" v-model="form.sceneryLabelTwo"></el-input>
+              <el-input maxlength="10" style="width: 350px" v-model="form.sceneryLabelTwo"></el-input>
             </el-form-item>
           </div>
         </div>
@@ -32,16 +34,16 @@
             <h3>用户须知</h3>
           </div>
           <el-form-item label="电话：" prop="sceneryPhone">
-            <el-input type="number" style="width: 350px" v-model.number="form.sceneryPhone"></el-input>
+            <el-input maxlength="20" type="number" style="width: 350px" v-model.number="form.sceneryPhone"></el-input>
           </el-form-item>
           <el-form-item label="营业时间：" prop="sceneryBusinesshours">
-            <el-input style="width: 350px" v-model="form.sceneryBusinesshours"></el-input>
+            <el-input maxlength="20" style="width: 350px" v-model="form.sceneryBusinesshours"></el-input>
           </el-form-item>
           <el-form-item label="价格说明：" prop="sceneryPrice">
-            <el-input style="width: 350px" v-model="form.sceneryPrice"></el-input>
+            <el-input maxlength="20" style="width: 350px" v-model="form.sceneryPrice"></el-input>
           </el-form-item>
           <el-form-item label="温馨提示：" prop="sceneryReminder">
-            <el-input type="textarea" v-model="form.sceneryReminder"></el-input>
+            <el-input maxlength="200" show-word-limit type="textarea" v-model="form.sceneryReminder"></el-input>
           </el-form-item>
         </div>
         <div class="block">
@@ -49,10 +51,10 @@
             <h3>交通攻略</h3>
           </div>
           <el-form-item label="自助游：" prop="sceneryIndependenttravel">
-            <el-input type="textarea" v-model="form.sceneryIndependenttravel"></el-input>
+            <el-input maxlength="200" show-word-limit type="textarea" v-model="form.sceneryIndependenttravel"></el-input>
           </el-form-item>
           <el-form-item label="自驾游：" prop="sceneryRoadtrip">
-            <el-input type="textarea" v-model="form.sceneryRoadtrip"></el-input>
+            <el-input maxlength="200" show-word-limit type="textarea" v-model="form.sceneryRoadtrip"></el-input>
           </el-form-item>
           <el-form-item label="地图标注：" prop="sceneryCoordinate">
             <div class="mark">
@@ -115,13 +117,12 @@
           </div>
           <el-form-item prop="sceneryFacilities">
             <el-checkbox-group v-model="form.sceneryFacilities">
-              <el-checkbox label="停车位" name="type"></el-checkbox>
-              <el-checkbox label="公厕" name="type"></el-checkbox>
-              <el-checkbox label="便利店" name="type"></el-checkbox>
-              <el-checkbox label="渔具" name="type"></el-checkbox>
-              <el-checkbox label="采摘工具" name="type"></el-checkbox>
-              <el-checkbox label="烧烤工具" name="type"></el-checkbox>
-              <el-checkbox label="农具" name="type"></el-checkbox>
+              <el-checkbox
+                v-for="(item,index) of facilityLsit"
+                :label="item.dictionaryName"
+                :key="index"
+                name="type"
+              ></el-checkbox>
             </el-checkbox-group>
           </el-form-item>
         </div>
@@ -148,8 +149,9 @@
               <el-table-column label="图片" align="center">
                 <template slot-scope="scope">
                   <el-image
-                    v-for="item in scope.row.fileList"
+                    v-for="(item,index) in scope.row.fileList"
                     style="width: 50px; height: 50px;margin-right: 5px"
+                    :key="index"
                     :src="item.fileUrl"
                     :fit="'cover'"/>
                 </template>
@@ -257,8 +259,8 @@
 <script>
   import {MapLoader} from '@/utils/AMap.js'
   import {isMobile} from '@/utils/validate'
-  import { addScenery, getDictionary} from '@/api/Releases'
-  import Graphic from '@/components/graphic'
+  import {addScenery, getDictionary, getSceneryDetails, updateScenery} from '@/api/Releases'
+  import Graphic from '@/components/graphic/index'
 
   export default {
     props: {
@@ -313,9 +315,9 @@
           sceneryPrice: [
             {required: true, message: '请填写价格说明', trigger: 'blur'}
           ],
-          /*sceneryDescribeList: [
-            { required: true, message: '请至少添加一个图文详情', trigger: 'change' }
-          ],*/
+          sceneryDescribeList: [
+            {required: true, message: '请至少添加一个图文详情', trigger: 'change'}
+          ],
         },
         // 图文详情
         graphic: {
@@ -331,56 +333,115 @@
           ]
         },
         classifyList: [],
+        facilityLsit:[],
         addShow: false,
         mapShow: false,
-        lnglat:'',
-        site:'',
-        lnglatCache:{
-          gnote:{},
-          address:''
+        lnglat: '',
+        site: '',
+        lnglatCache: {
+          gnote: {},
+          address: ''
         }, // 选择位置缓存
         graphicData: '',
-        sceneryId:'',// 景区id
+        sceneryId: '',// 景区id
       }
     },
-    components:{
+    components: {
       Graphic
     },
     created() {
       this.getDictionary()
+      this.getFacility()
       this.sceneryId = this.$route.query.sceneryId
-
+      if (this.sceneryId) {
+        this.getDetails(this.sceneryId)
+      }
     },
     methods: {
-      // 获取景区分类
-      getDictionary(){
+      // 获取景区详情
+      getDetails(id) {
         let params = {
-          dictionaryPcode:"SHOW_TYPE_PLAY"
+          sceneryId: id
+        }
+        getSceneryDetails(params)
+          .then(res => {
+            let data = res.data.data
+            data.sceneryCoordinate = JSON.parse(data.sceneryCoordinate)
+            data.sceneryFacilities = JSON.parse(data.sceneryFacilities)
+            data.sceneryRelease = data.sceneryRelease ? true : false
+            let formData = JSON.parse(JSON.stringify(data))
+            for (let key in this.form) {
+              this.form[key] = formData[key]
+            }
+            let lnglat = data.sceneryCoordinate.lng + ',' + data.sceneryCoordinate.lat
+            this.getAddress(lnglat)
+            console.log(this.form)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
+      // 逆解析地址
+      getAddress(lnglat) {
+        let _this = this
+        MapLoader().then(AMap => {
+          // let map = new AMap.Map(); // 注册地图
+          AMap.plugin(["AMap.Geocoder"], function () {
+            let geocoder = new AMap.Geocoder();
+
+            geocoder.getAddress(lnglat, (status, result) => {
+              if (status === 'complete' && result.regeocode) {
+                let address = result.regeocode.formattedAddress;
+                _this.lnglatCache.address = address;
+              } else {
+                _this.$message.error('根据经纬度查询地址失败')
+              }
+            });
+          })
+        })
+      },
+      // 获取景区分类
+      getDictionary() {
+        let params = {
+          dictionaryPcode: "SHOW_TYPE_PLAY"
         }
         getDictionary(params)
-          .then( res => {
-            if (res.data.data.code == 200){
+          .then(res => {
+            if (res.data.data.code == 200) {
               let data = res.data.data.data
               this.classifyList = data
             }
           })
       },
+      // 获取景区设施分类
+      getFacility() {
+        let params = {
+          dictionaryPcode: "FACILITIES_SERVICES_SCENERY"
+        }
+        getDictionary(params)
+          .then(res => {
+            if (res.data.data.code == 200) {
+              let data = res.data.data.data
+              this.facilityLsit = data
+            }
+          })
+      },
       // 打开地图
-      openMap(){
+      openMap() {
         this.mapShow = true
-        this.$nextTick( () => {
+        this.$nextTick(() => {
           this.init()
         })
       },
       // 确认地图经纬
-      mapSub(){
+      mapSub() {
         this.form.sceneryCoordinate = this.lnglatCache.gnote
         this.lnglatCache.address = this.site
         this.mapShow = false
         console.log(this.form)
       },
       // 取消选择地图
-      mapCanl(){
+      mapCanl() {
         this.mapShow = false
         this.lnglat = ''
         this.site = ''
@@ -397,10 +458,10 @@
             let geocoder = new AMap.Geocoder();
 
             geocoder.getAddress(lnglat, (status, result) => {
-              if (status === 'complete'&&result.regeocode) {
+              if (status === 'complete' && result.regeocode) {
                 let address = result.regeocode.formattedAddress;
                 _this.site = address;
-              }else{
+              } else {
                 _this.$message.error('根据经纬度查询地址失败')
               }
             });
@@ -448,31 +509,33 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            console.log(this.form)
-            this.addScenery()
+            if (this.sceneryId){
+              this.editScenery()
+            }else {
+              this.addScenery()
+            }
           } else {
             console.log('error submit!!');
             return false;
           }
         });
       },
-
       // 提交
       bySaving(data) {
-          if (this.graphicData.type === 'add'){
-            this.form.sceneryDescribeList.push(data)
-            this.$message({
-              type: 'success',
-              message: '添加成功!'
-            });
-          } else if (this.graphicData.type === 'edit'){
-            this.form.sceneryDescribeList[this.graphicData.index] = data
-            this.$message({
-              type: 'success',
-              message: '修改成功!'
-            });
-          }
-          this.addShow = false
+        if (this.graphicData.type === 'add') {
+          this.form.sceneryDescribeList.push(data)
+          this.$message({
+            type: 'success',
+            message: '添加成功!'
+          });
+        } else if (this.graphicData.type === 'edit') {
+          this.form.sceneryDescribeList[this.graphicData.index] = data
+          this.$message({
+            type: 'success',
+            message: '修改成功!'
+          });
+        }
+        this.addShow = false
       },
       // 取消图文详情添加
       cancel() {
@@ -482,7 +545,7 @@
       jsonToString(a) {
         return JSON.stringify(a)
       },
-      // 发送请求
+      // 发送新增请求
       addScenery() {
         let data = JSON.parse(JSON.stringify(this.form))
         data.sceneryDescribeList = this.form.sceneryDescribeList
@@ -503,14 +566,36 @@
             console.log(err)
           })
       },
-
+      // 发送修改请求
+      editScenery(){
+        let data = JSON.parse(JSON.stringify(this.form))
+        data.sceneryDescribeList = this.form.sceneryDescribeList
+        data.sceneryCoordinate = this.jsonToString(this.form.sceneryCoordinate)
+        data.sceneryFacilities = this.jsonToString(this.form.sceneryFacilities)
+        data.sceneryRelease = this.form.sceneryRelease ? '1' : '0'
+        data.sceneryId = this.sceneryId
+        updateScenery(data)
+          .then(res => {
+            if (res.data.code == '1'){
+              this.$message.success(res.data.msg)
+              setTimeout(() => {
+                this.$router.go(0)
+              },500)
+            }else {
+              this.$message.error(res.data.msg)
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
       // 取消景区添加
       resetForm(formName) {
         this.$router.back()
         // this.$refs[formName].resetFields();
       },
       // 修改图文详情
-      dataEdit(index,data){
+      dataEdit(index, data) {
         this.graphicData = {
           type: 'edit',
           index: index,
@@ -533,13 +618,13 @@
         })
       },
       // 删除图文详情
-      dataDelete(index){
+      dataDelete(index) {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.form.sceneryDescribeList.splice( index, 1)
+          this.form.sceneryDescribeList.splice(index, 1)
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -554,7 +639,6 @@
       handlePictureCardPreview(file) {
         console.log(file)
       },
-
     }
   }
 </script>
@@ -581,7 +665,7 @@
     .compileMain {
       padding: 50px;
 
-      .handleSave{
+      .handleSave {
         flex: 1;
         text-align: center;
       }
@@ -602,24 +686,24 @@
         }
       }
 
-      .mark{
+      .mark {
         display: flex;
         align-items: self-start;
 
-        .markMain{
+        .markMain {
           margin-left: 30px;
 
-          .item{
+          .item {
             display: flex;
             align-items: center;
             border: 1px solid #ced4da;
             border-radius: 10px;
 
-            &:first-child{
+            &:first-child {
               margin-bottom: 10px;
             }
 
-            .text{
+            .text {
               text-align: justify;
               text-align-last: justify;
               width: 80px;
@@ -629,12 +713,14 @@
               border-radius: 10px 0 0 10px;
             }
 
-            .content{
+            .content {
               width: 300px;
               font-size: 12px;
               color: #333333;
               padding-left: 10px;
               text-align: left;
+              overflow: hidden;
+              white-space: nowrap;
             }
           }
         }
@@ -645,26 +731,26 @@
         height: 300px;
       }
 
-      .dialog-footer{
+      .dialog-footer {
         display: flex;
         justify-content: space-between;
         align-items: center;
 
-        .main{
+        .main {
           width: 360px;
           margin-right: 8px;
 
-          .item{
+          .item {
             display: flex;
             align-items: center;
             border: 1px solid #ced4da;
             border-radius: 10px;
 
-            &:first-child{
+            &:first-child {
               margin-bottom: 10px;
             }
 
-            .text{
+            .text {
               text-align: justify;
               text-align-last: justify;
               width: 80px;
@@ -674,14 +760,14 @@
               border-radius: 10px 0 0 10px;
             }
 
-            .content{
+            .content {
               flex: 1;
               font-size: 12px;
               color: #333333;
               padding-left: 10px;
               text-align: left;
               overflow: hidden;
-              white-space:nowrap;
+              white-space: nowrap;
             }
           }
         }

@@ -52,7 +52,12 @@
           </div>
         </el-form-item>
         <el-form-item label="文字描述：" prop="describeContent">
-          <el-input type="textarea" v-model="graphic.describeContent"></el-input>
+          <el-input
+            type="textarea"
+            v-model="graphic.describeContent"
+            maxlength="500"
+            show-word-limit
+          ></el-input>
         </el-form-item>
         <el-form-item>
           <el-button size="medium" type="primary" @click="bySaving()">保 存</el-button>

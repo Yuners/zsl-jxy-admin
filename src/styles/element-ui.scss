@@ -61,6 +61,14 @@
 .addGraphic{
   .el-textarea__inner{
     height: 300px;
+    resize: none;
+  }
+}
+
+.compileMain{
+  .el-textarea__inner{
+    height: 100px;
+    resize: none;
   }
 }
 

@@ -55,7 +55,7 @@ export const constantRoutes = [
     children: [{
       path: 'home',
       name: 'Home',
-      component: () => import('@/views/Home/index'),
+      component: () => import('@/views/jinSwim/Home/index'),
       meta: {title: 'Home', icon: 'dashboard'}
     }]
   },
@@ -71,21 +71,28 @@ export const constantRoutes = [
         path: 'scenery',
         name: 'Scenery',
         redirect: '/releases/scenery/list',
-        component: () => import('@/views/scenery'),
+        component: () => import('@/views/jinSwim/scenery'),
         meta: {title: '风景发布', icon: 'table'},
         children: [
           {
             path: 'list',
             name: 'Compile',
-            component: () => import('@/views/scenery/list'),
-            meta: {title: '风景列表', icon: 'table'},
+            component: () => import('@/views/jinSwim/scenery/list'),
+            meta: {title: '风景列表'},
             hidden: true
           },
           {
             path: 'compile',
             name: 'Compile',
-            component: () => import('@/views/scenery/compile'),
-            meta: {title: '风景编辑', icon: 'table'},
+            component: () => import('@/views/jinSwim/scenery/compile'),
+            meta: {title: '风景编辑'},
+            hidden: true
+          },
+          {
+            path: 'details',
+            name: 'Details',
+            component: () => import('@/views/jinSwim/scenery/details'),
+            meta: {title: '风景详情'},
             hidden: true
           },
         ]
@@ -171,16 +178,6 @@ export const constantRoutes = [
     ]
   },
 
-  {
-    path: 'external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: {title: 'External Link', icon: 'link'}
-      }
-    ]
-  },
   // 404 page must be placed at the end !!!
   {path: '*', redirect: '/404', hidden: true}
 ]

@@ -261,6 +261,11 @@
   import Graphic from '@/components/graphic'
 
   export default {
+    props: {
+      params: {
+        type: Object
+      }
+    },
     data() {
       let validatePhone = (rule, value, callback) => {
         if (!isMobile(value)) {
@@ -501,7 +506,8 @@
 
       // 取消景区添加
       resetForm(formName) {
-        this.$refs[formName].resetFields();
+        this.$router.back()
+        // this.$refs[formName].resetFields();
       },
       // 修改图文详情
       dataEdit(index,data){

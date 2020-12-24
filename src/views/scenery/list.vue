@@ -31,7 +31,7 @@
       </el-table-column>
       <el-table-column label="景点类别" width="150" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.sceneryType || '暂无' }}</span>
+          <span>{{ scope.row.sceneryTypeName || '暂无'}}</span>
         </template>
       </el-table-column>
       <el-table-column label="所属地区" width="250" align="center">
@@ -41,12 +41,13 @@
       </el-table-column>
       <el-table-column class-name="status-col" label="状态" width="110" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.sceneryState | statusFilter">{{ scope.row.sceneryState }}</el-tag>
+          <span>{{ scope.row.sceneryStateName || '暂无'}}</span>
+          <!-- <el-tag :type="scope.row.sceneryState | statusFilter">{{ scope.row.sceneryState }}</el-tag> -->
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="反馈信息" width="200">
         <template slot-scope="scope">
-          <span>{{ scope.row.display_time }}</span>
+          <span>{{ scope.row.applyDescribe || '暂无'}}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -76,7 +77,7 @@
 
 <script>
   import { getList } from '@/api/table'
-  import { getScenery } from '@/api/Releases'
+  import { getScenery, getDictionary} from '@/api/Releases'
   export default {
     filters: {
       statusFilter(status) {
@@ -97,7 +98,8 @@
         pageIndex: 1, // 当前页数
         total: 0, // 总页数
         sceneryName: '', // 风景名称
-        affiliatingArea: '' // 所属地区
+        affiliatingArea: '' ,// 所属地区
+        showStateList: ['未提交','待审核','通过','不通过'],//状态类型
       }
     },
     created() {
@@ -115,8 +117,10 @@
         getScenery(params).then( res => {
           if (res.code == 1){
             let data = res.data
-            console.log(data)
             this.list = data.data
+            for(let i = 0;i<this.list.length;i++){
+              this.list[i].sceneryStateName = this.showStateList[this.list[i].sceneryState]
+            }
             this.total = data.page.total
             this.listLoading = false
           }

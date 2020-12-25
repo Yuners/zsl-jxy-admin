@@ -115,3 +115,24 @@ export function param2Obj(url) {
   })
   return obj
 }
+
+export function toTree(data) {
+  let arr = []
+  let child = []
+  data.map( (item,index) => {
+    if (item.dictionaryPcode == 'FACILITIES_SERVICES_BED'){
+      item.children = []
+      arr.push(item)
+    }else {
+      child.push(item)
+    }
+  })
+  arr.map( (item,index) => {
+    child.map( key => {
+      if (item.dictionaryCode == key.dictionaryPcode){
+        item.children.push(key)
+      }
+    })
+  })
+  return arr
+}

@@ -176,11 +176,14 @@
         </div>
         <el-form-item>
           <div style="display: flex;">
-            <el-switch
-              v-model="form.sceneryRelease"
-              active-color="#13ce66"
-              inactive-color="#eeeeee">
-            </el-switch>
+            <div class="switch_item">
+              <span>发布：</span>
+              <el-switch
+                v-model="form.sceneryRelease"
+                active-color="#13ce66"
+                inactive-color="#eeeeee">
+              </el-switch>
+            </div>
             <div class="handleSave">
               <el-button size="medium" type="primary" @click="submitForm('ruleForm')">保 存</el-button>
               <el-button size="medium" @click="resetForm('ruleForm')">取 消</el-button>
@@ -190,69 +193,7 @@
       </el-form>
     </div>
 
-    <!--<div class="addGraphic" v-show="addShow">
-      <div class="addMain" ref="addMain">
-        <el-form :model="graphic" :rules="graphicRules" ref="graphicForm" label-width="110px" class="demo-ruleForm">
-          <el-form-item label="上传图片：" prop="fileList">
-            <div class="is-flex">
-              <ul class="upTime" v-if="graphic.fileList.length && graphic.fileList">
-                <transition-group name="slide-fade">
-                  <li
-                    class="upLoad-item"
-                    v-for="(item,
-													index) in graphic.fileList"
-                    :key="item.fileUrl"
-                  >
-                    <img
-                      :src="item.fileUrl"
-                      alt=""
-                    />
-                    <span class="masked">
-														<span
-                              class="maskedDelet"
-                              @click="
-																handleRemove(
-																	index
-																)
-															"
-                            >
-															<i
-                                class="el-icon-delete"
-                              ></i>
-														</span>
-													</span>
-                  </li>
-                </transition-group>
-              </ul>
-              <el-upload
-                action
-                accept=".jpg,.jpeg,.png,.gif"
-                list-type="picture-card"
-                :auto-upload="true"
-                :limit="3"
-                v-if="graphic.fileList.length < 3"
-                :multiple="true"
-                :http-request="imagesUpload"
-                :on-exceed="handleExceed"
-                :before-upload="beforeAvatarUpload"
-                :file-list="graphic.fileList"
-                :show-file-list="false"
-              >
-                <i class="el-icon-plus"></i>
-              </el-upload>
-            </div>
-          </el-form-item>
-          <el-form-item label="文字描述：" prop="describeContent">
-            <el-input type="textarea" v-model="graphic.describeContent"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button size="medium" type="primary" @click="bySaving('graphicForm')">保 存</el-button>
-            <el-button size="medium" @click="cancel('graphicForm')">取 消</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-    </div>-->
-    <graphic v-if="addShow" :graphicData="graphicData" @submit="bySaving" @close="cancel"></graphic>
+    <graphic :addShow="addShow" :graphicData="graphicData" @submit="bySaving" @close="cancel"></graphic>
   </div>
 </template>
 
@@ -342,7 +283,7 @@
           gnote: {},
           address: ''
         }, // 选择位置缓存
-        graphicData: '',
+        graphicData: {},
         sceneryId: '',// 景区id
       }
     },
@@ -579,7 +520,7 @@
             if (res.data.code == '1'){
               this.$message.success(res.data.msg)
               setTimeout(() => {
-                this.$router.go(0)
+                this.$router.back()
               },500)
             }else {
               this.$message.error(res.data.msg)
@@ -596,15 +537,13 @@
       },
       // 修改图文详情
       dataEdit(index, data) {
+        let param = JSON.parse(JSON.stringify(data))
         this.graphicData = {
           type: 'edit',
           index: index,
-          data
+          data: param
         }
         this.addShow = true
-        this.$nextTick(() => {
-          window.scrollTo(0, 170)
-        })
       },
       // 打开添加详情
       addGraphic() {
@@ -613,9 +552,6 @@
           index: null
         }
         this.addShow = true
-        this.$nextTick(() => {
-          window.scrollTo(0, 170)
-        })
       },
       // 删除图文详情
       dataDelete(index) {
@@ -774,106 +710,6 @@
       }
     }
 
-    .addGraphic {
-      width: 100%;
-      height: calc(100% - 60px);
-      position: absolute;
-      top: 60px;
-      left: 0;
-      padding: 0 70px;
-      background-color: rgba(0, 0, 0, .2);
-      z-index: 99;
-
-      .addMain {
-        background-color: #ffffff;
-        padding: 70px;
-        margin-top: 150px;
-
-        .is-flex {
-          display: flex;
-
-          .upTime {
-            padding: 0;
-            margin: 0;
-
-            span {
-              display: flex;
-              justify-content: flex-start;
-            }
-
-            .upLoad-item {
-              position: relative;
-              font-size: 14px;
-              color: #606266;
-              line-height: 1.8;
-              overflow: hidden;
-              background-color: #fff;
-              border: 1px solid #c0ccda;
-              border-radius: 6px;
-              box-sizing: border-box;
-              width: 148px;
-              height: 148px;
-              margin: 0 8px 8px 0;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-
-              img {
-                width: 100%;
-                /*height: 100%;*/
-              }
-
-              .masked {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                left: 0;
-                top: 0;
-                cursor: default;
-                text-align: center;
-                color: #fff;
-                opacity: 0;
-                font-size: 20px;
-                background-color: rgba(0, 0, 0, 0.5);
-                transition: opacity 0.3s;
-
-                &:hover {
-                  opacity: 1;
-                }
-
-                .maskedDelet {
-                  position: absolute;
-                  top: 50%;
-                  margin-top: -11px;
-                  left: 50%;
-                  margin-left: -10px;
-                  font-size: inherit;
-
-                  i {
-                    cursor: pointer;
-                  }
-                }
-              }
-            }
-          }
-        }
-
-      }
-    }
   }
 
-  .slide-fade-enter-active {
-    transition: all 1s ease;
-  }
-
-  .slide-fade-leave-active {
-    transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-  }
-
-  .slide-fade-enter, .slide-fade-leave-to
-    /* .slide-fade-leave-active for below version 2.1.8 */
-  {
-    transform: translateY(-10px);
-    opacity: 0;
-  }
 </style>

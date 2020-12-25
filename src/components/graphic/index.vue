@@ -1,6 +1,11 @@
 <template>
   <div class="addGraphic">
-    <div class="addMain" ref="addMain">
+    <el-dialog
+      class="addMain"
+      :visible.sync="addShow"
+      :before-close="cancel"
+      :show-close="false"
+      center>
       <el-form :model="graphic" :rules="graphicRules" ref="graphicForm" label-width="110px" class="demo-ruleForm">
         <el-form-item label="上传图片：" prop="fileList">
           <div class="is-flex">
@@ -8,8 +13,7 @@
               <transition-group name="slide-fade">
                 <li
                   class="upLoad-item"
-                  v-for="(item,
-													index) in graphic.fileList"
+                  v-for="(item, index) in graphic.fileList"
                   :key="item.fileUrl"
                 >
                   <img
@@ -17,19 +21,13 @@
                     alt=""
                   />
                   <span class="masked">
-														<span
-                              class="maskedDelet"
-                              @click="
-																handleRemove(
-																	index
-																)
-															"
-                            >
-															<i
-                                class="el-icon-delete"
-                              ></i>
-														</span>
-													</span>
+                    <span
+                      class="maskedDelet"
+                      @click="handleRemove(index)"
+                    >
+                      <i class="el-icon-delete"></i>
+                    </span>
+                  </span>
                 </li>
               </transition-group>
             </ul>
@@ -59,12 +57,12 @@
             show-word-limit
           ></el-input>
         </el-form-item>
-        <el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
           <el-button size="medium" type="primary" @click="bySaving()">保 存</el-button>
           <el-button size="medium" @click="cancel()">取 消</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -93,15 +91,20 @@
         graphicData:{
           type: Object,
           default:{}
+        },
+        addShow:{
+          type: Boolean,
+          default: false
         }
       },
-      created() {
-        if (this.graphicData.data){
-          this.graphic = this.graphicData.data
+      watch:{
+        graphicData(val){
+          if (val.type == 'edit'){
+            this.graphic = val.data
+          }
         }
       },
       methods: {
-
         // 移除图片
         handleRemove(inx) {
           console.log(inx)
@@ -186,19 +189,8 @@
 <style scoped lang="scss">
 
   .addGraphic {
-    width: 100%;
-    height: calc(100% - 60px);
-    position: absolute;
-    top: 60px;
-    left: 0;
-    padding: 0 70px;
-    background-color: rgba(0, 0, 0, .2);
-    z-index: 99;
 
     .addMain {
-      background-color: #ffffff;
-      padding: 70px;
-      margin-top: 150px;
 
       .is-flex {
         display: flex;

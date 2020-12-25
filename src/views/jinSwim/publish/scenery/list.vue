@@ -36,7 +36,7 @@
         class="coverBut"
         type="success"
         size="medium"
-        @click="routingHop('/releases/scenery/compile')"
+        @click="routingHop('/jinSwim/releases/scenery/compile')"
       >添加</el-button>
     </div>
     <el-table
@@ -391,14 +391,19 @@
           isDeleted: 0,
           isDisabled: 0
         }
-        getScenery(params).then( res => {
-          if (res.code == 1){
+        getScenery(params)
+          .then( res => {
             let data = res.data
-            this.list = data.data
-            this.pages.total = data.page.total
+            if (data.data.length){
+              this.list = data.data
+              this.pages.total = data.page.total
+            }
             this.listLoading = false
-          }
-        })
+          })
+          .catch( err => {
+            this.$message.error('服务器错误')
+            this.listLoading = false
+          })
       },
       // 删除
       delScenery(id){
@@ -442,7 +447,7 @@
       },
       editScenery(sceneryId){
         this.$router.push({
-          path:'/releases/scenery/compile',
+          path:'/jinSwim/releases/scenery/compile',
           query:{
             sceneryId
           }
@@ -450,7 +455,7 @@
       },
       sceneryDetails(sceneryId){
         this.$router.push({
-          path:'/releases/scenery/details',
+          path:'/jinSwim/releases/scenery/details',
           query:{
             sceneryId
           }

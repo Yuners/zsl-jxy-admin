@@ -21,27 +21,27 @@ const jinSwimRouter = {
           path: 'scenery',
           name: 'Scenery',
           redirect: '/jinSwim/releases/scenery/list',
-          component: () => import('@/views/jinSwim/scenery'),
+          component: () => import('@/views/jinSwim/publish/scenery'),
           meta: {title: '风景发布', icon: 'table'},
           children: [
             {
               path: 'list',
               name: 'Compile',
-              component: () => import('@/views/jinSwim/scenery/list'),
+              component: () => import('@/views/jinSwim/publish/scenery/list'),
               meta: {title: '风景列表'},
               hidden: true
             },
             {
               path: 'compile',
               name: 'Compile',
-              component: () => import('@/views/jinSwim/scenery/compile'),
+              component: () => import('@/views/jinSwim/publish/scenery/compile'),
               meta: {title: '风景编辑'},
               hidden: true
             },
             {
               path: 'details',
               name: 'Details',
-              component: () => import('@/views/jinSwim/scenery/details'),
+              component: () => import('@/views/jinSwim/publish/scenery/details'),
               meta: {title: '风景详情'},
               hidden: true
             },

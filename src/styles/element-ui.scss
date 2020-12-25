@@ -65,6 +65,13 @@
   }
 }
 
+.addRoom{
+  .el-textarea__inner{
+    height: 150px;
+    resize: none;
+  }
+}
+
 .compileMain{
   .el-textarea__inner{
     height: 100px;

@@ -2,7 +2,7 @@
   <div class="list">
     <div class="tableHead">
       <div class="search">
-        <el-input class="coverStyle" v-model="sceneryName" placeholder="风景名称"></el-input>
+        <el-input class="coverStyle" v-model="specialtyName" placeholder="特产名称"></el-input>
         <el-cascader
           class="coverStyle"
           clearable
@@ -30,13 +30,13 @@
         type="success"
         icon="el-icon-plus"
         circle
-        @click="routingHop('/releases/scenery/compile')"
+        @click="routingHop('/releases/specialty/compile')"
       ></el-button>-->
       <el-button
         class="coverBut"
         type="success"
         size="medium"
-        @click="routingHop('/jinSwim/releases/scenery/compile')"
+        @click="routingHop('/jinSwim/releases/specialty/compile')"
       >添加</el-button>
     </div>
     <el-table
@@ -52,25 +52,25 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="景点名称">
+      <el-table-column label="特产名称">
         <template slot-scope="scope">
-          <span style="cursor: pointer" @click="sceneryDetails(scope.row.sceneryId)">{{ scope.row.sceneryName }}</span>
+          <span style="cursor: pointer" @click="specialtyDetails(scope.row.specialtyId)">{{ scope.row.specialtyName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="景点类别" width="150" align="center">
+      <el-table-column label="特产类别" width="150" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.sceneryTypeName || '暂无'}}</span>
+          <span>{{ scope.row.specialtyTypeName || '暂无'}}</span>
         </template>
       </el-table-column>
       <el-table-column label="所属地区" width="250" align="center">
         <template slot-scope="scope">
-          {{ scope.row.sceneryLocationName || '暂无' }}
+          {{ scope.row.specialtyLocationName || '暂无' }}
         </template>
       </el-table-column>
       <el-table-column class-name="status-col" label="状态" width="110" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.sceneryState | statusType">{{ scope.row.sceneryState | statusFilter}}</el-tag>
-          <!-- <el-tag :type="scope.row.sceneryState | statusFilter">{{ scope.row.sceneryState }}</el-tag> -->
+          <el-tag :type="scope.row.specialtyState | statusType">{{ scope.row.specialtyState | statusFilter}}</el-tag>
+          <!-- <el-tag :type="scope.row.specialtyState | statusFilter">{{ scope.row.specialtyState }}</el-tag> -->
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="反馈信息" width="200">
@@ -84,9 +84,9 @@
         width="150"
       >
         <template slot-scope="scope">
-          <el-button v-if="scope.row.sceneryRelease === 0" type="text" size="small">发布</el-button>
-          <el-button type="text" size="small" @click="editScenery(scope.row.sceneryId)">编辑</el-button>
-          <el-button type="text" size="small" @click="delScenery(scope.row.sceneryId)">删除</el-button>
+          <el-button v-if="scope.row.specialtyRelease === 0" type="text" size="small">发布</el-button>
+          <el-button type="text" size="small" @click="editSpecialty(scope.row.specialtyId)">编辑</el-button>
+          <el-button type="text" size="small" @click="delSpecialty(scope.row.specialtyId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -104,7 +104,8 @@
 </template>
 
 <script>
-  import { getScenery, delScenery} from '@/api/Releases/scenery'
+  import { getSpecialty, delSpecialty} from '@/api/Releases/specialty'
+
 
   export default {
     filters: {
@@ -151,7 +152,7 @@
           pageIndex: 1, // 当前页数
           total: 0, // 总页数
         },
-        sceneryName: '', // 风景名称
+        specialtyName: '', // 特产名称
         affiliatingArea: '' ,// 所属地区
         status: '', // 状态
         showStateList: ['未提交','待审核','通过','不通过'],//状态类型
@@ -376,7 +377,7 @@
     },
     methods: {
       clear(){
-        this.sceneryName = ''
+        this.specialtyName = ''
         this.affiliatingArea = ''
         this.status = ''
       },
@@ -391,7 +392,7 @@
           isDeleted: 0,
           isDisabled: 0
         }
-        getScenery(params)
+        getSpecialty(params)
           .then( res => {
             let data = res.data
             if (data.code == '1'){
@@ -405,12 +406,11 @@
             this.listLoading = false
           })
           .catch( err => {
-            this.$message.error('服务器错误')
             this.listLoading = false
           })
       },
       // 删除
-      delScenery(id){
+      delSpecialty(id){
         this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -418,9 +418,9 @@
         })
         .then( () => {
           let params = {
-            sceneryId: id
+            specialtyId: id
           }
-          delScenery(params)
+          delSpecialty(params)
             .then( res => {
               if (res.data.code == '1') {
                 this.$message.success(res.data.msg)
@@ -449,19 +449,19 @@
           path
         })
       },
-      editScenery(sceneryId){
+      editSpecialty(specialtyId){
         this.$router.push({
-          path:'/jinSwim/releases/scenery/compile',
+          path:'/jinSwim/releases/specialty/compile',
           query:{
-            sceneryId
+            specialtyId
           }
         })
       },
-      sceneryDetails(sceneryId){
+      specialtyDetails(specialtyId){
         this.$router.push({
-          path:'/jinSwim/releases/scenery/details',
+          path:'/jinSwim/releases/specialty/details',
           query:{
-            sceneryId
+            specialtyId
           }
         })
       }

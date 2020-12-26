@@ -168,7 +168,7 @@
 
 <script>
   import {MapLoader} from '@/utils/AMap.js'
-  import { getSceneryDetails } from '@/api/Releases/scenery'
+  import { getSpecialtyDetails } from '@/api/Releases/specialty'
   import { getDictionary } from '@/api/common'
 
   export default {
@@ -218,20 +218,17 @@
         }
         getSceneryDetails(params)
           .then(res => {
-            if (res.data.code == '1'){
-              let data = res.data.data
-              data.sceneryCoordinate = JSON.parse(data.sceneryCoordinate)
-              data.sceneryFacilities = JSON.parse(data.sceneryFacilities)
-              data.sceneryRelease = data.sceneryRelease ? true : false
-              let formData = JSON.parse(JSON.stringify(data))
-              for (let key in this.form) {
-                this.form[key] = formData[key]
-              }
-              let lnglat = data.sceneryCoordinate.lng + ',' + data.sceneryCoordinate.lat
-              this.getAddress(lnglat)
-            } else {
-              this.$message.error(res.data.msg)
+            let data = res.data.data
+            data.sceneryCoordinate = JSON.parse(data.sceneryCoordinate)
+            data.sceneryFacilities = JSON.parse(data.sceneryFacilities)
+            data.sceneryRelease = data.sceneryRelease ? true : false
+            let formData = JSON.parse(JSON.stringify(data))
+            for (let key in this.form) {
+              this.form[key] = formData[key]
             }
+            let lnglat = data.sceneryCoordinate.lng + ',' + data.sceneryCoordinate.lat
+            this.getAddress(lnglat)
+            console.log(this.form)
           })
           .catch(err => {
             console.log(err)

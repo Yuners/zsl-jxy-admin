@@ -98,7 +98,7 @@
 </template>
 
 <script>
-  import { getFoodList, delFood} from '@/api/Releases'
+  import { getFoodList, delFood } from '@/api/Releases/food'
 
   export default {
     filters: {
@@ -388,9 +388,13 @@
         getFoodList(params)
           .then( res => {
             let data = res.data
-            if (data.data.length){
-              this.list = data.data
-              this.pages.total = data.page.total
+            if (data.code == '1'){
+              if (data.data.length){
+                this.list = data.data
+                this.pages.total = data.page.total
+              }
+            } else {
+              this.$message.error(data.msg)
             }
             this.listLoading = false
           })
@@ -401,7 +405,7 @@
       },
       // 删除
       delFood(id){
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

@@ -168,7 +168,8 @@
 
 <script>
   import {MapLoader} from '@/utils/AMap.js'
-  import { getDictionary, getFoodDetails } from '@/api/Releases'
+  import { getFoodDetails } from '@/api/Releases/food'
+  import { getDictionary } from '@/api/common'
 
   export default {
     data() {
@@ -217,17 +218,20 @@
         }
         getFoodDetails(params)
           .then(res => {
-            let data = res.data.data
-            data.foodCoordinate = JSON.parse(data.foodCoordinate)
-            data.foodFacilities = JSON.parse(data.foodFacilities)
-            data.foodRelease = data.foodRelease ? true : false
-            let formData = JSON.parse(JSON.stringify(data))
-            for (let key in this.form) {
-              this.form[key] = formData[key]
+            if (res.data.code == '1'){
+              let data = res.data.data
+              data.foodCoordinate = JSON.parse(data.foodCoordinate)
+              data.foodFacilities = JSON.parse(data.foodFacilities)
+              data.foodRelease = data.foodRelease ? true : false
+              let formData = JSON.parse(JSON.stringify(data))
+              for (let key in this.form) {
+                this.form[key] = formData[key]
+              }
+              let lnglat = data.foodCoordinate.lng + ',' + data.foodCoordinate.lat
+              this.getAddress(lnglat)
+            } else {
+              this.$message.error(res.data.msg)
             }
-            let lnglat = data.foodCoordinate.lng + ',' + data.foodCoordinate.lat
-            this.getAddress(lnglat)
-            console.log(this.form)
           })
           .catch(err => {
             console.log(err)

@@ -198,9 +198,10 @@
 </template>
 
 <script>
-  import {MapLoader} from '@/utils/AMap.js'
-  import {isMobile} from '@/utils/validate'
-  import {addScenery, getDictionary, getSceneryDetails, updateScenery} from '@/api/Releases'
+  import { MapLoader } from '@/utils/AMap.js'
+  import { isMobile } from '@/utils/validate'
+  import { addScenery, getSceneryDetails, updateScenery } from '@/api/Releases/scenery'
+  import { getDictionary } from '@/api/common'
   import Graphic from '@/components/graphic/index'
 
   export default {
@@ -306,17 +307,20 @@
         }
         getSceneryDetails(params)
           .then(res => {
-            let data = res.data.data
-            data.sceneryCoordinate = JSON.parse(data.sceneryCoordinate)
-            data.sceneryFacilities = JSON.parse(data.sceneryFacilities)
-            data.sceneryRelease = data.sceneryRelease ? true : false
-            let formData = JSON.parse(JSON.stringify(data))
-            for (let key in this.form) {
-              this.form[key] = formData[key]
+            if (res.data.code == '1'){
+              let data = res.data.data
+              data.sceneryCoordinate = JSON.parse(data.sceneryCoordinate)
+              data.sceneryFacilities = JSON.parse(data.sceneryFacilities)
+              data.sceneryRelease = data.sceneryRelease ? true : false
+              let formData = JSON.parse(JSON.stringify(data))
+              for (let key in this.form) {
+                this.form[key] = formData[key]
+              }
+              let lnglat = data.sceneryCoordinate.lng + ',' + data.sceneryCoordinate.lat
+              this.getAddress(lnglat)
+            } else {
+              this.$message.error(res.data.msg)
             }
-            let lnglat = data.sceneryCoordinate.lng + ',' + data.sceneryCoordinate.lat
-            this.getAddress(lnglat)
-            console.log(this.form)
           })
           .catch(err => {
             console.log(err)
@@ -470,7 +474,8 @@
             message: '添加成功!'
           });
         } else if (this.graphicData.type === 'edit') {
-          this.form.sceneryDescribeList[this.graphicData.index] = data
+          // this.form.sceneryDescribeList[this.graphicData.index] = data
+          this.$set(this.form.sceneryDescribeList, this.graphicData.index, data)
           this.$message({
             type: 'success',
             message: '修改成功!'
@@ -495,12 +500,15 @@
         data.sceneryRelease = this.form.sceneryRelease ? '1' : '0'
         addScenery(data)
           .then(res => {
-            if (res.code == 1) {
+            let data = res.data
+            if (data.code == '1') {
               this.$message({
-                message: res.data.msg,
+                message: data.msg,
                 type: 'success'
               })
               this.$router.back()
+            } else {
+              this.$message.error(data.msg)
             }
           })
           .catch(err => {
@@ -555,7 +563,7 @@
       },
       // 删除图文详情
       dataDelete(index) {
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

@@ -1,31 +1,31 @@
 <template>
   <div class="compile">
     <div class="compileHead">
-      <h1>美食详情</h1>
+      <h1>民宿编辑</h1>
     </div>
     <div class="compileMain">
       <el-form label-position="right" :model="form" ref="ruleForm" label-width="110px">
         <div class="block">
           <div class="title">
-            <h3>美食详情</h3>
+            <h3>编辑民宿</h3>
           </div>
-          <el-form-item label="美食分类：" prop="foodType">
-            <el-radio-group v-model="form.foodType">
-              <el-radio disabled v-for="item in classifyList" :key="item.dictionaryId" :label="item.dictionaryId">{{
+          <el-form-item label="选择分类：" prop="bedType">
+            <el-radio-group v-model="form.bedType">
+              <el-radio :disabled="true" v-for="item in classifyList" :key="item.dictionaryId" :label="item.dictionaryId">{{
                 item.dictionaryName }}
               </el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="美食名称：" prop="foodName">
-            <el-input :disabled="true" maxlength="20" style="width: 350px" v-model="form.foodName"></el-input>
+          <el-form-item label="民宿名称：" prop="bedName">
+            <el-input :disabled="true" maxlength="20" style="width: 350px" v-model="form.bedName"></el-input>
           </el-form-item>
           <div class="clearfix feature">
-            <el-form-item label="特色一：" prop="foodLabelOne">
-              <el-input :disabled="true" maxlength="10" style="width: 350px" v-model="form.foodLabelOne"></el-input>
+            <el-form-item label="特色一：" prop="bedLabelOne">
+              <el-input :disabled="true" maxlength="10" style="width: 350px" v-model="form.bedLabelOne"></el-input>
             </el-form-item>
             <div style="width: 100px"></div>
-            <el-form-item label="特色二：" prop="foodLabelTwo">
-              <el-input :disabled="true" maxlength="10" style="width: 350px" v-model="form.foodLabelTwo"></el-input>
+            <el-form-item label="特色二：" prop="bedLabelTwo">
+              <el-input :disabled="true" maxlength="10" style="width: 350px" v-model="form.bedLabelTwo"></el-input>
             </el-form-item>
           </div>
         </div>
@@ -33,30 +33,30 @@
           <div class="title">
             <h3>用户须知</h3>
           </div>
-          <el-form-item label="电话：" prop="foodPhone">
-            <el-input :disabled="true" maxlength="20" type="number" style="width: 350px" v-model.number="form.foodPhone"></el-input>
+          <el-form-item label="电话：" prop="bedPhone">
+            <el-input :disabled="true" maxlength="20" type="number" style="width: 350px" v-model.number="form.bedPhone"></el-input>
           </el-form-item>
-          <el-form-item label="营业时间：" prop="foodBusinesshours">
-            <el-input :disabled="true" maxlength="20" style="width: 350px" v-model="form.foodBusinesshours"></el-input>
+          <el-form-item label="营业时间：" prop="bedBusinesshours">
+            <el-input :disabled="true" maxlength="20" style="width: 350px" v-model="form.bedBusinesshours"></el-input>
           </el-form-item>
-          <el-form-item label="价格说明：" prop="foodPrice">
-            <el-input :disabled="true" maxlength="20" style="width: 350px" v-model="form.foodPrice"></el-input>
+          <el-form-item label="价格说明：" prop="bedPrice">
+            <el-input :disabled="true" maxlength="20" style="width: 350px" v-model="form.bedPrice"></el-input>
           </el-form-item>
-          <el-form-item label="温馨提示：" prop="foodReminder">
-            <el-input :disabled="true" maxlength="200" show-word-limit type="textarea" v-model="form.foodReminder"></el-input>
+          <el-form-item label="温馨提示：" prop="bedReminder">
+            <el-input :disabled="true" maxlength="200" show-word-limit type="textarea" v-model="form.bedReminder"></el-input>
           </el-form-item>
         </div>
         <div class="block">
           <div class="title">
             <h3>交通攻略</h3>
           </div>
-          <el-form-item label="自助游：" prop="foodIndependenttravel">
-            <el-input :disabled="true" maxlength="200" show-word-limit type="textarea" v-model="form.foodIndependenttravel"></el-input>
+          <el-form-item label="自助游：" prop="bedIndependenttravel">
+            <el-input :disabled="true" maxlength="200" show-word-limit type="textarea" v-model="form.bedIndependenttravel"></el-input>
           </el-form-item>
-          <el-form-item label="自驾游：" prop="foodRoadtrip">
-            <el-input :disabled="true" maxlength="200" show-word-limit type="textarea" v-model="form.foodRoadtrip"></el-input>
+          <el-form-item label="自驾游：" prop="bedRoadtrip">
+            <el-input :disabled="true" maxlength="200" show-word-limit type="textarea" v-model="form.bedRoadtrip"></el-input>
           </el-form-item>
-          <el-form-item label="地图标注：" prop="foodCoordinate">
+          <el-form-item :disabled="true" label="地图标注：" prop="bedCoordinate">
             <div class="mark">
               <div class="markMain">
                 <div class="item">
@@ -64,7 +64,7 @@
                     经纬度
                   </div>
                   <div class="content">
-                    {{ form.foodCoordinate ? form.foodCoordinate.lng + ',' + form.foodCoordinate.lat : '' }}
+                    {{ form.bedCoordinate ? form.bedCoordinate.lng + ',' + form.bedCoordinate.lat : '' }}
                   </div>
                 </div>
                 <div class="item">
@@ -77,62 +77,61 @@
                 </div>
               </div>
             </div>
-            <el-dialog
-              title="请点击地图"
-              :visible.sync="mapShow"
-              width="30%">
-              <div id="map"></div>
-              <span slot="footer" class="dialog-footer">
-                <div class="main">
-                  <div class="item">
-                    <div class="text">
-                      经纬度
-                    </div>
-                    <div class="content">
-                      {{ lnglat }}
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class="text">
-                      地址
-                    </div>
-                    <div class="content">
-                      {{ site }}
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <el-button >取 消</el-button>
-                  <el-button type="primary" >确 定</el-button>
-                </div>
-              </span>
-            </el-dialog>
-            <!--            <div id="map"></div>-->
           </el-form-item>
         </div>
         <div class="block">
           <div class="title">
-            <h3>设施包含</h3>
+            <h3>预订流程</h3>
           </div>
-          <el-form-item prop="foodFacilities">
-            <el-checkbox-group v-model="form.foodFacilities">
-              <el-checkbox
-                v-for="(item,index) of facilityLsit"
-                disabled
-                :label="item.dictionaryName"
-                :key="index"
-                name="type"
-              ></el-checkbox>
-            </el-checkbox-group>
+          <el-form-item label="线上预订：">
+            <span>提交订单后，需要房东确认订单</span>
+          </el-form-item>
+          <el-form-item label="线下押金：" prop="bedDeposit">
+            <el-radio :disabled="true" v-model="radio" label="1">免押金</el-radio>
+            <el-radio :disabled="true" v-model="radio" label="2">付押金</el-radio>
+            <el-input :disabled="true" style="width: 100px" type="number" v-model="form.bedDeposit"></el-input> <span>元</span>
+          </el-form-item>
+          <el-form-item label="提供发票：">
+            <span>开具发票需与房东协商</span>
+          </el-form-item>
+          <el-form-item label="退订规则：">
+            <div class="regulation">
+              <div class="centent">
+                <span>入住日前1天14:00前取消订单，全额退款；距入住日14:00不足24小时取消，扣首晚房费；入住后提前离店，当日14:00前取消，扣当日房费，当日14:00后取消，扣当日+次日房费。</span>
+              </div>
+              <div class="flow">
+                <el-steps direction="vertical" finish-status="success" :active="3">
+                  <el-step title="现在预订">
+                    <div class="desCent" slot="description">
+                      <el-tag type="success">如取消订单，全额退款</el-tag>
+                    </div>
+                  </el-step>
+                  <el-step title="入住日前一天14:00前">
+                    <div class="desCent" slot="description">
+                      <el-tag type="danger">如取消订单，扣首晚房费</el-tag>
+                    </div>
+                  </el-step>
+                  <el-step title="入住当天14:00">
+                    <div class="desCent" slot="description">
+                      <el-tag type="danger">
+                        当日14:00前取消订单，扣当日房费，
+                        当日14:00后取消订单，  扣当日+次日房费。
+                      </el-tag>
+                    </div>
+                  </el-step>
+                  <el-step title="离店日当天12:00"></el-step>
+                </el-steps>
+              </div>
+            </div>
           </el-form-item>
         </div>
         <div class="block">
           <div class="title">
             <h3>图文详情</h3>
           </div>
-          <el-form-item prop="foodDescribeList">
+          <el-form-item prop="bedDescribeList">
             <el-table
-              :data="form.foodDescribeList"
+              :data="form.bedDescribeList"
               border
               fit
               highlight-current-row
@@ -160,6 +159,55 @@
             </el-table>
           </el-form-item>
         </div>
+        <div class="block">
+          <div class="title">
+            <h3>房间编辑</h3>
+          </div>
+          <el-form-item prop="bedRoomList">
+            <el-table
+              :data="form.bedRoomList"
+              border
+              fit
+              highlight-current-row
+            >
+              <el-table-column align="center" label="房间类型" width="95">
+                <template slot-scope="scope">
+                  {{ isClassType(scope.row.roomType) }}
+                </template>
+              </el-table-column>
+              <el-table-column label="房间名称(房号)" align="center">
+                <template slot-scope="scope">
+                  {{ scope.row.roomName }}
+                </template>
+              </el-table-column>
+              <el-table-column label="房间描述" align="center">
+                <template slot-scope="scope">
+                  {{ scope.row.roomDescribe }}
+                </template>
+              </el-table-column>
+              <el-table-column label="面积" align="center">
+                <template slot-scope="scope">
+                  {{ scope.row.roomArea }}
+                </template>
+              </el-table-column>
+              <el-table-column label="价格" align="center">
+                <template slot-scope="scope">
+                  {{ scope.row.roomPrice }}
+                </template>
+              </el-table-column>
+              <el-table-column label="其他说明" align="center">
+                <template slot-scope="scope">
+                  {{ scope.row.roomExplain }}
+                </template>
+              </el-table-column>
+              <el-table-column label="设施包含" align="center">
+                <template slot-scope="scope">
+                  {{ updataString(scope.row.roomFacilities) }}
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-form-item>
+        </div>
       </el-form>
     </div>
 
@@ -168,66 +216,89 @@
 
 <script>
   import {MapLoader} from '@/utils/AMap.js'
-  import { getDictionary, getFoodDetails } from '@/api/Releases'
+  import { getBedDetails } from '@/api/Releases/bed'
+  import { getDictionary } from '@/api/common'
 
   export default {
     data() {
       return {
+        radio:'1', // 选择押金
         // 表单字段
         form: {
-          foodType: '', // 选择分类
-          foodName: '', // 景区名称
-          foodLabelOne: '', // 特色一
-          foodLabelTwo: '', // 特色二
-          foodPhone: '', // 电话
-          foodBusinesshours: '', // 营业时间
-          foodPrice: '', // 价格说明
-          foodReminder: '', // 温馨提示
-          foodIndependenttravel: '', // 自助游
-          foodRoadtrip: '', // 自驾游
-          foodCoordinate: '', // 地图经纬
-          foodFacilities: [], // 包含设施
-          foodDescribeList: [], // 图文详情
-          foodRelease: false
+          bedType: '', // 选择分类
+          bedName: '', // 民宿名称
+          bedLabelOne: '', // 特色一
+          bedLabelTwo: '', // 特色二
+          bedPhone: '', // 电话
+          bedBusinesshours: '', // 营业时间
+          bedPrice: '', // 价格说明
+          bedDeposit:'', // 押金
+          bedReminder: '', // 温馨提示
+          bedIndependenttravel: '', // 自助游
+          bedRoadtrip: '', // 自驾游
+          bedCoordinate: '', // 地图经纬
+          bedDescribeList: [], // 图文详情
+          bedRoomList:[], // 房间详情
+          bedRelease: false
         },
-        classifyList: [],
-        facilityLsit:[],
-        lnglat: '',
-        site: '',
+        classifyList: [], // 分类
+        addShow: false, // 图文添加显示
+        mapShow: false, // 地图
+        lnglat: '', // 经纬度
+        site: '', // 详细地址
         lnglatCache: {
           gnote: {},
           address: ''
         }, // 选择位置缓存
-        foodId: '',// 景区id
+        graphicData: {}, // 图文详情数据
+        bedId: '',// 民宿id
+        roomData: {}, // 房间编辑数据
+        addRoom: false, // 房间编辑显示
+        roomClassList:[], // 房间类型
       }
     },
     created() {
       this.getDictionary()
-      this.getFacility()
-      this.foodId = this.$route.query.foodId
-      if (this.foodId) {
-        this.getDetails(this.foodId)
+      this.bedId = this.$route.query.bedId
+      if (this.bedId) {
+        this.getDetails(this.bedId)
       }
     },
     methods: {
-      // 获取景区详情
+      updataString(val){
+        let data = JSON.parse(val)
+        return data.join()
+      },
+      isClassType(val){
+        let data = this.roomClassList.filter( item => {
+          return  item.dictionaryId == val
+        })
+        return data[0].dictionaryName
+      },
+      // 获取民宿详情
       getDetails(id) {
         let params = {
-          foodId: id
+          bedId: id
         }
-        getFoodDetails(params)
+        getBedDetails(params)
           .then(res => {
-            let data = res.data.data
-            data.foodCoordinate = JSON.parse(data.foodCoordinate)
-            data.foodFacilities = JSON.parse(data.foodFacilities)
-            data.foodRelease = data.foodRelease ? true : false
-            let formData = JSON.parse(JSON.stringify(data))
-            for (let key in this.form) {
-              this.form[key] = formData[key]
+            if (res.data.code == '1'){
+              let data = res.data.data
+              data.bedCoordinate = JSON.parse(data.bedCoordinate)
+              data.bedFacilities = JSON.parse(data.bedFacilities)
+              data.bedRelease = data.bedRelease ? true : false
+              let formData = JSON.parse(JSON.stringify(data))
+              if (formData.bedDeposit){
+                this.radio = '2'
+              }
+              for (let key in this.form) {
+                this.form[key] = formData[key]
+              }
+              let lnglat = data.bedCoordinate.lng + ',' + data.bedCoordinate.lat
+              this.getAddress(lnglat)
+            } else {
+              this.$message.error(res.data.msg)
             }
-            let lnglat = data.foodCoordinate.lng + ',' + data.foodCoordinate.lat
-            this.getAddress(lnglat)
-            console.log(this.form)
           })
           .catch(err => {
             console.log(err)
@@ -252,10 +323,10 @@
           })
         })
       },
-      // 获取景区分类
+      // 获取民宿分类
       getDictionary() {
         let params = {
-          dictionaryPcode: "SHOW_TYPE_FOOD"
+          dictionaryPcode: "SHOW_TYPE_BED"
         }
         getDictionary(params)
           .then(res => {
@@ -264,19 +335,20 @@
               this.classifyList = data
             }
           })
-      },
-      // 获取景区设施分类
-      getFacility() {
-        let params = {
-          dictionaryPcode: "FACILITIES_SERVICES_SCENERY"
+        let a = {
+          dictionaryPcode: "ROOM_TYPE"
         }
-        getDictionary(params)
+        getDictionary(a)
           .then(res => {
             if (res.data.data.code == 200) {
               let data = res.data.data.data
-              this.facilityLsit = data
+              this.roomClassList = data
             }
           })
+      },
+      // 转换类型
+      jsonToString(a) {
+        return JSON.stringify(a)
       },
     }
   }
@@ -370,6 +442,28 @@
         height: 300px;
       }
 
+      .regulation{
+        display: flex;
+        flex-direction: column;
+
+        .centent{
+          width: 500px;
+
+          span{
+            font-size: 16px;
+            color: #333333;
+          }
+        }
+
+        .flow{
+          padding: 30px 0;
+          box-sizing: border-box;
+          height: 400px;
+          line-height: 1;
+
+        }
+      }
+
       .dialog-footer {
         display: flex;
         justify-content: space-between;
@@ -412,107 +506,6 @@
         }
       }
     }
-
-    .addGraphic {
-      width: 100%;
-      height: calc(100% - 60px);
-      position: absolute;
-      top: 60px;
-      left: 0;
-      padding: 0 70px;
-      background-color: rgba(0, 0, 0, .2);
-      z-index: 99;
-
-      .addMain {
-        background-color: #ffffff;
-        padding: 70px;
-        margin-top: 150px;
-
-        .is-flex {
-          display: flex;
-
-          .upTime {
-            padding: 0;
-            margin: 0;
-
-            span {
-              display: flex;
-              justify-content: flex-start;
-            }
-
-            .upLoad-item {
-              position: relative;
-              font-size: 14px;
-              color: #606266;
-              line-height: 1.8;
-              overflow: hidden;
-              background-color: #fff;
-              border: 1px solid #c0ccda;
-              border-radius: 6px;
-              box-sizing: border-box;
-              width: 148px;
-              height: 148px;
-              margin: 0 8px 8px 0;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-
-              img {
-                width: 100%;
-                /*height: 100%;*/
-              }
-
-              .masked {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                left: 0;
-                top: 0;
-                cursor: default;
-                text-align: center;
-                color: #fff;
-                opacity: 0;
-                font-size: 20px;
-                background-color: rgba(0, 0, 0, 0.5);
-                transition: opacity 0.3s;
-
-                &:hover {
-                  opacity: 1;
-                }
-
-                .maskedDelet {
-                  position: absolute;
-                  top: 50%;
-                  margin-top: -11px;
-                  left: 50%;
-                  margin-left: -10px;
-                  font-size: inherit;
-
-                  i {
-                    cursor: pointer;
-                  }
-                }
-              }
-            }
-          }
-        }
-
-      }
-    }
   }
 
-  .slide-fade-enter-active {
-    transition: all 1s ease;
-  }
-
-  .slide-fade-leave-active {
-    transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-  }
-
-  .slide-fade-enter, .slide-fade-leave-to
-    /* .slide-fade-leave-active for below version 2.1.8 */
-  {
-    transform: translateY(-10px);
-    opacity: 0;
-  }
 </style>

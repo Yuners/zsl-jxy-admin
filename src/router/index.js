@@ -62,7 +62,6 @@ export const constantRoutes = [
   {
     path: '/jinSwim/releases',
     component: Layout,
-    redirect: '/jinSwim/releases/scenery',
     name: 'Releases',
     meta: {title: '发布管理', icon: 'publish'},
     children: [
@@ -75,7 +74,7 @@ export const constantRoutes = [
         children: [
           {
             path: 'list',
-            name: 'Compile',
+            name: 'List',
             component: () => import('@/views/jinSwim/publish/scenery/list'),
             meta: {title: '风景列表'},
             hidden: true
@@ -157,6 +156,36 @@ export const constantRoutes = [
         ]
       },
       {
+        path: 'specialty',
+        name: 'Specialty',
+        redirect: '/jinSwim/releases/specialty/list',
+        component: () => import('@/views/jinSwim/publish/specialty'),
+        meta: {title: '特产发布', icon: 'specialty'},
+        children: [
+          {
+            path: 'list',
+            name: 'List',
+            component: () => import('@/views/jinSwim/publish/specialty/list'),
+            meta: {title: '特产列表'},
+            hidden: true
+          },
+          {
+            path: 'compile',
+            name: 'Compile',
+            component: () => import('@/views/jinSwim/publish/specialty/compile'),
+            meta: {title: '特产编辑'},
+            hidden: true
+          },
+          {
+            path: 'details',
+            name: 'Details',
+            component: () => import('@/views/jinSwim/publish/specialty/details'),
+            meta: {title: '特产详情'},
+            hidden: true
+          },
+        ]
+      },
+      {
         path: 'tree',
         name: 'Tree',
         component: () => import('@/views/tree/index'),
@@ -164,7 +193,44 @@ export const constantRoutes = [
       }
     ]
   },
-
+  {
+    path: '/jinSwim/operation',
+    component: Layout,
+    name: 'Operation',
+    meta: {title: '运营管理', icon: 'operation'},
+    children: [
+      {
+        path: 'carriage',
+        name: 'Carriage',
+        redirect: '/jinSwim/operation/carriage/list',
+        component: () => import('@/views/jinSwim/operation/carriage'),
+        meta: {title: '运费管理', icon: 'carriage'},
+        children: [
+          {
+            path: 'list',
+            name: 'List',
+            component: () => import('@/views/jinSwim/operation/carriage/list'),
+            meta: {title: '运费列表'},
+            hidden: true
+          },
+          {
+            path: 'compile',
+            name: 'Compile',
+            component: () => import('@/views/jinSwim/operation/carriage/compile'),
+            meta: {title: '运费编辑'},
+            hidden: true
+          },
+          {
+            path: 'details',
+            name: 'Details',
+            component: () => import('@/views/jinSwim/operation/carriage/details'),
+            meta: {title: '运费详情'},
+            hidden: true
+          },
+        ]
+      }
+    ]
+  },
   {
     path: '/form',
     component: Layout,

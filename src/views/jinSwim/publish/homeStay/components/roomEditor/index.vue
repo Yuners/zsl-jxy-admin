@@ -103,7 +103,7 @@
 
 <script>
   import FileApi from "@/api/FileApi";
-  import { getDictionary, getBedDictionary} from "@/api/Releases";
+  import { getBedDictionary } from "@/api/Releases/bed";
   import { toTree } from "@/utils/index"
 
   export default {
@@ -160,7 +160,6 @@
     watch:{
       roomData(val){
         if (val.type == 'edit'){
-          this.graphic = val.data
           for ( let key in this.graphic){
             if (key == 'roomFacilities'){
               this.graphic[key] = JSON.parse(val.data[key])

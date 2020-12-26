@@ -252,7 +252,7 @@
               </el-table-column>
               <el-table-column label="设施包含" align="center">
                 <template slot-scope="scope">
-                  {{ scope.row.roomFacilities }}
+                  {{ updataString(scope.row.roomFacilities) }}
                 </template>
               </el-table-column>
               <el-table-column
@@ -301,11 +301,12 @@
 </template>
 
 <script>
-  import {MapLoader} from '@/utils/AMap.js'
-  import {isMobile} from '@/utils/validate'
-  import {addBed, getDictionary, getBedDetails, updateBed} from '@/api/Releases'
+  import { MapLoader } from '@/utils/AMap.js'
+  import { isMobile } from '@/utils/validate'
+  import { addBed, getBedDetails, updateBed } from '@/api/Releases/bed'
+  import { getDictionary } from '@/api/common'
   import Graphic from '@/components/graphic/index'
-  import roomEditor from '@/components/roomEditor/index'
+  import roomEditor from './components/roomEditor'
 
   export default {
     data() {
@@ -377,19 +378,6 @@
             {required: true, message: '请至少添加一个房间', trigger: 'change'}
           ]
         },
-        // 图文详情
-        graphic: {
-          fileList: [],
-          describeContent: ''
-        },
-        graphicRules: {
-          fileList: [
-            {required: true, message: '请上传图片', trigger: 'blur'}
-          ],
-          describeContent: [
-            {required: true, message: '请填写文字描述', trigger: 'blur'}
-          ]
-        },
         classifyList: [], // 分类
         addShow: false, // 图文添加显示
         mapShow: false, // 地图
@@ -418,6 +406,10 @@
       }
     },
     methods: {
+      updataString(val){
+        let data = JSON.parse(val)
+        return data.join()
+      },
       isClassType(val){
         let data = this.roomClassList.filter( item => {
           return  item.dictionaryId == val
@@ -431,19 +423,23 @@
         }
         getBedDetails(params)
           .then(res => {
-            let data = res.data.data
-            data.bedCoordinate = JSON.parse(data.bedCoordinate)
-            data.bedFacilities = JSON.parse(data.bedFacilities)
-            data.bedRelease = data.bedRelease ? true : false
-            let formData = JSON.parse(JSON.stringify(data))
-            if (formData.bedDeposit){
-              this.radio = '2'
+            if (res.data.code == '1'){
+              let data = res.data.data
+              data.bedCoordinate = JSON.parse(data.bedCoordinate)
+              data.bedFacilities = JSON.parse(data.bedFacilities)
+              data.bedRelease = data.bedRelease ? true : false
+              let formData = JSON.parse(JSON.stringify(data))
+              if (formData.bedDeposit){
+                this.radio = '2'
+              }
+              for (let key in this.form) {
+                this.form[key] = formData[key]
+              }
+              let lnglat = data.bedCoordinate.lng + ',' + data.bedCoordinate.lat
+              this.getAddress(lnglat)
+            } else {
+              this.$message.error(res.data.msg)
             }
-            for (let key in this.form) {
-              this.form[key] = formData[key]
-            }
-            let lnglat = data.bedCoordinate.lng + ',' + data.bedCoordinate.lat
-            this.getAddress(lnglat)
           })
           .catch(err => {
             console.log(err)
@@ -598,12 +594,15 @@
         data.bedRelease = this.form.bedRelease ? '1' : '0'
         addBed(data)
           .then(res => {
-            if (res.code == 1) {
+            let data = res.data
+            if (data.code == 1) {
               this.$message({
-                message: res.data.msg,
+                message: data.msg,
                 type: 'success'
               })
               this.$router.back()
+            } else {
+              this.$message.error(data.msg)
             }
           })
           .catch(err => {
@@ -658,7 +657,7 @@
       },
       // 删除图文详情
       dataDelete(index) {
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -684,7 +683,8 @@
             message: '添加成功!'
           });
         } else if (this.graphicData.type === 'edit') {
-          this.form.bedDescribeList[this.graphicData.index] = data
+          // this.form.bedDescribeList[this.graphicData.index] = data
+          this.$set(this.form.bedDescribeList, this.graphicData.index, data)
           this.$message({
             type: 'success',
             message: '修改成功!'
@@ -716,7 +716,7 @@
       },
       // 房间删除
       roomDelete(index){
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -742,7 +742,8 @@
             message: '添加成功!'
           });
         } else if (this.roomData.type === 'edit') {
-          this.form.bedRoomList[this.roomData.index] = data
+          // this.form.bedRoomList[this.roomData.index] = data
+          this.$set(this.form.bedRoomList, this.roomData.index, data)
           this.$message({
             type: 'success',
             message: '修改成功!'

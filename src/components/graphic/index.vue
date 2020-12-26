@@ -100,7 +100,9 @@
       watch:{
         graphicData(val){
           if (val.type == 'edit'){
-            this.graphic = val.data
+            for ( let key in this.graphic){
+                this.graphic[key] = val.data[key]
+            }
           }
         }
       },

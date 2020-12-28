@@ -44,7 +44,9 @@ service.interceptors.response.use(
   response => {
     const res = response.data
     // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 1) {
+    if (res.code == 1 || res.code == 200) {
+      return res
+    } else {
       Message({
         message: res.data.msg || 'Error',
         type: 'error',
@@ -65,8 +67,6 @@ service.interceptors.response.use(
         })
       }
       return Promise.reject(new Error(res.data.msg || 'Error'))
-    } else {
-      return res
     }
   },
   error => {

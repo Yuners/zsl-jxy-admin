@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import jinSwimRouter from './modules/jinSwim'
 
 Vue.use(Router)
 
@@ -47,8 +48,14 @@ export const constantRoutes = [
     component: () => import('@/views/test'),
     hidden: true
   },
-
   {
+    path: '/',
+    redirect: '/jinSwim',
+    hidden: true
+  },
+
+  jinSwimRouter,
+  /*{
     path: '/',
     component: Layout,
     redirect: '/jinSwim/home',
@@ -230,8 +237,10 @@ export const constantRoutes = [
         ]
       }
     ]
-  },
-  {
+  },*/
+
+
+  /*{
     path: '/form',
     component: Layout,
     children: [
@@ -301,7 +310,7 @@ export const constantRoutes = [
         meta: {title: 'menu2'}
       }
     ]
-  },
+  },*/
 
   // 404 page must be placed at the end !!!
   {path: '*', redirect: '/404', hidden: true}

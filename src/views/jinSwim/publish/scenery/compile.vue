@@ -314,7 +314,9 @@
               data.sceneryRelease = data.sceneryRelease ? true : false
               let formData = JSON.parse(JSON.stringify(data))
               for (let key in this.form) {
-                this.form[key] = formData[key]
+                if (formData[key] != null){
+                  this.form[key] = formData[key]
+                }
               }
               let lnglat = data.sceneryCoordinate.lng + ',' + data.sceneryCoordinate.lat
               this.getAddress(lnglat)

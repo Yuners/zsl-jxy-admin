@@ -28,6 +28,61 @@
               <el-input maxlength="10" style="width: 350px" v-model="form.specialtyLabelTwo"></el-input>
             </el-form-item>
           </div>
+
+          <el-form-item label="产地标注：" prop="specialtyCoordinate">
+            <div class="mark">
+              <el-button type="primary" size="medium" @click="openMap">选择地点</el-button>
+              <div class="markMain">
+                <div class="item">
+                  <div class="text">
+                    经纬度
+                  </div>
+                  <div class="content">
+                    {{ form.specialtyCoordinate ? form.specialtyCoordinate.lng + ',' + form.specialtyCoordinate.lat : '' }}
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="text">
+                    地址
+                  </div>
+                  <div class="content">
+                    {{ lnglatCache.address }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <el-dialog
+              title="请点击地图"
+              :visible.sync="mapShow"
+              width="30%">
+              <div id="map"></div>
+              <span slot="footer" class="dialog-footer">
+                <div class="main">
+                  <div class="item">
+                    <div class="text">
+                      经纬度
+                    </div>
+                    <div class="content">
+                      {{ lnglat }}
+                    </div>
+                  </div>
+                  <div class="item">
+                    <div class="text">
+                      地址
+                    </div>
+                    <div class="content">
+                      {{ site }}
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <el-button @click="mapCanl">取 消</el-button>
+                  <el-button type="primary" @click="mapSub">确 定</el-button>
+                </div>
+              </span>
+            </el-dialog>
+            <!--            <div id="map"></div>-->
+          </el-form-item>
         </div>
         <div class="block">
           <div class="title">
@@ -159,6 +214,7 @@
   import { getDictionary } from '@/api/common'
   import Graphic from '@/components/graphic/index'
   import Specification from './components/specification'
+  import {MapLoader} from "@/utils/AMap";
 
   export default {
     data() {
@@ -171,6 +227,7 @@
           specialtyLabelTwo: '', // 特色二
           specsList:[], // 特产规格
           specialtyDescribeList: [], // 图文详情
+          specialtyCoordinate: '', // 地图经纬
           specialtyRelease: false
         },
         // 表单验证
@@ -187,6 +244,9 @@
           specsList: [
             {required: true, message: '请至少添加一个特产规格', trigger: 'change'}
           ],
+          specialtyCoordinate: [
+            {required: true, message: '请选择产地标注', trigger: 'change'}
+          ],
           specialtyDescribeList: [
             {required: true, message: '请至少添加一个图文详情', trigger: 'change'}
           ],
@@ -197,6 +257,13 @@
         graphicData: {},
         specifData: {},
         specialtyId: '',// 特产id
+        mapShow: false,
+        lnglat: '',
+        site: '',
+        lnglatCache: {
+          gnote: {},
+          address: ''
+        }, // 选择位置缓存
       }
     },
     components: {
@@ -211,6 +278,103 @@
       }
     },
     methods: {
+      // 逆解析地址
+      getAddress(lnglat) {
+        let _this = this
+        MapLoader().then(AMap => {
+          // let map = new AMap.Map(); // 注册地图
+          AMap.plugin(["AMap.Geocoder"], function () {
+            let geocoder = new AMap.Geocoder();
+
+            geocoder.getAddress(lnglat, (status, result) => {
+              if (status === 'complete' && result.regeocode) {
+                let address = result.regeocode.formattedAddress;
+                _this.lnglatCache.address = address;
+              } else {
+                _this.$message.error('根据经纬度查询地址失败')
+              }
+            });
+          })
+        })
+      },
+      // 打开地图
+      openMap() {
+        this.mapShow = true
+        this.$nextTick(() => {
+          this.init()
+        })
+      },
+      // 确认地图经纬
+      mapSub() {
+        this.form.specialtyCoordinate = this.lnglatCache.gnote
+        this.lnglatCache.address = this.site
+        this.mapShow = false
+      },
+      // 取消选择地图
+      mapCanl() {
+        this.mapShow = false
+        this.lnglat = ''
+        this.site = ''
+        this.lnglatCache = {}
+      },
+      // 调用地图
+      init() {
+        let _this = this
+        MapLoader().then(AMap => {
+          let map = new AMap.Map('map'); // 注册地图
+
+          // 标记地址与逆解析
+          let regeoCode = (lnglat) => {
+            let geocoder = new AMap.Geocoder();
+
+            geocoder.getAddress(lnglat, (status, result) => {
+              if (status === 'complete' && result.regeocode) {
+                let address = result.regeocode.formattedAddress;
+                _this.site = address;
+              } else {
+                _this.$message.error('根据经纬度查询地址失败')
+              }
+            });
+          }
+          // 获取当前位置
+          map.plugin('AMap.Geolocation', function () {
+            let geolocation = new AMap.Geolocation({
+              enableHighAccuracy: true,//是否使用高精度定位，默认:true
+              timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+              maximumAge: 0,           //定位结果缓存0毫秒，默认：0
+              convert: true,           //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
+              showButton: true,        //显示定位按钮，默认：true
+              buttonPosition: 'LB',    //定位按钮停靠位置，默认：'LB'，左下角
+              buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+              showMarker: true,        //定位成功后在定位到的位置显示点标记，默认：true
+              showCircle: true,        //定位成功后用圆圈表示定位精度范围，默认：true
+              panToLocation: true,     //定位成功后将定位到的位置作为地图中心点，默认：true
+              zoomToAccuracy: true      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+            });
+            map.addControl(geolocation);
+            geolocation.getCurrentPosition(function (status, result) {
+              if (status == 'complete') {
+                console.log(result)
+              } else {
+                console.log(result)
+              }
+            });
+            // AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+            // AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
+          });
+          // 绑定地图点击事件
+          map.on('click', (e) => {
+            let data = {
+              lng: e.lnglat.getLng(),
+              lat: e.lnglat.getLat()
+            }
+            _this.lnglatCache.gnote = data
+            _this.lnglat = `${data.lng}` + ',' + `${data.lat}`
+            regeoCode(`${data.lng}` + ',' + `${data.lat}`)
+          })
+
+        })
+      },
       // 获取特产详情
       getDetails(id) {
         let params = {
@@ -218,15 +382,24 @@
         }
         getSpecialtyDetails(params)
           .then(res => {
-            let data = res.data.data
-            data.specialtyCoordinate = JSON.parse(data.specialtyCoordinate)
-            data.specialtyFacilities = JSON.parse(data.specialtyFacilities)
-            data.specialtyRelease = data.specialtyRelease ? true : false
-            let formData = JSON.parse(JSON.stringify(data))
-            for (let key in this.form) {
-              if (formData[key] != null){
-                this.form[key] = formData[key]
+            if (res.data.code == '1'){
+              let data = res.data.data
+              data.specialtyCoordinate = JSON.parse(data.specialtyCoordinate)
+              data.specialtyFacilities = JSON.parse(data.specialtyFacilities)
+              data.specialtyRelease = data.specialtyRelease ? true : false
+              let formData = JSON.parse(JSON.stringify(data))
+              for (let key in this.form) {
+                if (formData[key] != null){
+                  this.form[key] = formData[key]
+                }
               }
+              if (data.specialtyCoordinate){
+                console.log(data.specialtyCoordinate)
+                let lnglat = data.specialtyCoordinate.lng + ',' + data.specialtyCoordinate.lat
+                this.getAddress(lnglat)
+              }
+            } else {
+              this.$message.error(res.data.msg)
             }
           })
           .catch(err => {
@@ -270,7 +443,6 @@
         let data = JSON.parse(JSON.stringify(this.form))
         data.specialtyDescribeList = this.form.specialtyDescribeList
         data.specialtyCoordinate = this.jsonToString(this.form.specialtyCoordinate)
-        data.specialtyFacilities = this.jsonToString(this.form.specialtyFacilities)
         data.specialtyRelease = this.form.specialtyRelease ? '1' : '0'
         addSpecialty(data)
           .then(res => {
@@ -291,7 +463,6 @@
         let data = JSON.parse(JSON.stringify(this.form))
         data.specialtyDescribeList = this.form.specialtyDescribeList
         data.specialtyCoordinate = this.jsonToString(this.form.specialtyCoordinate)
-        data.specialtyFacilities = this.jsonToString(this.form.specialtyFacilities)
         data.specialtyRelease = this.form.specialtyRelease ? '1' : '0'
         data.specialtyId = this.specialtyId
         updateSpecialty(data)

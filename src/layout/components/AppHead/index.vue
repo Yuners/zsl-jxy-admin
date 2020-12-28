@@ -6,8 +6,9 @@
       </div>
 
       <div class="systemName">
-        <h1>{{ systemName }}</h1>
-        <h1>{{ systemName }}</h1>
+        <template v-for="route of routes">
+          <app-link v-if="!route.hidden" :to="route.path">{{ route.meta.title }}</app-link>
+        </template>
       </div>
 
       <div class="right-menu">
@@ -39,6 +40,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
+  import AppLink from '../Sidebar/Link'
 
 
   export default {
@@ -49,10 +51,16 @@
         systemName: '数字乡村管理系统'
       }
     },
+    components: {
+      AppLink
+    },
     computed: {
       ...mapGetters([
         'avatar'
-      ])
+      ]),
+      routes() {
+        return this.$router.options.routes
+      },
     },
   }
 </script>

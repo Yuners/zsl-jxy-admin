@@ -31,7 +31,17 @@ export default {
       'sidebar'
     ]),
     routes() {
-      return this.$router.options.routes
+      let name = this.$route.matched[0].name
+      let routeList = this.$router.options.routes
+      switch (name) {
+        case "jinSwim":
+          let list = routeList.filter( item => {
+            return item.name == name
+          })
+          return list[0].children
+          break
+      }
+      // return this.$router.options.routes
     },
     activeMenu() {
       const route = this.$route

@@ -77,6 +77,12 @@
     height: 100px;
     resize: none;
   }
+
+  .cityItem{
+    .el-form-item__content{
+      width: 1200px;
+    }
+  }
 }
 
 input::-webkit-outer-spin-button,

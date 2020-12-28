@@ -10,9 +10,9 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/login','/test'] // no redirect whitelist
 
-/*
 router.beforeEach(async(to, from, next) => {
-  // start progress bar
+  next()
+  /*// start progress bar
   NProgress.start()
 
   // set page title
@@ -56,9 +56,8 @@ router.beforeEach(async(to, from, next) => {
       next(`/login?redirect=${to.path}`)
       NProgress.done()
     }
-  }
+  }*/
 })
-*/
 
 router.afterEach(() => {
   // finish progress bar

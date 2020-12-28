@@ -194,7 +194,37 @@ const jinSwimRouter = {
                 hidden: true
               },
             ]
-          }
+          },
+          {
+            path: 'userNotes',
+            name: 'UserNotes',
+            redirect: '/jinSwim/operation/userNotes/list',
+            component: () => import('@/views/jinSwim/operation/userNotes'),
+            meta: {title: '用户须知', icon: 'carriage'},
+            children: [
+              {
+                path: 'list',
+                name: 'List',
+                component: () => import('@/views/jinSwim/operation/userNotes/list'),
+                meta: {title: '须知列表'},
+                hidden: true
+              },
+              {
+                path: 'compile',
+                name: 'Compile',
+                component: () => import('@/views/jinSwim/operation/userNotes/compile'),
+                meta: {title: '须知编辑'},
+                hidden: true
+              },
+              {
+                path: 'details',
+                name: 'Details',
+                component: () => import('@/views/jinSwim/operation/carriage/details'),
+                meta: {title: '须知详情'},
+                hidden: true
+              },
+            ]
+          },
         ]
       }
     ]

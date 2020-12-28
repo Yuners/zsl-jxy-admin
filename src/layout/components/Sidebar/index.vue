@@ -33,25 +33,24 @@ export default {
     routes() {
       let name = this.$route.matched[0].name
       let routeList = this.$router.options.routes
-      let list
       switch (name) {
         case "jinSwim":
-          routeList.filter( item => {
+          let jinSwim = routeList.filter( item => {
             return item.name == name
           })
-          return list[0].children
+          return jinSwim[0].children
           break
         case 'infoManage':
-          routeList.filter( item => {
+          let infoManage = routeList.filter( item => {
             return item.name == name
           })
-          return list[0].children
+          return infoManage[0].children
           break
         case 'sysManage':
-          routeList.filter( item => {
+          let sysManage = routeList.filter( item => {
             return item.name == name
           })
-          return list[0].children
+          return sysManage[0].children
           break
       }
       // return this.$router.options.routes

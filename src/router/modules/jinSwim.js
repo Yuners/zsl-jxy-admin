@@ -9,7 +9,7 @@ const jinSwimRouter = {
     meta: {title: '晋乡游'},
     children: [
       {
-        path: 'home',
+        path: '/jinSwim/home',
         name: 'Home',
         component: Layout,
         redirect: '/jinSwim/home/index',

@@ -57,10 +57,13 @@ export default {
     },
     activeMenu() {
       const route = this.$route
-      const { meta, path } = route
+      const { meta, path, redirectedFrom } = route
       // if set path, the sidebar will highlight the path you set
       if (meta.activeMenu) {
         return meta.activeMenu
+      }
+      if (meta.redirectedFrom){
+        return redirectedFrom
       }
       return path
     },

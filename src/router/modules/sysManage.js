@@ -25,27 +25,43 @@ const sysManageRouter = {
         },
         {
         path: '/sysManage/jurisdiction',
-        redirect: '/sysManage/jurisdiction/directoryTree',
+        redirect: '/sysManage/jurisdiction/framework',
         component: Layout,
         name: 'Releases',
         meta: {title: '权限管理', icon: 'publish'},
         children: [
             {
-                path: 'directoryTree',
-                name: 'DirectoryTree',
-                redirect: '/sysManage/jurisdiction/directoryTree/tree',
-                component: () => import('@/views/sysManage/jurisdiction/directoryTree'),
+                path: 'framework',
+                name: 'Framework',
+                redirect: '/sysManage/jurisdiction/framework/tree',
+                component: () => import('@/views/sysManage/jurisdiction/framework'),
                 meta: {title: '组织机构', icon: 'scenery'},
                 children: [
                     {
                         path: 'tree',
                         name: 'Tree',
-                        component: () => import('@/views/sysManage/jurisdiction/directoryTree/tree'),
+                        component: () => import('@/views/sysManage/jurisdiction/framework/tree'),
                         meta: {title: '组织树'},
                         hidden: true
                     }
                 ]
-            }
+            },
+            {
+                path: 'directoryTree',
+                name: 'DirectoryTree',
+                redirect: '/sysManage/jurisdiction/directoryTree/tree',
+                component: () => import('@/views/sysManage/jurisdiction/directoryTree'),
+                meta: {title: '菜单管理', icon: 'scenery'},
+                children: [
+                    {
+                        path: 'tree',
+                        name: 'Tree',
+                        component: () => import('@/views/sysManage/jurisdiction/directoryTree/tree'),
+                        meta: {title: '菜单树'},
+                        hidden: true
+                    }
+                ]
+            },
         ]
     }
     ]

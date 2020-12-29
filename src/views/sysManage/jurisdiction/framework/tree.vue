@@ -14,32 +14,18 @@
       <el-container >
         <div>
           <el-form ref="treeFrom" :model="items" label-width="80px" >
-            <el-form-item label="页面名称" >
-              <el-input v-model="items.directoryTreeName" :disabled="tabShow" maxlength="17" show-word-limit ></el-input>
+            <el-form-item label="区划名称" >
+              <el-input v-model="items.frameworkName" :disabled="tabShow" maxlength="17" show-word-limit ></el-input>
             </el-form-item>
-            <el-form-item label="页面简称" >
-              <el-input v-model="items.directoryTreeAbbreviation" :disabled="tabShow" maxlength="17" show-word-limit></el-input>
+            <el-form-item label="行政编号" >
+              <el-input v-model="items.frameworkAdministrative" :disabled="tabShow" maxlength="12" show-word-limit></el-input>
             </el-form-item>
-             <el-form-item label="页面路径" >
-              <el-input v-model="items.directoryTreePath" :disabled="tabShow" maxlength="250" show-word-limit></el-input>
-            </el-form-item>
-             <el-form-item label="显示路径" >
-              <el-input v-model="items.directoryTreeAccordingPath" :disabled="tabShow" maxlength="250" show-word-limit></el-input>
-            </el-form-item>
-             <el-form-item label="重定向" >
-              <el-input v-model="items.directoryTreeRedirectPath" :disabled="tabShow" maxlength="250" show-word-limit></el-input>
-            </el-form-item>
-             <el-form-item label="图标" >
-              <el-input v-model="items.directoryTreeIcon" :disabled="tabShow" maxlength="50" show-word-limit></el-input>
-            </el-form-item>
-            <el-form-item label="目录类型" >
-              <el-input :value="items.typeName" disabled ></el-input>
-            </el-form-item>
+             
             <el-form-item>
-                <el-button type="warning" v-if="tabShow" :disabled="this.items.directoryTreeId<0"  @click="isUpdate">修改</el-button>
-                <el-button type="primary" v-if="tabShow" @click="addTree" :disabled="items.directoryTreeType!=1">添加下一级</el-button>
-                <el-button type="danger" v-if="tabShow" :disabled="this.items.directoryTreeId<0" @click="delect">删除</el-button>
-                <el-button type="primary" v-if="!tabShow&&this.items.directoryTreeId>=0" style="margin-left: 20px;" @click="onSubmit">保存</el-button>
+                <el-button type="warning" v-if="tabShow" :disabled="this.items.frameworkRank<=1"  @click="isUpdate">修改</el-button>
+                <el-button type="primary" v-if="tabShow" @click="addTree" >添加下一级</el-button>
+                <el-button type="danger" v-if="tabShow" :disabled="this.items.frameworkRank<=1" @click="delect">删除</el-button>
+                <el-button type="primary" v-if="!tabShow&&this.items.frameworkRank>1" style="margin-left: 20px;" @click="onSubmit">保存</el-button>
              </el-form-item>
           </el-form>
         </div>
@@ -48,10 +34,7 @@
           :visible.sync="addShow"
           width="40%"
         >
-          <!-- <span slot="footer" class="dialog-footer">
-          </span> -->
-          <!-- <span slot="footer" class="dialog-footer"> -->
-            <el-form ref="addTreeFrom" :model="addItems" label-width="80px" >
+            <!-- <el-form ref="addTreeFrom" :model="addItems" label-width="80px" >
               <el-form-item label="上级页面" >
                 <el-input v-model="addItems.directoryTreePpIdName"  disabled></el-input>
               </el-form-item>
@@ -83,7 +66,7 @@
                   <el-button type="danger" @click="noAddCanl">取消</el-button>
                   <el-button type="primary" @click="add">提交</el-button>
                 
-             </span>
+             </span> -->
           
         </el-dialog>
       </el-container>
@@ -91,7 +74,7 @@
 </template>
 
 <script>
-import { selectDirectoryTree,updateDirectoryTree, addDirectoryTree,delectDirectoryTree} from '@/api/Role/Jurisdiction/directoryTree'
+import { selectFramework,updateFramework, addFramework,delectFramework} from '@/api/Role/Jurisdiction/framework'
 import { isPathName } from '@/utils/validate'
 export default {
 
@@ -101,7 +84,7 @@ export default {
       tree:[],
       defaultProps: {
         children: 'items',
-        label: 'directoryTreeName'
+        label: 'frameworkName'
       },
       items:{},
       treeHight:100,
@@ -131,10 +114,9 @@ export default {
     search(show){
       this.listLoading = true;
       let params = {
-        isDisable: true,
-        isPage:true
+        ids:111
       };
-      selectDirectoryTree(params).then(v=>{
+     selectFramework(params).then(v=>{
         // console.log("yes");
         console.log(v);
         this.listLoading = false;
@@ -144,29 +126,17 @@ export default {
         // for(let i=0;i<v.data.length;i++){
         //   this.tree.push(v.data[i]);
         // }
-        
-        this.tree=v.data;
+        this.tree=[];
+        this.tree.push(v.data);
         if(!show){
           if(v.data!=null){
-          if(v.data.length>0){
             let p={
-              ...v.data[0]
+             ...v.data
             };
             this.items=p;
             console.log(this.items)
-            if(this.items.directoryTreeId<0){
-              this.items.typeName="系统级";
-            }
-            else{
-              if(this.items.directoryTreeType===1){
-                this.items.typeName="目录";
-              }
-              else{
-                this.items.typeName="页面";
-              }
-            }
+            console.log(this.items)
           }
-        }
         }
         
         // console.log(this.tree)
@@ -188,17 +158,7 @@ export default {
           ...data
        };
        this.items=p;
-       if(this.items.directoryTreeId<0){
-          this.items.typeName="系统级";
-       }
-       else{
-          if(this.items.directoryTreeType===1){
-             this.items.typeName="目录";
-          }
-          else{
-            this.items.typeName="页面";
-          }
-       }
+      
        this.tabShow=true;
        
     },
@@ -286,10 +246,8 @@ export default {
         this.addShow=false;
     },
     onSubmit(){
-      if(this.items.directoryTreeId<0){
-        this.$message.error('系统级不能修改')
-      }
-      else if(!isPathName(this.items.directoryTreeName)){
+     
+      if(!isPathName(this.items.frameworkName)){
        this.$message.error('页面名称应在2-17之间')
       }
       else{

@@ -418,6 +418,9 @@
               .then( res => {
                 if (res.data.code == '1') {
                   this.$message.success(res.data.msg)
+                  setTimeout( () => {
+                    this.fetchData()
+                  })
                 }else {
                   this.$message.error(res.data.msg)
                 }

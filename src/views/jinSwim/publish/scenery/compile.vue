@@ -205,11 +205,6 @@
   import Graphic from '@/components/graphic/index'
 
   export default {
-    props: {
-      params: {
-        type: Object
-      }
-    },
     data() {
       let validatePhone = (rule, value, callback) => {
         if (!isMobile(value)) {

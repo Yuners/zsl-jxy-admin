@@ -1,34 +1,28 @@
 <template>
-  <el-upload
-    action=""
-    list-type="picture-card"
-    :auto-upload="true"
-    :http-request="testUpload"
-    :on-preview="handlePictureCardPreview">
-    <i class="el-icon-plus"></i>
-  </el-upload>
+  <div>
+    <CustomUpload uploadType="video" @succeed="test" @deleteImage="deleteImage"></CustomUpload>
+  </div>
 </template>
 
 <script>
-  import FileApi from "@/api/FileApi"
-
+  import CustomUpload from '@/components/CustomUpload'
     export default {
-        name: "index",
-
-      methods:{
-        testUpload(param){
-          console.log(param)
-          FileApi.uploadImage(param)
-            .then( res => {
-              console.log(res)
-            })
-            .catch( err => {
-              console.log(err)
-            })
+      data(){
+        return{
+          fileList:[]
+        }
+      },
+      components:{
+        CustomUpload
+      },
+      methods: {
+        test(data){
+          this.fileList.push(data)
         },
-        handlePictureCardPreview(file){
-          console.log(file)
-        },
+        deleteImage(index){
+          console.log(index)
+          this.fileList.splice(index, 1)
+        }
       }
     }
 </script>

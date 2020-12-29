@@ -78,7 +78,18 @@ export function validPassword(str) {
 export function validPayPassword(str) {
   return /^[0-9]{6}$/.test(str);
 }
-
+/**
+ * 页面昵称校验：只能中文，数字，英文且长度为2-18
+ * @param str
+ * @returns {boolean}
+ */
+export function isPathName(str) {
+  return !(
+    /[^\a-\z\A-\Z0-9\u4E00-\u9FA5]$/g.test(str) ||
+    str.length < 2 ||
+    str.length > 18
+  );
+}
 export const isEmail = (s) => {
   return /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(
     s

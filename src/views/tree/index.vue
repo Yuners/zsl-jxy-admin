@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { selectDirectoryTree } from '@/api/Role/directoryTree'
+import { selectDirectoryTree } from '@/api/Role/Jurisdiction/directoryTree'
 export default {
 
   data() {

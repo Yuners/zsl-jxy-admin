@@ -59,7 +59,6 @@ export default {
       const route = this.$route
       const { meta, path, redirectedFrom } = route
       // if set path, the sidebar will highlight the path you set
-      console.log(this.$route)
       if (meta.activeMenu) {
         return meta.activeMenu
       }

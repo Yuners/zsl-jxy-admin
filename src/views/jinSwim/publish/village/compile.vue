@@ -30,10 +30,10 @@
           </div>
           <div class="uploadItem">
             <template v-if="form.villagePropagandaType == '视频'">
-              <CustomUpload :fileList="form.villageDescribeList" uploadType="video" @succeed="videoSucce" @deleteImage="videoImage"></CustomUpload>
+              <CustomUpload :limit="1" :fileList="form.villageDescribeList" uploadType="video" @succeed="videoSucce" @deleteImage="videoImage"></CustomUpload>
             </template>
             <template v-if="form.villagePropagandaType == '图片'">
-              <CustomUpload :fileList="form.villageDescribeList" @succeed="imageSucce" @deleteImage="deleteImage"></CustomUpload>
+              <CustomUpload :limit="20" :fileList="form.villageDescribeList" @succeed="imageSucce" @deleteImage="deleteImage"></CustomUpload>
             </template>
           </div>
         </div>

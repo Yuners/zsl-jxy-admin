@@ -3,6 +3,32 @@
  */
 
 /**
+ * 数组对象去重
+ * @param obj
+ * @returns {[]}
+ */
+export function deteleObject(obj) {
+  let uniques = [];
+  let stringify = {};
+  for (let i = 0; i < obj.length; i++) {
+    let keys = Object.keys(obj[i]);
+    keys.sort(function(a, b) {
+      return (Number(a) - Number(b));
+    });
+    let str = '';
+    for (let j = 0; j < keys.length; j++) {
+      str += JSON.stringify(keys[j]);
+      str += JSON.stringify(obj[i][keys[j]]);
+    }
+    if (!stringify.hasOwnProperty(str)) {
+      uniques.push(obj[i]);
+      stringify[str] = true;
+    }
+  }
+  uniques = uniques;
+  return uniques;
+}
+/**
  * Parse the time to string
  * @param {(Object|string|number)} time
  * @param {string} cFormat

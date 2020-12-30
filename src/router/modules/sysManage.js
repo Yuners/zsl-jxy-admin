@@ -46,6 +46,22 @@ const sysManageRouter = {
                     }
                 ]
             },
+             {
+                path: 'role',
+                name: 'Role',
+                redirect: '/sysManage/jurisdiction/role/list',
+                component: () => import('@/views/sysManage/jurisdiction/role'),
+                meta: {title: '角色管理', icon: 'scenery'},
+                children: [
+                    {
+                        path: 'list',
+                        name: 'List',
+                        component: () => import('@/views/sysManage/jurisdiction/role/list'),
+                        meta: {title: '角色列表'},
+                        hidden: true
+                    }
+                ]
+            },
             {
                 path: 'directoryTree',
                 name: 'DirectoryTree',

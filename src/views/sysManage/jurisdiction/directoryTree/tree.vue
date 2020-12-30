@@ -135,41 +135,37 @@ export default {
         isPage:true
       };
       selectDirectoryTree(params).then(v=>{
-        // console.log("yes");
-        console.log(v);
-        this.listLoading = false;
-        // for(let i=0;i<v.data.length;i++){
-        //   this.tree.push(v.data[i]);
-        // }
-        // for(let i=0;i<v.data.length;i++){
-        //   this.tree.push(v.data[i]);
-        // }
-        
-        this.tree=v.data;
-        if(!show){
-          if(v.data!=null){
-          if(v.data.length>0){
-            let p={
-              ...v.data[0]
-            };
-            this.items=p;
-            console.log(this.items)
-            if(this.items.directoryTreeId<0){
-              this.items.typeName="系统级";
-            }
-            else{
-              if(this.items.directoryTreeType===1){
-                this.items.typeName="目录";
-              }
-              else{
-                this.items.typeName="页面";
+        console.log(v)
+        //  if (v.code == '1'){
+          // console.log(v.data.code)
+          this.listLoading = false;
+          this.tree=v.data;
+          if(!show){
+            if(v.data!=null){
+              if(v.data.length>0){
+                let p={
+                  ...v.data[0]
+                };
+                this.items=p;
+                console.log(this.items)
+                if(this.items.directoryTreeId<0){
+                  this.items.typeName="系统级";
+                }
+                else{
+                  if(this.items.directoryTreeType===1){
+                    this.items.typeName="目录";
+                  }
+                  else{
+                    this.items.typeName="页面";
+                  }
+                }
               }
             }
           }
-        }
-        }
-        
-        // console.log(this.tree)
+        // }
+        // else{
+        //   this.$message.error(v.data.msg)
+        // }
       })
       .catch( err => {
         this.$message.error('服务器错误')
@@ -242,14 +238,19 @@ export default {
         })
         .then(()=>{
             let treeItems={
-              directoryTreeId:this.items.directoryTreeId,
+              id:this.items.directoryTreeId,
             };
             delectDirectoryTree(treeItems).then(v=>{
-                this.search(true);
-                this.$message({
-                  type: 'success',
-                  message: '删除成功!'
-                });
+              //  if (v.data.code == '1'){
+                  this.search(true);
+                  this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                  });
+              //  }
+              //  else{
+              //     this.$message.error(v.data.msg)
+              //  }
             })
             .catch( err => {
               this.$message.error('服务器错误')
@@ -268,15 +269,22 @@ export default {
         })
         .then(()=>{
             addDirectoryTree(this.addItems).then(v=>{ 
-              this.addShow=false;
-              this.search(true);
-                this.$message({
-                  type: 'success',
-                  message: '添加成功!'
-                });
+              // if (v.data.code == '1'){
+                this.addShow=false;
+                this.search(true);
+                  this.$message({
+                    type: 'success',
+                    message: '添加成功!'
+                  });
+              // }
+              // else{
+              //   this.$message.error(v.data.msg)
+              // }
              
             })
-            
+            .catch( err => {
+              this.$message.error('服务器错误')
+            })
         })
       }
        
@@ -310,6 +318,7 @@ export default {
               directoryTreeAccordingPath:this.items.directoryTreeAccordingPath,
             };
             updateDirectoryTree(path).then(v=>{
+              // if (v.data.code == '1'){
                 // console.log(v);
                 this.tabShow=true;
                 this.search(true);
@@ -317,6 +326,10 @@ export default {
                   type: 'success',
                   message: '修改成功!'
                 });
+              // }
+              // else{
+              //   this.$message.error(v.data.msg)
+              // }
                 
             })
             .catch( err => {

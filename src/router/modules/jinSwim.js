@@ -25,11 +25,41 @@ const jinSwimRouter = {
       },
       {
         path: '/jinSwim/releases',
-        redirect: '/jinSwim/releases/scenery',
+        redirect: '/jinSwim/releases/village',
         component: Layout,
         name: 'Releases',
         meta: {title: '发布管理', icon: 'publish'},
         children: [
+          {
+            path: 'village',
+            name: 'Village',
+            redirect: '/jinSwim/releases/village/list',
+            component: () => import('@/views/jinSwim/publish/village'),
+            meta: {title: '乡村简介', icon: 'village'},
+            children: [
+              {
+                path: 'list',
+                name: 'List',
+                component: () => import('@/views/jinSwim/publish/village/list'),
+                meta: {title: '乡村列表'},
+                hidden: true
+              },
+              {
+                path: 'compile',
+                name: 'Compile',
+                component: () => import('@/views/jinSwim/publish/village/compile'),
+                meta: {title: '乡村编辑'},
+                hidden: true
+              },
+              /*{
+                path: 'details',
+                name: 'Details',
+                component: () => import('@/views/jinSwim/publish/village/details'),
+                meta: {title: '乡村详情'},
+                hidden: true
+              },*/
+            ]
+          },
           {
             path: 'scenery',
             name: 'Scenery',

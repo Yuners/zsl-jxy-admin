@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import jinSwimRouter from './modules/jinSwim'
 import sysManageRouter from './modules/sysManage'
+import infoManageRoute from './modules/infoManage'
 Vue.use(Router)
 
 /* Layout */
@@ -56,6 +57,7 @@ export const constantRoutes = [
 
   jinSwimRouter,
   sysManageRouter,
+  infoManageRoute,
   /*{
     path: '/',
     component: Layout,

@@ -1,31 +1,31 @@
 <template>
   <div class="compile">
     <div class="compileHead">
-      <h1>风景编辑</h1>
+      <h1>美食编辑</h1>
     </div>
     <div class="compileMain">
       <el-form label-position="right" :model="form" :rules="rules" ref="ruleForm" label-width="110px">
         <div class="block">
           <div class="title">
-            <h3>编辑景区</h3>
+            <h3>编辑美食</h3>
           </div>
-          <el-form-item label="选择分类：" prop="sceneryType">
-            <el-radio-group v-model="form.sceneryType">
+          <el-form-item label="选择分类：" prop="foodType">
+            <el-radio-group v-model="form.foodType">
               <el-radio v-for="item in classifyList" :key="item.dictionaryId" :label="item.dictionaryId">{{
                 item.dictionaryName }}
               </el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="景区名称：" prop="sceneryName">
-            <el-input maxlength="20" style="width: 350px" v-model="form.sceneryName"></el-input>
+          <el-form-item label="美食名称：" prop="foodName">
+            <el-input maxlength="20" style="width: 350px" v-model="form.foodName"></el-input>
           </el-form-item>
           <div class="clearfix feature">
-            <el-form-item label="特色一：" prop="sceneryLabelOne">
-              <el-input maxlength="10" style="width: 350px" v-model="form.sceneryLabelOne"></el-input>
+            <el-form-item label="特色一：" prop="foodLabelOne">
+              <el-input maxlength="10" style="width: 350px" v-model="form.foodLabelOne"></el-input>
             </el-form-item>
             <div style="width: 100px"></div>
-            <el-form-item label="特色二：" prop="sceneryLabelTwo">
-              <el-input maxlength="10" style="width: 350px" v-model="form.sceneryLabelTwo"></el-input>
+            <el-form-item label="特色二：" prop="foodLabelTwo">
+              <el-input maxlength="10" style="width: 350px" v-model="form.foodLabelTwo"></el-input>
             </el-form-item>
           </div>
         </div>
@@ -33,30 +33,30 @@
           <div class="title">
             <h3>用户须知</h3>
           </div>
-          <el-form-item label="电话：" prop="sceneryPhone">
-            <el-input maxlength="20" type="number" style="width: 350px" v-model.number="form.sceneryPhone"></el-input>
+          <el-form-item label="电话：" prop="foodPhone">
+            <el-input maxlength="20" type="number" style="width: 350px" v-model.number="form.foodPhone"></el-input>
           </el-form-item>
-          <el-form-item label="营业时间：" prop="sceneryBusinesshours">
-            <el-input maxlength="20" style="width: 350px" v-model="form.sceneryBusinesshours"></el-input>
+          <el-form-item label="营业时间：" prop="foodBusinesshours">
+            <el-input maxlength="20" style="width: 350px" v-model="form.foodBusinesshours"></el-input>
           </el-form-item>
-          <el-form-item label="价格说明：" prop="sceneryPrice">
-            <el-input maxlength="20" style="width: 350px" v-model="form.sceneryPrice"></el-input>
+          <el-form-item label="价格说明：" prop="foodPrice">
+            <el-input maxlength="20" style="width: 350px" v-model="form.foodPrice"></el-input>
           </el-form-item>
-          <el-form-item label="温馨提示：" prop="sceneryReminder">
-            <el-input maxlength="200" show-word-limit type="textarea" v-model="form.sceneryReminder"></el-input>
+          <el-form-item label="温馨提示：" prop="foodReminder">
+            <el-input maxlength="200" show-word-limit type="textarea" v-model="form.foodReminder"></el-input>
           </el-form-item>
         </div>
         <div class="block">
           <div class="title">
             <h3>交通攻略</h3>
           </div>
-          <el-form-item label="自助游：" prop="sceneryIndependenttravel">
-            <el-input maxlength="200" show-word-limit type="textarea" v-model="form.sceneryIndependenttravel"></el-input>
+          <el-form-item label="自助游：" prop="foodIndependenttravel">
+            <el-input maxlength="200" show-word-limit type="textarea" v-model="form.foodIndependenttravel"></el-input>
           </el-form-item>
-          <el-form-item label="自驾游：" prop="sceneryRoadtrip">
-            <el-input maxlength="200" show-word-limit type="textarea" v-model="form.sceneryRoadtrip"></el-input>
+          <el-form-item label="自驾游：" prop="foodRoadtrip">
+            <el-input maxlength="200" show-word-limit type="textarea" v-model="form.foodRoadtrip"></el-input>
           </el-form-item>
-          <el-form-item label="地图标注：" prop="sceneryCoordinate">
+          <el-form-item label="地图标注：" prop="foodCoordinate">
             <div class="mark">
               <el-button type="primary" size="medium" @click="openMap">选择地点</el-button>
               <div class="markMain">
@@ -65,7 +65,7 @@
                     经纬度
                   </div>
                   <div class="content">
-                    {{ form.sceneryCoordinate ? form.sceneryCoordinate.lng + ',' + form.sceneryCoordinate.lat : '' }}
+                    {{ form.foodCoordinate ? form.foodCoordinate.lng + ',' + form.foodCoordinate.lat : '' }}
                   </div>
                 </div>
                 <div class="item">
@@ -115,8 +115,8 @@
           <div class="title">
             <h3>设施包含</h3>
           </div>
-          <el-form-item prop="sceneryFacilities">
-            <el-checkbox-group v-model="form.sceneryFacilities">
+          <el-form-item prop="foodFacilities">
+            <el-checkbox-group v-model="form.foodFacilities">
               <el-checkbox
                 v-for="(item,index) of facilityLsit"
                 :label="item.dictionaryName"
@@ -130,13 +130,13 @@
           <div class="title">
             <h3>图文详情</h3>
           </div>
-          <el-form-item prop="sceneryDescribeList">
+          <el-form-item prop="foodDescribeList">
             <div class="graphic">
               <span>*</span>
               <el-button size="medium" @click="addGraphic">添加详情</el-button>
             </div>
             <el-table
-              :data="form.sceneryDescribeList"
+              :data="form.foodDescribeList"
               border
               fit
               highlight-current-row
@@ -179,7 +179,7 @@
             <div class="switch_item">
               <span>发布：</span>
               <el-switch
-                v-model="form.sceneryRelease"
+                v-model="form.foodRelease"
                 active-color="#13ce66"
                 inactive-color="#eeeeee">
               </el-switch>
@@ -200,11 +200,16 @@
 <script>
   import { MapLoader } from '@/utils/AMap.js'
   import { isMobile } from '@/utils/validate'
-  import { addScenery, getSceneryDetails, updateScenery } from '@/api/Releases/scenery'
+  import { addFood, getFoodDetails, updateFood } from '@/api/Releases/food'
   import { getDictionary } from '@/api/common'
   import Graphic from '@/components/graphic/index'
 
   export default {
+    props: {
+      params: {
+        type: Object
+      }
+    },
     data() {
       let validatePhone = (rule, value, callback) => {
         if (!isMobile(value)) {
@@ -216,43 +221,46 @@
       return {
         // 表单字段
         form: {
-          sceneryType: '', // 选择分类
-          sceneryName: '', // 景区名称
-          sceneryLabelOne: '', // 特色一
-          sceneryLabelTwo: '', // 特色二
-          sceneryPhone: '', // 电话
-          sceneryBusinesshours: '', // 营业时间
-          sceneryPrice: '', // 价格说明
-          sceneryReminder: '', // 温馨提示
-          sceneryIndependenttravel: '', // 自助游
-          sceneryRoadtrip: '', // 自驾游
-          sceneryCoordinate: '', // 地图经纬
-          sceneryFacilities: [], // 包含设施
-          sceneryDescribeList: [], // 图文详情
-          sceneryRelease: false
+          foodType: '', // 选择分类
+          foodName: '', // 美食名称
+          foodLabelOne: '', // 特色一
+          foodLabelTwo: '', // 特色二
+          foodPhone: '', // 电话
+          foodBusinesshours: '', // 营业时间
+          foodPrice: '', // 价格说明
+          foodReminder: '', // 温馨提示
+          foodIndependenttravel: '', // 自助游
+          foodRoadtrip: '', // 自驾游
+          foodCoordinate: '', // 地图经纬
+          foodFacilities: [], // 包含设施
+          foodDescribeList: [], // 图文详情
+          foodRelease: false
         },
         // 表单验证
         rules: {
-          sceneryType: [
+          foodType: [
             {required: true, message: '请选择分类', trigger: 'blur'}
           ],
-          sceneryName: [
-            {required: true, message: '请填写景区名称', trigger: 'blur'}
+          foodName: [
+            {required: true, message: '请填写美食名称', trigger: 'blur'}
           ],
-          sceneryLabelOne: [
+          foodLabelOne: [
             {required: true, message: '请填写特色', trigger: 'blur'}
           ],
-          sceneryPhone: [
+          foodPhone: [
             {required: true, message: '请输入电话', trigger: 'blur'},
             {validator: validatePhone, trigger: "blur"}
           ],
-          sceneryBusinesshours: [
+          foodBusinesshours: [
             {required: true, message: '请填写营业时间', trigger: 'blur'}
           ],
-          sceneryPrice: [
+          foodPrice: [
             {required: true, message: '请填写价格说明', trigger: 'blur'}
           ],
-          sceneryDescribeList: [
+          foodCoordinate: [
+            {required: true, message: '请选择标注地址', trigger: 'blur'}
+          ],
+          foodDescribeList: [
             {required: true, message: '请至少添加一个图文详情', trigger: 'change'}
           ],
         },
@@ -280,7 +288,7 @@
           address: ''
         }, // 选择位置缓存
         graphicData: {},
-        sceneryId: '',// 景区id
+        foodId: '',// 美食id
       }
     },
     components: {
@@ -289,31 +297,29 @@
     created() {
       this.getDictionary()
       this.getFacility()
-      this.sceneryId = this.$route.query.sceneryId
-      if (this.sceneryId) {
-        this.getDetails(this.sceneryId)
+      this.foodId = this.$route.query.foodId
+      if (this.foodId) {
+        this.getDetails(this.foodId)
       }
     },
     methods: {
-      // 获取景区详情
+      // 获取美食详情
       getDetails(id) {
         let params = {
-          sceneryId: id
+          foodId: id
         }
-        getSceneryDetails(params)
+        getFoodDetails(params)
           .then(res => {
             if (res.data.code == '1'){
               let data = res.data.data
-              data.sceneryCoordinate = JSON.parse(data.sceneryCoordinate)
-              data.sceneryFacilities = JSON.parse(data.sceneryFacilities)
-              data.sceneryRelease = data.sceneryRelease ? true : false
+              data.foodCoordinate = JSON.parse(data.foodCoordinate)
+              data.foodFacilities = JSON.parse(data.foodFacilities)
+              data.foodRelease = data.foodRelease ? true : false
               let formData = JSON.parse(JSON.stringify(data))
               for (let key in this.form) {
-                if (formData[key] != null){
-                  this.form[key] = formData[key]
-                }
+                this.form[key] = formData[key]
               }
-              let lnglat = data.sceneryCoordinate.lng + ',' + data.sceneryCoordinate.lat
+              let lnglat = data.foodCoordinate.lng + ',' + data.foodCoordinate.lat
               this.getAddress(lnglat)
             } else {
               this.$message.error(res.data.msg)
@@ -342,10 +348,10 @@
           })
         })
       },
-      // 获取景区分类
+      // 获取美食分类
       getDictionary() {
         let params = {
-          dictionaryPcode: "SHOW_TYPE_PLAY"
+          dictionaryPcode: "SHOW_TYPE_FOOD"
         }
         getDictionary(params)
           .then(res => {
@@ -355,7 +361,7 @@
             }
           })
       },
-      // 获取景区设施分类
+      // 获取美食设施分类
       getFacility() {
         let params = {
           dictionaryPcode: "FACILITIES_SERVICES_SCENERY"
@@ -377,7 +383,7 @@
       },
       // 确认地图经纬
       mapSub() {
-        this.form.sceneryCoordinate = this.lnglatCache.gnote
+        this.form.foodCoordinate = this.lnglatCache.gnote
         this.lnglatCache.address = this.site
         this.mapShow = false
         console.log(this.form)
@@ -451,10 +457,10 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            if (this.sceneryId){
-              this.editScenery()
+            if (this.foodId){
+              this.editFood()
             }else {
-              this.addScenery()
+              this.addFood()
             }
           } else {
             console.log('error submit!!');
@@ -465,14 +471,14 @@
       // 提交
       bySaving(data) {
         if (this.graphicData.type === 'add') {
-          this.form.sceneryDescribeList.push(data)
+          this.form.foodDescribeList.push(data)
           this.$message({
             type: 'success',
             message: '添加成功!'
           });
         } else if (this.graphicData.type === 'edit') {
-          // this.form.sceneryDescribeList[this.graphicData.index] = data
-          this.$set(this.form.sceneryDescribeList, this.graphicData.index, data)
+          // this.form.foodDescribeList[this.graphicData.index] = data
+          this.$set(this.form.foodDescribeList, this.graphicData.index, data)
           this.$message({
             type: 'success',
             message: '修改成功!'
@@ -489,13 +495,13 @@
         return JSON.stringify(a)
       },
       // 发送新增请求
-      addScenery() {
+      addFood() {
         let data = JSON.parse(JSON.stringify(this.form))
-        data.sceneryDescribeList = this.form.sceneryDescribeList
-        data.sceneryCoordinate = this.jsonToString(this.form.sceneryCoordinate)
-        data.sceneryFacilities = this.jsonToString(this.form.sceneryFacilities)
-        data.sceneryRelease = this.form.sceneryRelease ? '1' : '0'
-        addScenery(data)
+        data.foodDescribeList = this.form.foodDescribeList
+        data.foodCoordinate = this.jsonToString(this.form.foodCoordinate)
+        data.foodFacilities = this.jsonToString(this.form.foodFacilities)
+        data.foodRelease = this.form.foodRelease ? '1' : '0'
+        addFood(data)
           .then(res => {
             let data = res.data
             if (data.code == '1') {
@@ -513,14 +519,14 @@
           })
       },
       // 发送修改请求
-      editScenery(){
+      editFood(){
         let data = JSON.parse(JSON.stringify(this.form))
-        data.sceneryDescribeList = this.form.sceneryDescribeList
-        data.sceneryCoordinate = this.jsonToString(this.form.sceneryCoordinate)
-        data.sceneryFacilities = this.jsonToString(this.form.sceneryFacilities)
-        data.sceneryRelease = this.form.sceneryRelease ? '1' : '0'
-        data.sceneryId = this.sceneryId
-        updateScenery(data)
+        data.foodDescribeList = this.form.foodDescribeList
+        data.foodCoordinate = this.jsonToString(this.form.foodCoordinate)
+        data.foodFacilities = this.jsonToString(this.form.foodFacilities)
+        data.foodRelease = this.form.foodRelease ? '1' : '0'
+        data.foodId = this.foodId
+        updateFood(data)
           .then(res => {
             if (res.data.code == '1'){
               this.$message.success(res.data.msg)
@@ -535,7 +541,7 @@
             console.log(err)
           })
       },
-      // 取消景区添加
+      // 取消美食添加
       resetForm(formName) {
         this.$router.back()
         // this.$refs[formName].resetFields();
@@ -565,7 +571,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.form.sceneryDescribeList.splice(index, 1)
+          this.form.foodDescribeList.splice(index, 1)
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -714,7 +720,6 @@
         }
       }
     }
-
   }
 
 </style>

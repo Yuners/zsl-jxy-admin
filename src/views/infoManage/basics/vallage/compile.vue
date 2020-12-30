@@ -1,62 +1,91 @@
 <template>
   <div class="compile">
     <div class="compileHead">
-      <h1>风景编辑</h1>
+      <h1>乡村编辑</h1>
     </div>
     <div class="compileMain">
       <el-form label-position="right" :model="form" :rules="rules" ref="ruleForm" label-width="110px">
         <div class="block">
-          <div class="title">
-            <h3>编辑景区</h3>
-          </div>
-          <el-form-item label="选择分类：" prop="sceneryType">
-            <el-radio-group v-model="form.sceneryType">
-              <el-radio v-for="item in classifyList" :key="item.dictionaryId" :label="item.dictionaryId">{{
-                item.dictionaryName }}
-              </el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="景区名称：" prop="sceneryName">
-            <el-input maxlength="20" style="width: 350px" v-model="form.sceneryName"></el-input>
-          </el-form-item>
           <div class="clearfix feature">
-            <el-form-item label="特色一：" prop="sceneryLabelOne">
-              <el-input maxlength="10" style="width: 350px" v-model="form.sceneryLabelOne"></el-input>
+            <el-form-item label="乡村名称：" prop="villageName">
+              <el-input maxlength="10" style="width: 350px" v-model="form.villageName"></el-input>
             </el-form-item>
             <div style="width: 100px"></div>
-            <el-form-item label="特色二：" prop="sceneryLabelTwo">
-              <el-input maxlength="10" style="width: 350px" v-model="form.sceneryLabelTwo"></el-input>
+            <el-form-item label="电话区号：" prop="villagePhone">
+              <el-input maxlength="10" style="width: 350px" v-model="form.villagePhone"></el-input>
             </el-form-item>
           </div>
+          <div class="clearfix feature">
+            <el-form-item label="乡村别名：" prop="villageNikeName">
+              <el-input maxlength="10" style="width: 350px" v-model="form.villageNikeName"></el-input>
+            </el-form-item>
+            <div style="width: 100px"></div>
+            <el-form-item label="邮政编码：" prop="villagePostCode">
+              <el-input maxlength="10" style="width: 350px" v-model="form.villagePostCode"></el-input>
+            </el-form-item>
+          </div>
+          <div class="clearfix feature">
+            <el-form-item label="所属地区：" prop="villageLocationId">
+              <el-input maxlength="10" style="width: 350px" v-model="form.villageLocationName" disabled placeholder="xx省xx市xx县/区xx镇/乡"></el-input>
+            </el-form-item>
+            <div style="width: 100px"></div>
+            <el-form-item label="主要特产：" prop="villageMainSpecialty">
+              <el-input maxlength="10" style="width: 350px" v-model="form.villageMainSpecialty"></el-input>
+            </el-form-item>
+          </div>
+          <div class="clearfix feature">
+            <el-form-item label="面积：" prop="villageArea">
+              <el-input maxlength="10" style="width: 350px" v-model="form.villageArea" placeholder="平方公里"></el-input>
+            </el-form-item>
+            <div style="width: 100px"></div>
+            <el-form-item label="气温：" prop="villageAverageTemperature">
+              <el-input maxlength="10" style="width: 350px" v-model="form.villageAverageTemperature" placeholder="年平均气温℃"></el-input>
+            </el-form-item>
+          </div>
+          <div class="clearfix feature">
+            <el-form-item label="下辖村：" prop="villageJurisdiction">
+              <el-input maxlength="10" style="width: 350px" v-model="form.villageJurisdiction" placeholder="下辖自然村组"></el-input>
+            </el-form-item>
+            <div style="width: 100px"></div>
+            <el-form-item label="年降水量：" prop="villagePrecipitation">
+              <el-input maxlength="10" style="width: 350px" v-model="form.villagePrecipitation" placeholder="毫米"></el-input>
+            </el-form-item>
+          </div>
+          <div class="clearfix feature">
+            <el-form-item label="方言：" prop="villageDialect">
+              <el-input maxlength="10" style="width: 350px" v-model="form.villageDialect"></el-input>
+            </el-form-item>
+            <div style="width: 100px"></div>
+            <el-form-item label="海拔：" prop="villageAltitude">
+              <el-input maxlength="10" style="width: 350px" v-model="form.villageAltitude" placeholder="千米"></el-input>
+            </el-form-item>
+          </div>
+          <div class="clearfix feature">
+            <el-form-item label="地理状况：" prop="villageGeography">
+              <el-input maxlength="10" style="width: 350px" v-model="form.villageGeography"></el-input>
+            </el-form-item>
+            <div style="width: 100px"></div>
+            <el-form-item label="年份：" prop="villageYear">
+              <el-input maxlength="10" style="width: 350px" v-model="form.villageYear" disabled></el-input>
+            </el-form-item>
+            <!-- <div class="container">
+              <el-form-item label="年份："  prop="villageYear">
+                <div class="block">
+                  <el-date-picker
+                    style="width: 350px"
+                    v-model="form.villageYear"
+                    type="year"
+                    @change="test"
+                    value-format='yyyy'
+                    placeholder="选择年份">
+                  </el-date-picker>
+                </div>
+              </el-form-item>
+            </div> -->
+          </div>
         </div>
         <div class="block">
-          <div class="title">
-            <h3>用户须知</h3>
-          </div>
-          <el-form-item label="电话：" prop="sceneryPhone">
-            <el-input maxlength="20" type="number" style="width: 350px" v-model.number="form.sceneryPhone"></el-input>
-          </el-form-item>
-          <el-form-item label="营业时间：" prop="sceneryBusinesshours">
-            <el-input maxlength="20" style="width: 350px" v-model="form.sceneryBusinesshours"></el-input>
-          </el-form-item>
-          <el-form-item label="价格说明：" prop="sceneryPrice">
-            <el-input maxlength="20" style="width: 350px" v-model="form.sceneryPrice"></el-input>
-          </el-form-item>
-          <el-form-item label="温馨提示：" prop="sceneryReminder">
-            <el-input maxlength="200" show-word-limit type="textarea" v-model="form.sceneryReminder"></el-input>
-          </el-form-item>
-        </div>
-        <div class="block">
-          <div class="title">
-            <h3>交通攻略</h3>
-          </div>
-          <el-form-item label="自助游：" prop="sceneryIndependenttravel">
-            <el-input maxlength="200" show-word-limit type="textarea" v-model="form.sceneryIndependenttravel"></el-input>
-          </el-form-item>
-          <el-form-item label="自驾游：" prop="sceneryRoadtrip">
-            <el-input maxlength="200" show-word-limit type="textarea" v-model="form.sceneryRoadtrip"></el-input>
-          </el-form-item>
-          <el-form-item label="地图标注：" prop="sceneryCoordinate">
+          <el-form-item label="地图标注：" prop="villageCoordinate">
             <div class="mark">
               <el-button type="primary" size="medium" @click="openMap">选择地点</el-button>
               <div class="markMain">
@@ -65,7 +94,7 @@
                     经纬度
                   </div>
                   <div class="content">
-                    {{ form.sceneryCoordinate ? form.sceneryCoordinate.lng + ',' + form.sceneryCoordinate.lat : '' }}
+                    {{ form.villageCoordinate ? form.villageCoordinate.lng + ',' + form.villageCoordinate.lat : '' }}
                   </div>
                 </div>
                 <div class="item">
@@ -111,79 +140,8 @@
             <!--            <div id="map"></div>-->
           </el-form-item>
         </div>
-        <div class="block">
-          <div class="title">
-            <h3>设施包含</h3>
-          </div>
-          <el-form-item prop="sceneryFacilities">
-            <el-checkbox-group v-model="form.sceneryFacilities">
-              <el-checkbox
-                v-for="(item,index) of facilityLsit"
-                :label="item.dictionaryName"
-                :key="index"
-                name="type"
-              ></el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-        </div>
-        <div class="block">
-          <div class="title">
-            <h3>图文详情</h3>
-          </div>
-          <el-form-item prop="sceneryDescribeList">
-            <div class="graphic">
-              <span>*</span>
-              <el-button size="medium" @click="addGraphic">添加详情</el-button>
-            </div>
-            <el-table
-              :data="form.sceneryDescribeList"
-              border
-              fit
-              highlight-current-row
-            >
-              <el-table-column align="center" label="序号" width="95">
-                <template slot-scope="scope">
-                  {{ scope.$index + 1 }}
-                </template>
-              </el-table-column>
-              <el-table-column label="图片" align="center">
-                <template slot-scope="scope">
-                  <el-image
-                    v-for="(item,index) in scope.row.fileList"
-                    style="width: 50px; height: 50px;margin-right: 5px"
-                    :key="index"
-                    :src="item.fileUrl"
-                    :fit="'cover'"/>
-                </template>
-              </el-table-column>
-              <el-table-column label="文字描述" align="center">
-                <template slot-scope="scope">
-                  {{ scope.row.describeContent }}
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                label="操作"
-                width="150"
-              >
-                <template slot-scope="scope">
-                  <el-button type="text" @click="dataEdit(scope.$index,scope.row)">编辑</el-button>
-                  <el-button type="text" @click="dataDelete(scope.$index)">删除</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-          </el-form-item>
-        </div>
         <el-form-item>
           <div style="display: flex;">
-            <div class="switch_item">
-              <span>发布：</span>
-              <el-switch
-                v-model="form.sceneryRelease"
-                active-color="#13ce66"
-                inactive-color="#eeeeee">
-              </el-switch>
-            </div>
             <div class="handleSave">
               <el-button size="medium" type="primary" @click="submitForm('ruleForm')">保 存</el-button>
               <el-button size="medium" @click="resetForm('ruleForm')">取 消</el-button>
@@ -199,16 +157,28 @@
 
 <script>
   import { MapLoader } from '@/utils/AMap.js'
-  import { isMobile } from '@/utils/validate'
-  import { addScenery, getSceneryDetails, updateScenery } from '@/api/Releases/scenery'
-  import { getDictionary } from '@/api/common'
+  import { isAllNumber } from '@/utils/validate'
+  import { addVillage, updateVillage, getVillageById } from '@/api/infoMng/basics/vallage'
+  import { getPcca } from '@/api/common'
   import Graphic from '@/components/graphic/index'
 
   export default {
+    props: {
+      params: {
+        type: Object
+      }
+    },
     data() {
       let validatePhone = (rule, value, callback) => {
-        if (!isMobile(value)) {
-          callback(new Error("请输入正确的手机号"));
+        if (!isAllNumber(value) || value.length!=4) {
+          callback(new Error("请输入正确的电话区号(四位)"));
+        } else {
+          callback();
+        }
+      };
+      let validateCode = (rule, value, callback) => {
+        if (!isAllNumber(value) || value.length!=6) {
+          callback(new Error("请输入正确的电话区号(6位)"));
         } else {
           callback();
         }
@@ -216,45 +186,79 @@
       return {
         // 表单字段
         form: {
-          sceneryType: '', // 选择分类
-          sceneryName: '', // 景区名称
-          sceneryLabelOne: '', // 特色一
-          sceneryLabelTwo: '', // 特色二
-          sceneryPhone: '', // 电话
-          sceneryBusinesshours: '', // 营业时间
-          sceneryPrice: '', // 价格说明
-          sceneryReminder: '', // 温馨提示
-          sceneryIndependenttravel: '', // 自助游
-          sceneryRoadtrip: '', // 自驾游
-          sceneryCoordinate: '', // 地图经纬
-          sceneryFacilities: [], // 包含设施
-          sceneryDescribeList: [], // 图文详情
-          sceneryRelease: false
+          villageName: '', // 乡村名称
+          villageLocationId: '', // 乡村所属行政区划id
+          villageNikeName: '', // 乡村别名
+          villageCoordinate: '', // 乡村坐标
+          villageArea: '', // 面积
+          villageJurisdiction: '', // 下辖自然村组
+          villageDialect: '', // 方言
+          villagePhone: '', // 电话
+          villagePostCode: '', // 邮政编码
+          villageMainSpecialty: '', // 主要特产
+          villageGeography: '', // 地理状况
+          villageAverageTemperature: '', // 年平均气温
+          villagePrecipitation: '', // 年降水量
+          villageAltitude: '', // 海拔
+          foodRelease: false,
+          villageYear:null, // 记录年份
+          villageLocationName:'',
         },
         // 表单验证
         rules: {
-          sceneryType: [
-            {required: true, message: '请选择分类', trigger: 'blur'}
+          villageName: [
+            {required: true, message: '此选项为必选', trigger: 'blur'}
           ],
-          sceneryName: [
-            {required: true, message: '请填写景区名称', trigger: 'blur'}
+          villageLocationId: [
+            {required: true, message: '此选项为必选', trigger: 'blur'}
           ],
-          sceneryLabelOne: [
-            {required: true, message: '请填写特色', trigger: 'blur'}
+          villageNikeName: [
+            {required: true, message: '此选项为必选', trigger: 'blur'}
           ],
-          sceneryPhone: [
-            {required: true, message: '请输入电话', trigger: 'blur'},
-            {validator: validatePhone, trigger: "blur"}
+          villageArea: [
+            {required: true, message: '此选项为必选', trigger: 'blur'}
           ],
-          sceneryBusinesshours: [
-            {required: true, message: '请填写营业时间', trigger: 'blur'}
+          villageJurisdiction: [
+            {required: true, message: '此选项为必选', trigger: 'blur'}
           ],
-          sceneryPrice: [
-            {required: true, message: '请填写价格说明', trigger: 'blur'}
+          villageDialect: [
+            {required: true, message: '此选项为必选', trigger: 'blur'}
           ],
-          sceneryDescribeList: [
-            {required: true, message: '请至少添加一个图文详情', trigger: 'change'}
+          villagePhone: [
+            {required: true, message: '此选项为必选', trigger: 'blur'},
+            {validator: validatePhone, trigger: 'blur'},
           ],
+          villagePostCode: [
+            {required: true, message: '此选项为必选', trigger: 'blur'},
+            {validator: validateCode}
+          ],
+          villageMainSpecialty: [
+            {required: true, message: '此选项为必选', trigger: 'blur'}
+          ],
+          villageGeography: [
+            {required: true, message: '此选项为必选', trigger: 'blur'}
+          ],
+          villageAverageTemperature: [
+            {required: true, message: '此选项为必选', trigger: 'blur'}
+          ],
+          villagePrecipitation: [
+            {required: true, message: '此选项为必选', trigger: 'blur'}
+          ],
+          villageAltitude: [
+            {required: true, message: '此选项为必选', trigger: 'blur'}
+          ],
+          foodRelease: [
+            {required: true, message: '此选项为必选', trigger: 'blur'}
+          ],
+          villageCoordinate: [
+            {required: true, message: '请选择标注地址', trigger: 'blur'}
+          ],
+          villageYear: [
+            {required: true, message: '此选项为必选', trigger: 'blur'}
+          ]
+          // foodDescribeList: [
+          //   {required: true, message: '请至少添加一个图文详情', trigger: 'change'}
+          // ],
         },
         // 图文详情
         graphic: {
@@ -280,40 +284,41 @@
           address: ''
         }, // 选择位置缓存
         graphicData: {},
-        sceneryId: '',// 景区id
+        villageId: '',// 乡村id
+        cityList: null,
       }
     },
     components: {
       Graphic
     },
     created() {
-      this.getDictionary()
-      this.getFacility()
-      this.sceneryId = this.$route.query.sceneryId
-      if (this.sceneryId) {
-        this.getDetails(this.sceneryId)
+      this.villageId = this.$route.query.villageId
+      if (this.villageId) {
+        this.getDetails(this.villageId)
+      }else{
+        this.form.villageYear = new Date().getFullYear()
       }
+      this.getCity()
     },
     methods: {
-      // 获取景区详情
+      // 获取乡村详情
       getDetails(id) {
         let params = {
-          sceneryId: id
+          villageId: id
         }
-        getSceneryDetails(params)
+        getVillageById(params)
           .then(res => {
             if (res.data.code == '1'){
               let data = res.data.data
-              data.sceneryCoordinate = JSON.parse(data.sceneryCoordinate)
-              data.sceneryFacilities = JSON.parse(data.sceneryFacilities)
-              data.sceneryRelease = data.sceneryRelease ? true : false
+              data.foodRelease = data.foodRelease ? true : false
               let formData = JSON.parse(JSON.stringify(data))
               for (let key in this.form) {
-                if (formData[key] != null){
-                  this.form[key] = formData[key]
-                }
+                this.form[key] = formData[key]
               }
-              let lnglat = data.sceneryCoordinate.lng + ',' + data.sceneryCoordinate.lat
+              this.form.villageCoordinate = JSON.parse(data.villageCoordinate)
+              console.info(data.villageCoordinate)
+              let coordinate = JSON.parse(data.villageCoordinate)
+              let lnglat = coordinate.lng + ',' + coordinate.lat
               this.getAddress(lnglat)
             } else {
               this.$message.error(res.data.msg)
@@ -342,10 +347,10 @@
           })
         })
       },
-      // 获取景区分类
+      // 获取乡村分类
       getDictionary() {
         let params = {
-          dictionaryPcode: "SHOW_TYPE_PLAY"
+          dictionaryPcode: "SHOW_TYPE_FOOD"
         }
         getDictionary(params)
           .then(res => {
@@ -355,17 +360,18 @@
             }
           })
       },
-      // 获取景区设施分类
-      getFacility() {
+      getCity(){
         let params = {
-          dictionaryPcode: "FACILITIES_SERVICES_SCENERY"
+          id: "1338353936444280801"
         }
-        getDictionary(params)
-          .then(res => {
-            if (res.data.data.code == 200) {
-              let data = res.data.data.data
-              this.facilityLsit = data
-            }
+        getPcca(params)
+          .then( res => {
+            console.info(res.data)
+            this.cityList = res.data
+            console.info(this.cityList)
+          })
+          .catch( err => {
+            console.log(err)
           })
       },
       // 打开地图
@@ -377,7 +383,7 @@
       },
       // 确认地图经纬
       mapSub() {
-        this.form.sceneryCoordinate = this.lnglatCache.gnote
+        this.form.villageCoordinate = this.lnglatCache.gnote
         this.lnglatCache.address = this.site
         this.mapShow = false
         console.log(this.form)
@@ -451,10 +457,10 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            if (this.sceneryId){
-              this.editScenery()
+            if (this.villageId){
+              this.editVillage()
             }else {
-              this.addScenery()
+              this.addVillage()
             }
           } else {
             console.log('error submit!!');
@@ -465,14 +471,14 @@
       // 提交
       bySaving(data) {
         if (this.graphicData.type === 'add') {
-          this.form.sceneryDescribeList.push(data)
+          this.form.foodDescribeList.push(data)
           this.$message({
             type: 'success',
             message: '添加成功!'
           });
         } else if (this.graphicData.type === 'edit') {
-          // this.form.sceneryDescribeList[this.graphicData.index] = data
-          this.$set(this.form.sceneryDescribeList, this.graphicData.index, data)
+          // this.form.foodDescribeList[this.graphicData.index] = data
+          this.$set(this.form.foodDescribeList, this.graphicData.index, data)
           this.$message({
             type: 'success',
             message: '修改成功!'
@@ -489,13 +495,11 @@
         return JSON.stringify(a)
       },
       // 发送新增请求
-      addScenery() {
+      addVillage() {
         let data = JSON.parse(JSON.stringify(this.form))
-        data.sceneryDescribeList = this.form.sceneryDescribeList
-        data.sceneryCoordinate = this.jsonToString(this.form.sceneryCoordinate)
-        data.sceneryFacilities = this.jsonToString(this.form.sceneryFacilities)
-        data.sceneryRelease = this.form.sceneryRelease ? '1' : '0'
-        addScenery(data)
+        data.villageCoordinate = this.jsonToString(this.form.villageCoordinate)
+        data.foodRelease = this.form.foodRelease ? '1' : '0'
+        addVillage(data)
           .then(res => {
             let data = res.data
             if (data.code == '1') {
@@ -512,15 +516,16 @@
             console.log(err)
           })
       },
+      test(val){
+        console.log(val)
+      },
       // 发送修改请求
-      editScenery(){
+      editVillage(){
         let data = JSON.parse(JSON.stringify(this.form))
-        data.sceneryDescribeList = this.form.sceneryDescribeList
-        data.sceneryCoordinate = this.jsonToString(this.form.sceneryCoordinate)
-        data.sceneryFacilities = this.jsonToString(this.form.sceneryFacilities)
-        data.sceneryRelease = this.form.sceneryRelease ? '1' : '0'
-        data.sceneryId = this.sceneryId
-        updateScenery(data)
+        data.villageCoordinate = this.jsonToString(this.form.villageCoordinate)
+        data.foodRelease = this.form.foodRelease ? '1' : '0'
+        data.villageId = this.villageId
+        updateVillage(data)
           .then(res => {
             if (res.data.code == '1'){
               this.$message.success(res.data.msg)
@@ -535,20 +540,10 @@
             console.log(err)
           })
       },
-      // 取消景区添加
+      // 取消乡村添加
       resetForm(formName) {
         this.$router.back()
         // this.$refs[formName].resetFields();
-      },
-      // 修改图文详情
-      dataEdit(index, data) {
-        let param = JSON.parse(JSON.stringify(data))
-        this.graphicData = {
-          type: 'edit',
-          index: index,
-          data: param
-        }
-        this.addShow = true
       },
       // 打开添加详情
       addGraphic() {
@@ -557,28 +552,6 @@
           index: null
         }
         this.addShow = true
-      },
-      // 删除图文详情
-      dataDelete(index) {
-        this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.form.sceneryDescribeList.splice(index, 1)
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        });
-      },
-      handlePictureCardPreview(file) {
-        console.log(file)
       },
     }
   }
@@ -714,7 +687,6 @@
         }
       }
     }
-
   }
 
 </style>

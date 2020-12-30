@@ -431,12 +431,12 @@
       },
       // 切换页数
       handleCurrentChange(val) {
-        this.pageIndex = val
+        this.pages.pageIndex = val
         this.fetchData()
       },
       // 切换每页条数
       handleSizeChange(val) {
-        this.pageSize = val
+        this.pages.pageSize = val
         this.fetchData()
       },
       // 跳转

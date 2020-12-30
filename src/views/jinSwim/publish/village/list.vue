@@ -2,7 +2,7 @@
   <div class="list">
     <div class="tableHead">
       <div class="search">
-        <el-input class="coverStyle" v-model="foodName" placeholder="风景名称"></el-input>
+        <el-input class="coverStyle" v-model="villageName" placeholder="乡村简介"></el-input>
         <el-cascader
           class="coverStyle"
           clearable
@@ -30,7 +30,7 @@
         class="coverBut"
         type="success"
         size="medium"
-        @click="routingHop('/jinSwim/releases/gourmet/compile')"
+        @click="routingHop('/jinSwim/releases/village/compile')"
       >添加</el-button>
     </div>
     <el-table
@@ -46,25 +46,25 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="美食名称">
+      <el-table-column label="乡村名称">
         <template slot-scope="scope">
-          <span style="cursor: pointer" @click="foodDetails(scope.row.foodId)">{{ scope.row.foodName }}</span>
+          <span style="cursor: pointer" @click="villageDetails(scope.row.villageId)">{{ scope.row.villageName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="美食类别" width="150" align="center">
+      <el-table-column label="所属地区" width="150" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.foodTypeName || '暂无'}}</span>
+          <span>{{ scope.row.villageLocationName || '暂无'}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="所属地区" width="250" align="center">
+      <el-table-column label="宣传片类型" width="250" align="center">
         <template slot-scope="scope">
-          {{ scope.row.foodLocationName || '暂无' }}
+          {{ scope.row.villagePropagandaType || '暂无' }}
         </template>
       </el-table-column>
       <el-table-column class-name="status-col" label="状态" width="110" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.foodState | statusType">{{ scope.row.foodState | statusFilter}}</el-tag>
-          <!-- <el-tag :type="scope.row.foodState | statusFilter">{{ scope.row.foodState }}</el-tag> -->
+          <el-tag :type="scope.row.villageState | statusType">{{ scope.row.villageState | statusFilter}}</el-tag>
+          <!-- <el-tag :type="scope.row.villageState | statusFilter">{{ scope.row.villageState }}</el-tag> -->
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="反馈信息" width="200">
@@ -78,9 +78,9 @@
         width="150"
       >
         <template slot-scope="scope">
-          <el-button v-if="scope.row.foodRelease === 0" type="text" size="small">发布</el-button>
-          <el-button type="text" size="small" @click="editFood(scope.row.foodId)">编辑</el-button>
-          <el-button type="text" size="small" @click="delFood(scope.row.foodId)">删除</el-button>
+          <el-button v-if="scope.row.villageRelease === 0" type="text" size="small">发布</el-button>
+          <el-button type="text" size="small" @click="editVillage(scope.row.villageId)">编辑</el-button>
+          <el-button type="text" size="small" @click="delVillage(scope.row.villageId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -98,7 +98,7 @@
 </template>
 
 <script>
-  import { getFoodList, delFood } from '@/api/Releases/food'
+  import { getVillageList, delVillage } from '@/api/Releases/village'
 
   export default {
     filters: {
@@ -145,7 +145,7 @@
           pageIndex: 1, // 当前页数
           total: 0, // 总页数
         },
-        foodName: '', // 美食名称
+        villageName: '', // 美食名称
         affiliatingArea: '' ,// 所属地区
         status: '', // 状态
         showStateList: ['未提交','待审核','通过','不通过'], // 状态类型
@@ -370,7 +370,7 @@
     },
     methods: {
       clear(){
-        this.foodName = ''
+        this.villageName = ''
         this.affiliatingArea = ''
         this.status = ''
       },
@@ -385,7 +385,7 @@
           isDeleted: 0,
           isDisabled: 0
         }
-        getFoodList(params)
+        getVillageList(params)
           .then( res => {
             let data = res.data
             if (data.code == '1'){
@@ -404,7 +404,7 @@
           })
       },
       // 删除
-      delFood(id){
+      delVillage(id){
         this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -412,9 +412,9 @@
         })
           .then( () => {
             let params = {
-              foodId: id
+              villageId: id
             }
-            delFood(params)
+            delVillage(params)
               .then( res => {
                 if (res.data.code == '1') {
                   this.$message.success(res.data.msg)
@@ -446,19 +446,19 @@
           path
         })
       },
-      editFood(foodId){
+      editVillage(villageId){
         this.$router.push({
-          path:'/jinSwim/releases/gourmet/compile',
+          path:'/jinSwim/releases/village/compile',
           query:{
-            foodId
+            villageId
           }
         })
       },
-      foodDetails(foodId){
+      villageDetails(villageId){
         this.$router.push({
-          path:'/jinSwim/releases/gourmet/details',
+          path:'/jinSwim/releases/village/details',
           query:{
-            foodId
+            villageId
           }
         })
       }

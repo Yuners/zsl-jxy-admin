@@ -5,7 +5,7 @@
         class="coverBut"
         type="success"
         size="medium"
-        @click="routingHop('/jinSwim/operation/carriage/compile')"
+        @click="handleVillageFlag()"
       >添加</el-button>
     </div>
     <el-table
@@ -21,19 +21,24 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="模板名称">
+      <el-table-column label="乡村名称">
         <template slot-scope="scope">
-          <span style="cursor: pointer" @click="freightDetails(scope.row.freightId)">{{ scope.row.freightName }}</span>
+          <span style="cursor: pointer;color:blue" @click="details(scope.row.villageId)">{{ scope.row.villageName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="计费方式" width="150" align="center">
+      <el-table-column label="所属地区" width="150" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.freightChargingType || '暂无'}}</span>
+          <span>{{ scope.row.villageLocationName || '暂无'}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新时间" width="250" align="center">
+      <el-table-column label="记录年份">
+        <template slot-scope="scope" >
+          <span style="cursor: pointer;" >{{ scope.row.villageYear }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="创建时间">
         <template slot-scope="scope">
-          {{ scope.row.updatedOn || '暂无' }}
+          <span style="cursor: pointer;" >{{scope.row.createdOn|formatDate}}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -42,8 +47,8 @@
         width="150"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="editFreight(scope.row.freightId)">编辑</el-button>
-          <el-button type="text" size="small" @click="delFreight(scope.row.freightId)">删除</el-button>
+          <el-button type="text" size="small" @click="edit(scope.row.villageId)">编辑</el-button>
+          <!-- <el-button type="text" size="small" @click="delVallage(scope.row.villageId)">删除</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -61,8 +66,9 @@
 </template>
 
 <script>
+  import { formatDate } from '@/utils/index.js'
   import { getFreightList, delFreight} from '@/api/Operation/carriage'
-
+  import { getVillagePage, delVillage, getVillageFlag} from '@/api/infoMng/basics/vallage'
   export default {
     filters: {
       statusFilter(status) {
@@ -111,18 +117,34 @@
       }
     },
     created() {
-      this.fetchData()
+      this.search()
+    },
+    filters: {
+        formatDate(time) {
+            var date = new Date(time);
+            return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
+        }
     },
     methods: {
-      clear(){
-        this.freightName = ''
-        this.affiliatingArea = ''
-        this.status = ''
+      handleVillageFlag(){
+        let params = {
+          villageYear: new Date().getFullYear(),
+          villageLocationId: '1338353936444280822' // 测试
+        }
+        console.info(params)
+        getVillageFlag(params)
+          .then( res => {
+            let data = res.data.data
+            console.info(data)
+            if(data != null){
+              this.$message.error("该年记录已被录入")
+            }else{
+              this.routingHop('/infoManage/basics/vallage/compile')
+            }
+            
+          })
       },
-      handleChange(value) {
-        console.log(value);
-      },
-      fetchData() {
+      search() {
         this.listLoading = true
         let params = {
           curPage: this.pages.pageIndex,
@@ -130,7 +152,7 @@
           isDeleted: 0,
           isDisabled: 0
         }
-        getFreightList(params)
+        getVillagePage(params)
           .then( res => {
             let data = res.data
             if (data.code == '1'){
@@ -148,7 +170,7 @@
           })
       },
       // 删除
-      delFreight(id){
+      delVallage(id){
         this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -156,9 +178,9 @@
         })
         .then( () => {
           let params = {
-            freightId: id
+            villageId: id
           }
-          delFreight(params)
+          delVillage(params)
             .then( res => {
               if (res.data.code == '1') {
                 this.$message.success(res.data.msg)
@@ -173,13 +195,14 @@
       },
       // 切换页数
       handleCurrentChange(val) {
+        console.info(val)
         this.pages.pageIndex = val
-        this.fetchData()
+        this.search()
       },
       // 切换每页条数
       handleSizeChange(val) {
         this.pages.pageSize = val
-        this.fetchData()
+        this.search()
       },
       // 跳转
       routingHop(path){
@@ -187,19 +210,21 @@
           path
         })
       },
-      editFreight(freightId){
+      //修改
+      edit(villageId){
         this.$router.push({
-          path:'/jinSwim/operation/carriage/compile',
+          path:'/infoManage/basics/vallage/compile',
           query:{
-            freightId
+            villageId
           }
         })
       },
-      freightDetails(freightId){
+      //乡村详细页面
+      details(villageId){
         this.$router.push({
-          path:'/jinSwim/operation/carriage/details',
+          path:'/infoManage/basics/vallage/details',
           query:{
-            freightId
+            villageId
           }
         })
       }

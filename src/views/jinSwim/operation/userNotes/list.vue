@@ -5,7 +5,7 @@
         class="coverBut"
         type="success"
         size="medium"
-        @click="routingHop('/jinSwim/operation/carriage/compile')"
+        @click="routingHop('/jinSwim/operation/userNotes/compile')"
       >添加</el-button>
     </div>
     <el-table
@@ -23,12 +23,7 @@
       </el-table-column>
       <el-table-column label="模板名称">
         <template slot-scope="scope">
-          <span style="cursor: pointer" @click="freightDetails(scope.row.freightId)">{{ scope.row.freightName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="计费方式" width="150" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.freightChargingType || '暂无'}}</span>
+          <span style="cursor: pointer" @click="noticeDetails(scope.row.noticeId)">{{ scope.row.noticeName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="更新时间" width="250" align="center">
@@ -42,8 +37,8 @@
         width="150"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="editFreight(scope.row.freightId)">编辑</el-button>
-          <el-button type="text" size="small" @click="delFreight(scope.row.freightId)">删除</el-button>
+          <el-button type="text" size="small" @click="editNotice(scope.row.noticeId)">编辑</el-button>
+          <el-button type="text" size="small" @click="delNotice(scope.row.noticeId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -61,43 +56,9 @@
 </template>
 
 <script>
-  import { getFreightList, delFreight} from '@/api/Operation/carriage'
+  import { getNoticeList, delNotice} from '@/api/Operation/userNotes'
 
   export default {
-    filters: {
-      statusFilter(status) {
-        switch (status) {
-          case 0:
-            return '未提交'
-            break;
-          case 1:
-            return '待审核'
-            break;
-          case 2:
-            return '通过'
-            break;
-          case 3:
-            return '不通过'
-            break;
-        }
-      },
-      statusType(status) {
-        switch (status) {
-          case 0:
-            return ''
-            break;
-          case 1:
-            return 'warning'
-            break;
-          case 2:
-            return 'success'
-            break;
-          case 3:
-            return 'danger'
-            break;
-        }
-      }
-    },
     data() {
       return {
         list: null, // 渲染列表
@@ -115,7 +76,7 @@
     },
     methods: {
       clear(){
-        this.freightName = ''
+        this.noticeName = ''
         this.affiliatingArea = ''
         this.status = ''
       },
@@ -130,7 +91,7 @@
           isDeleted: 0,
           isDisabled: 0
         }
-        getFreightList(params)
+        getNoticeList(params)
           .then( res => {
             let data = res.data
             if (data.code == '1'){
@@ -148,7 +109,7 @@
           })
       },
       // 删除
-      delFreight(id){
+      delNotice(id){
         this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -156,12 +117,15 @@
         })
         .then( () => {
           let params = {
-            freightId: id
+            noticeId: id
           }
-          delFreight(params)
+          delNotice(params)
             .then( res => {
               if (res.data.code == '1') {
                 this.$message.success(res.data.msg)
+                setTimeout( () => {
+                  this.fetchData()
+                })
               }else {
                 this.$message.error(res.data.msg)
               }
@@ -187,19 +151,19 @@
           path
         })
       },
-      editFreight(freightId){
+      editNotice(noticeId){
         this.$router.push({
-          path:'/jinSwim/operation/carriage/compile',
+          path:'/jinSwim/operation/userNotes/compile',
           query:{
-            freightId
+            noticeId
           }
         })
       },
-      freightDetails(freightId){
+      noticeDetails(noticeId){
         this.$router.push({
-          path:'/jinSwim/operation/carriage/details',
+          path:'/jinSwim/operation/userNotes/details',
           query:{
-            freightId
+            noticeId
           }
         })
       }

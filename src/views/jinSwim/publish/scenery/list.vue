@@ -424,6 +424,9 @@
             .then( res => {
               if (res.data.code == '1') {
                 this.$message.success(res.data.msg)
+                setTimeout( () => {
+                  this.fetchData()
+                })
               }else {
                 this.$message.error(res.data.msg)
               }
@@ -435,12 +438,12 @@
       },
       // 切换页数
       handleCurrentChange(val) {
-        this.pageIndex = val
+        this.pages.pageIndex = val
         this.fetchData()
       },
       // 切换每页条数
       handleSizeChange(val) {
-        this.pageSize = val
+        this.pages.pageSize = val
         this.fetchData()
       },
       // 跳转

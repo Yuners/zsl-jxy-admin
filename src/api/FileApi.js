@@ -6,6 +6,14 @@ if (process.env.NODE_ENV == 'development'){
   host = 'file/'
 }
 
+/**
+ * 上传音频
+ * @param file
+ * @param name
+ * @param output
+ * @param quality
+ * @returns {AxiosPromise<any>}
+ */
 let uploadAudio = (file,name,output,quality) => {
     let formData=new FormData();
     formData.append('name',name||"音频");
@@ -18,6 +26,14 @@ let uploadAudio = (file,name,output,quality) => {
     });
 };
 
+/**
+ * 上传图片
+ * @param file
+ * @param name
+ * @param output
+ * @param quality
+ * @returns {AxiosPromise<any>}
+ */
 let uploadImage = (file,compress) => {
     let formData=new FormData();
     formData.append('compress',compress||true);
@@ -28,6 +44,14 @@ let uploadImage = (file,compress) => {
     });
 };
 
+/**
+ * 上传附件
+ * @param file
+ * @param name
+ * @param output
+ * @param quality
+ * @returns {AxiosPromise<any>}
+ */
 let uploadFile = (file) => {
     let formData=new FormData();
     formData.append('file',file);
@@ -46,9 +70,17 @@ let uploadTmp = (file) => {
     });
 };
 
-let uploadVideo = (file,name,output,quality) => {
+/**
+ * 上传视频
+ * @param file
+ * @param name
+ * @param output
+ * @param quality
+ * @returns {AxiosPromise<any>}
+ */
+let uploadVideo = (file,output,quality) => {
     let formData=new FormData();
-    formData.append('file',file);
+    formData.append('file',file.file);
     formData.append('output',output||'mpeg');
     formData.append('quality',quality||'original');
     return service.post(host + 'upload/video/binary',formData,{

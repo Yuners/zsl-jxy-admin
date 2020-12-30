@@ -44,3 +44,12 @@ export function getVillagePage( params ) {
 export function updateVillage( params ) {
   return request.post('/village/updateVillage', params)
 }
+
+/**
+ * 是否存在该村当年信息
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export function getVillageFlag( params ) {
+  return request.post('/village/getVillageFlag', params)
+}

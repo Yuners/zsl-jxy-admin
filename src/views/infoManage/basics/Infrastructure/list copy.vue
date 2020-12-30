@@ -21,19 +21,14 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="模板名称">
+      <el-table-column label="乡村名称">
         <template slot-scope="scope">
           <span style="cursor: pointer" @click="freightDetails(scope.row.freightId)">{{ scope.row.freightName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="计费方式" width="150" align="center">
+      <el-table-column label="所属地区" width="150" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.freightChargingType || '暂无'}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="更新时间" width="250" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.updatedOn || '暂无' }}
         </template>
       </el-table-column>
       <el-table-column
@@ -62,7 +57,7 @@
 
 <script>
   import { getFreightList, delFreight} from '@/api/Operation/carriage'
-
+  import { getVillagePage, delVillage} from '@/api/infoMng/basics/vallage'
   export default {
     filters: {
       statusFilter(status) {
@@ -130,7 +125,7 @@
           isDeleted: 0,
           isDisabled: 0
         }
-        getFreightList(params)
+        getVillagePage(params)
           .then( res => {
             let data = res.data
             if (data.code == '1'){

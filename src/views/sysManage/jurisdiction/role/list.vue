@@ -4,13 +4,13 @@
       <div class="search">
         <el-input class="coverStyle" v-model="sceneryName" placeholder="角色名称"></el-input>
         <el-button type="info" size="medium" plain @click="clear()">重置</el-button>
-        <el-button class="coverBut" type="primary" size="medium">查询</el-button>
+        <el-button class="coverBut" type="primary" size="medium" @click="fetchData">查询</el-button>
       </div>
       <el-button
         class="coverBut"
         type="success"
         size="medium"
-        @click="routingHop('/jinSwim/releases/scenery/compile')"
+        @click="routingHop('/sysManage/jurisdiction/role/compile')"
       >添加</el-button>
     </div>
     <el-table
@@ -43,7 +43,7 @@
       >
         <template slot-scope="scope">
           <el-button type="text" size="small">分配权限</el-button>
-          <el-button type="text" size="small" @click="editScenery(scope.row.sceneryId)">编辑</el-button>
+          <el-button type="text" size="small" @click="editScenery(scope.row.roleId)">编辑</el-button>
           <el-button type="text" size="small" @click="delScenery(scope.row.sceneryId)">删除</el-button>
         </template>
       </el-table-column>
@@ -63,42 +63,9 @@
 
 <script>
   import { getScenery, delScenery} from '@/api/Releases/scenery'
-  import { selectFrameworkPage} from '@/api/Role/Jurisdiction/role'
+  import { selectRolePage} from '@/api/Role/Jurisdiction/role'
   export default {
-    filters: {
-      statusFilter(status) {
-        switch (status) {
-          case 0:
-            return '未提交'
-            break;
-          case 1:
-            return '待审核'
-            break;
-          case 2:
-            return '通过'
-            break;
-          case 3:
-            return '不通过'
-            break;
-        }
-      },
-      statusType(status) {
-        switch (status) {
-          case 0:
-            return ''
-            break;
-          case 1:
-            return 'warning'
-            break;
-          case 2:
-            return 'success'
-            break;
-          case 3:
-            return 'danger'
-            break;
-        }
-      }
-    },
+
     data() {
       return {
         list: null, // 渲染列表
@@ -110,13 +77,48 @@
           total: 0, // 总页数
         },
         sceneryName: null, // 角色名称
-        showStateList: ['未提交','待审核','通过','不通过'],//状态类型
+        addShow:false,
+        addItems:{
+            flag:1,
+            roleName:null,
+            sort:null,
+            frameworkName:null,
+            roleFrameworkId:null,
+        },
+        tree:{},
+        isframework:false,
+        frameworkItems:{
+          frameworkName:null,
+          frameworkId:null,
+          frameworkAdministrative:null,
+        }
       }
     },
     created() {
       this.fetchData()
     },
     methods: {
+      search(){
+         let params = {
+        ids:111
+      };
+      selectFramework(params).then(v=>{
+            this.listLoading = false;
+            this.tree=[];
+            this.tree.push(v.data);
+            if(!show){
+              if(v.data!=null){
+                let p={
+                ...v.data
+                };
+                this.items=p;
+              }
+            }
+        })
+        .catch( err => {
+          this.$message.error('服务器错误')
+        })
+      },
       clear(){
         this.sceneryName = ''
       },
@@ -132,10 +134,9 @@
         if(this.sceneryName!=null&&this.sceneryName!=''){
           params.roleName=this.sceneryName;
         }
-        selectFrameworkPage(params)
+        selectRolePage(params)
           .then( res => {
             let data = res.data
-            console.log(data);
             this.list = data.items
             this.pages.total = data.page.total
             this.listLoading = false
@@ -168,42 +169,43 @@
               }
             })
             .catch( err => {
-              console.log(err)
+               this.$message.error('服务器错误')
             })
         })
       },
       // 切换页数
       handleCurrentChange(val) {
-        this.pageIndex = val
+        this.pages.pageIndex = val
         this.fetchData()
       },
       // 切换每页条数
       handleSizeChange(val) {
-        this.pageSize = val
+        this.pages.pageSize = val
         this.fetchData()
       },
-      // 跳转
+      frameworkShow(){
+        let frameworkItems={
+          frameworkName:null,
+          frameworkId:null,
+          frameworkAdministrative:null,
+        };
+        this.frameworkItems=frameworkItems;
+        this.isframework=true;
+      },
+      // 添加
       routingHop(path){
-        this.$router.push({
+         this.$router.push({
           path
-        })
+        });
       },
-      editScenery(sceneryId){
+      editScenery(roleId){
         this.$router.push({
-          path:'/jinSwim/releases/scenery/compile',
+          path:'/sysManage/jurisdiction/role/compile',
           query:{
-            sceneryId
+            roleId
           }
         })
       },
-      sceneryDetails(sceneryId){
-        this.$router.push({
-          path:'/jinSwim/releases/scenery/details',
-          query:{
-            sceneryId
-          }
-        })
-      }
     }
   }
 </script>

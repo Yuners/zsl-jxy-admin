@@ -5,7 +5,7 @@ import request from "@/utils/request";
  * @param params
  * @returns {AxiosPromise<any>}
  */
-export function addFramework( params ) {
+export function addRole( params ) {
   return request.post('/role/add', params)
 }
 
@@ -14,7 +14,7 @@ export function addFramework( params ) {
  * @param params
  * @returns {AxiosPromise<any>}
  */
-export function updateFramework( params ) {
+export function updateRole( params ) {
   return request.post('/role/updateName', params)
 }
 
@@ -25,7 +25,7 @@ export function updateFramework( params ) {
  * @param params
  * @returns {AxiosPromise<any>}
  */
-export function delectFramework( params ) {
+export function delectRole( params ) {
   return request.post('/role/delect', params)
 }
 
@@ -34,7 +34,7 @@ export function delectFramework( params ) {
  * @param params
  * @returns {AxiosPromise<any>}
  */
-export function disabledFramework( params ) {
+export function disabledRole( params ) {
   return request.post('/role/disabled', params)
 }
 
@@ -43,7 +43,7 @@ export function disabledFramework( params ) {
  * @param params
  * @returns {AxiosPromise<any>}
  */
-export function selectFramework( params ) {
+export function selectRoleList( params ) {
   return request.post('/role/select/list', params)
 }
 
@@ -52,6 +52,14 @@ export function selectFramework( params ) {
  * @param params
  * @returns {AxiosPromise<any>}
  */
-export function selectFrameworkPage( params ) {
+export function selectRolePage( params ) {
   return request.get('/role/select/page', {params})
+}
+/**
+ * 查询角色信息
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export function selectRole( params ) {
+  return request.post('/role/select', params)
 }

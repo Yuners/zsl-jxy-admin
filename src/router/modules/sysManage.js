@@ -59,6 +59,12 @@ const sysManageRouter = {
                         component: () => import('@/views/sysManage/jurisdiction/role/list'),
                         meta: {title: '角色列表'},
                         hidden: true
+                    },{
+                        path: 'compile',
+                        name: 'Compile',
+                        component: () => import('@/views/sysManage/jurisdiction/role/compile'),
+                        meta: {title: '角色编辑'},
+                        hidden: true
                     }
                 ]
             },

@@ -7,9 +7,12 @@
           :props="defaultProps"
           :filter-node-method="filterNode"
           class="filter-tree"
-          default-expand-all
           @node-click="handleNodeClick"
+          render-after-expand
+          accordion
         />
+         <!-- :load="loadNode"
+          lazy -->
       </el-aside>
       <el-container >
         <div>
@@ -19,6 +22,9 @@
             </el-form-item>
             <el-form-item label="行政编号" >
               <el-input v-model="items.frameworkAdministrative" :disabled="tabShow" maxlength="12" show-word-limit></el-input>
+            </el-form-item>
+            <el-form-item label="排序" >
+              <el-input v-model="items.sort" :disabled="tabShow" maxlength="12" show-word-limit></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="warning" v-if="tabShow" :disabled="this.items.frameworkRank<=1"  @click="isUpdate">修改</el-button>
@@ -43,13 +49,14 @@
               <el-form-item label="行政编号" >
                 <el-input v-model="addItems.frameworkAdministrative"  maxlength="12" show-word-limit></el-input>
               </el-form-item>
+              <el-form-item label="排序" >
+                 <el-input v-model="addItems.sort" :disabled="tabShow" maxlength="12" show-word-limit></el-input>
+              </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                   <el-button type="danger" @click="noAddCanl">取消</el-button>
                   <el-button type="primary" @click="add">提交</el-button>
-                
              </span>
-          
         </el-dialog>
       </el-container>
     </el-container>
@@ -77,6 +84,7 @@ export default {
         frameworkName:null, //页面图标
         frameworkPpId:null,//页面名称
         frameworkPpIdName:null,//页面名称
+        sort:null,//排序
       }
     }
   },
@@ -93,9 +101,6 @@ export default {
         ids:111
       };
      selectFramework(params).then(v=>{
-        // console.log("yes");
-        // console.log(v);
-        // if (v.data.code == '1'){
           this.listLoading = false;
           this.tree=[];
           this.tree.push(v.data);
@@ -105,8 +110,6 @@ export default {
               ...v.data
               };
               this.items=p;
-              console.log(this.items)
-              console.log(this.items)
             }
           }
         // }
@@ -120,6 +123,36 @@ export default {
         this.$message.error('服务器错误')
         this.listLoading = false;
       })
+    },
+    loadNode(node, resolve){
+      if(node.label==undefined){
+        return
+      }
+      else{
+        let data=node.data;
+        console.log(data);
+        if(data.items==null){
+          let params = {
+            id:data.frameworkId
+          };
+          selectFramework(params).then(v=>{
+             setTimeout(() => {
+                resolve(v.data.items);
+              }, 500);
+          })
+          .catch( err => {
+            this.$message.error('服务器错误')
+          })
+
+        }
+        else{
+          setTimeout(() => {
+            resolve(data.items);
+          }, 500);
+        }
+      }
+      
+      
     },
     isUpdate(){
       this.tabShow=false;
@@ -143,6 +176,7 @@ export default {
         frameworkName:null, //区划名称
         frameworkPpId:null,//上级组织
         frameworkPpIdName:null,//上级组织名称
+        sort:null,//排序
       };
       addItems.frameworkPpId=this.items.frameworkId;
       addItems.frameworkPpIdName=this.items.frameworkName;
@@ -169,12 +203,7 @@ export default {
                 this.$message({
                   type: 'success',
                   message: '删除成功!'
-                });
-              // }
-              // else{
-              //    this.$message.error(v.data.msg)
-              // }
-                
+                });  
             })
             .catch( err => {
               this.$message.error('服务器错误')
@@ -240,22 +269,16 @@ export default {
             let path={
               frameworkId:this.items.frameworkId,
               frameworkAdministrative:this.items.frameworkAdministrative,
-              frameworkName:this.items.frameworkName
+              frameworkName:this.items.frameworkName,
+              sort:this.items.sort,
             };
             updateFramework(path).then(v=>{
-              // if (v.data.code == '1'){
-                // console.log(v);
                 this.tabShow=true;
                 this.search(true);
                 this.$message({
                   type: 'success',
                   message: '修改成功!'
                 });
-              // }
-              // else{
-              //     this.$message.error(v.data.msg)
-              // }
-                
             })
             .catch( err => {
               this.$message.error('服务器错误')

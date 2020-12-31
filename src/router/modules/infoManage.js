@@ -64,27 +64,27 @@ const infoManageRouter = {
             path: 'infrastructure',
             name: 'Infrastructure',
             redirect: '/infoManage/basics/infrastructure/list',
-            component: () => import('@/views/infoManage/basics/Infrastructure'),
+            component: () => import('@/views/infoManage/basics/infrastructure'),
             meta: {title: '基础建设', icon: 'table'},
             children: [
               {
                 path: 'list',
                 name: 'List',
-                component: () => import('@/views/infoManage/basics/Infrastructure/list'),
+                component: () => import('@/views/infoManage/basics/infrastructure/list'),
                 meta: {title: '基础建设列表', icon: 'table'},
                 hidden: true
               },
               {
                 path: 'compile',
                 name: 'Compile',
-                component: () => import('@/views/infoManage/basics/Infrastructure/compile'),
+                component: () => import('@/views/infoManage/basics/infrastructure/compile'),
                 meta: {title: '基础建设编辑'},
                 hidden: true
               },
               {
                 path: 'details',
                 name: 'Details',
-                component: () => import('@/views/infoManage/basics/Infrastructure/details'),
+                component: () => import('@/views/infoManage/basics/infrastructure/details'),
                 meta: {title: '基础建设详情'},
                 hidden: true
               },

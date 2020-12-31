@@ -19,3 +19,32 @@ export function getFreightList(params) {
 export function delFreight(params) {
   return request.get('/freight/delFreight', params)
 }
+
+/**
+ * 新增运费数据
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export function addFreight(params) {
+  return request.post('/freight/addFreight', params)
+}
+
+
+/**
+ * 新增运费数据
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export function getFreightDetails(params) {
+  return request.post('/freight/getFreightById', params)
+}
+
+
+/**
+ * 修改运费数据
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export function updateFreight(params) {
+  return request.post('/freight/updateFreight', params)
+}

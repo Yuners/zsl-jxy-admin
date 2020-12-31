@@ -28,7 +28,7 @@
       </el-table-column>
       <el-table-column label="计费方式" width="150" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.freightChargingType || '暂无'}}</span>
+          <span>{{ scope.row.freightChargingType | statusFilter}}</span>
         </template>
       </el-table-column>
       <el-table-column label="更新时间" width="250" align="center">
@@ -67,36 +67,17 @@
     filters: {
       statusFilter(status) {
         switch (status) {
-          case 0:
-            return '未提交'
+          case '0':
+            return '按件计费'
             break;
-          case 1:
-            return '待审核'
+          case '1':
+            return '按重量计费'
             break;
-          case 2:
-            return '通过'
-            break;
-          case 3:
-            return '不通过'
+          case '2':
+            return '按体积计费'
             break;
         }
       },
-      statusType(status) {
-        switch (status) {
-          case 0:
-            return ''
-            break;
-          case 1:
-            return 'warning'
-            break;
-          case 2:
-            return 'success'
-            break;
-          case 3:
-            return 'danger'
-            break;
-        }
-      }
     },
     data() {
       return {

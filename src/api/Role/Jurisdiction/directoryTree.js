@@ -45,6 +45,5 @@ export function disabledDirectoryTree( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function selectDirectoryTree( params ) {
-  console.log(params)
   return request.post('/directoryTree/select/tree', params)
 }

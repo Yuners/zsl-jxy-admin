@@ -90,6 +90,10 @@
       fileList: {
         type: Array,
         default: []
+      },
+      limit: {
+        type: Number,
+        default: 3
       }
     },
     computed: {
@@ -101,18 +105,7 @@
         }
       },
       fileShow(){
-        if (this.uploadType == 'image'){
-          return this.fileList.length < 10
-        } else if (this.uploadType == 'video'){
-          return this.fileList.length < 1
-        }
-      },
-      limit(){
-        if (this.uploadType == 'image'){
-          return 3
-        } else if (this.uploadType == 'video'){
-          return 1
-        }
+          return this.fileList.length < this.limit
       }
     },
     data() {
@@ -152,7 +145,20 @@
           }
           return isJPG && isLt2M;
         } else if ( this.uploadType == 'video' ) {
-          console.log(file)
+          let isJPG;
+          let fileType = ["video/mp4", "video/flv"];
+          if (fileType.indexOf(file.type) >= 0) {
+            isJPG = true;
+          } else {
+            isJPG = false;
+          }
+          const isLt2M = file.size / 1024 / 1024 < 150;
+          if (!isJPG) {
+            this.$message.error("请上传视频文件!");
+          } else if (!isLt2M) {
+            this.$message.error("上传视频大小不能超过 150MB!");
+          }
+          return isJPG && isLt2M;
         }
       },
       // 上传图片

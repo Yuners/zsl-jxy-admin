@@ -1,6 +1,17 @@
 <template>
   <div class="list">
     <div class="tableHead">
+      <div class="search">
+          <el-date-picker class="coverStyle"
+            style="width: 350px"
+            v-model="param.villageYear"
+            type="year"
+            value-format='yyyy'
+            placeholder="选择年份">
+          </el-date-picker>
+        <el-button type="info" size="medium" plain @click="clear()">重置</el-button>
+        <el-button class="coverBut" type="primary" size="medium" @click="search()">查询</el-button>
+      </div>
       <el-button
         class="coverBut"
         type="success"
@@ -28,7 +39,12 @@
       </el-table-column>
       <el-table-column label="所属地区" width="150" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.villageLocationName || '暂无'}}</span>
+          <el-popover trigger="hover" placement="top">
+            <p>{{ scope.row.villageLocationName }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium">{{ scope.row.villageLocationName !='' && scope.row.villageLocationName !=null?scope.row.villageLocationName.substring(0,6)+'...':'暂无' }}</el-tag>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column label="记录年份">
@@ -47,7 +63,7 @@
         width="150"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="edit(scope.row.villageId)">编辑</el-button>
+          <el-button type="text" size="small" @click="edit(scope.row.villageId,scope.row.villageYear)">编辑</el-button>
           <!-- <el-button type="text" size="small" @click="delVallage(scope.row.villageId)">删除</el-button> -->
         </template>
       </el-table-column>
@@ -108,6 +124,9 @@
       return {
         list: null, // 渲染列表
         listLoading: true, // 加载
+        param:{
+          villageYear:null
+        },
         pages:{
           pageSize: 10, // 每页多少条
           pageCount: 1, // 一共多少页
@@ -126,6 +145,9 @@
         }
     },
     methods: {
+      clear(){
+        this.param.villageYear = null
+      },
       handleVillageFlag(){
         let params = {
           villageYear: new Date().getFullYear(),
@@ -147,6 +169,7 @@
       search() {
         this.listLoading = true
         let params = {
+          villageYear: this.param.villageYear,
           curPage: this.pages.pageIndex,
           pageSize: this.pages.pageSize,
           isDeleted: 0,
@@ -210,8 +233,24 @@
           path
         })
       },
+      //判断是否是当年信息。修改只能修改当年的，或者去年的，前提是本年3月份之前。
+      handelYear(villageYear){
+        let dayYear = new Date().getFullYear();
+        let dayMonth = new Date().getMonth()+1;
+        if(villageYear == dayYear){
+          return true;
+        }else if(villageYear+1 == dayYear){// 判断是否为去年的
+          return dayMonth <3?true:false;
+        }else{
+          return false;
+        }
+      },
       //修改
-      edit(villageId){
+      edit(villageId, villageYear){
+        if(!this.handelYear(villageYear)){
+          this.$message.error("当年记录已不满足修改条件")
+          return;
+        }
         this.$router.push({
           path:'/infoManage/basics/vallage/compile',
           query:{

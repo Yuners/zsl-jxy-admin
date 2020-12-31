@@ -31,6 +31,12 @@
               @check="frameworkChange"
            />
         </el-form-item>
+        <el-form-item>
+          <div class="handleSave">
+              <el-button size="medium" type="primary" @click="submitForm('addTreeFrom')">保 存</el-button>
+              <el-button size="medium" @click="resetForm('addTreeFrom')">取 消</el-button>
+            </div>
+        </el-form-item>
     </el-form>
      <el-dialog
         title="选择组织机构"
@@ -74,9 +80,10 @@
 </template>
 
 <script>
- import { selectRole} from '@/api/Role/Jurisdiction/role'
+ import { selectRole,addRole,updateRole} from '@/api/Role/Jurisdiction/role'
  import { selectFramework} from '@/api/Role/Jurisdiction/framework'
  import { selectJurisdictionTree} from '@/api/Role/Jurisdiction/jurisdiction'
+import sysManageRouter from '@/router/modules/sysManage'
   export default {
     data() {
       return {
@@ -105,7 +112,7 @@
         },
         addJurisdictionList:[],
         removeJurisdictionList:[],
-        
+        roleId:'',
       }
     },
     components: {
@@ -120,6 +127,7 @@
       this.search();
     },
     methods: {
+        //初始数据获取
         search(show){
           let params = {
             ids:111
@@ -155,9 +163,16 @@
 
            })
         },
+        //取消编辑
+        resetForm(formName) {
+          this.$router.back()
+          // this.$refs[formName].resetFields();
+        },
+        //打开组织机构选择器
         frameworkShow(){
           this.isframework=true;
         },
+        //角色信息初始
         getDetails(roleId){
           let items={
             roleId
@@ -169,18 +184,83 @@
               this.$message.error('服务器错误')
             })
         },
+        //组织机构取消
         noAddCanl(){
           this.isframework=false;
         },
+        //组织机构确认
         AddCanl(){
           this.isframework=false;
           this.addItems.roleFrameworkId=this.frameworkItems.frameworkId;
           this.addItems.frameworkName=this.frameworkItems.frameworkName;
         },
+        //tree过滤
         filterNode(value, data) {
           if (!value) return true
           return data.label.indexOf(value) !== -1
         },
+        // 提交
+        submitForm(formName) {
+          this.$refs[formName].validate((valid) => {
+            if (valid) {
+              if (this.roleId){
+                this.editScenery()
+              }else {
+                this.addScenery()
+              }
+            } else {
+              console.log('error submit!!');
+              return false;
+            }
+          });
+        },
+        //添加角色
+        addScenery(){
+          let items={
+            roleName:this.addItems.roleName,
+            roleFrameworkId:this.addItems.roleFrameworkId,
+            sort:this.addItems.sort,
+            reqJurisdiction:{
+              addJurisdictionList:this.addJurisdictionList,
+              removeJurisdictionList:this.removeJurisdictionList,
+            }
+          };
+          addRole(items).then(v=>{
+              this.$message({
+                  type: 'success',
+                  message: '添加成功!'
+                });  
+                this.$router.back()
+          })
+          .catch( err => {
+              this.$message.error('服务器错误')
+            })
+        },
+        //修改角色
+        editScenery(){
+          let items={
+            roleId:this.roleId,
+            roleName:this.addItems.roleName,
+            roleFrameworkId:this.addItems.roleFrameworkId,
+            sort:this.addItems.sort,
+            reqJurisdiction:{
+              addJurisdictionList:this.addJurisdictionList,
+              removeJurisdictionList:this.removeJurisdictionList,
+            }
+          };
+          updateRole(items).then(v=>{
+               this.$message({
+                  type: 'success',
+                  message: '修改成功!'
+                });  
+                this.$router.back()
+                
+          })
+          .catch( err => {
+              this.$message.error('服务器错误')
+            })
+        },
+        //组织机构信息切换
         handleNodeClick(data){
           console.log(data)
           let p={
@@ -199,22 +279,52 @@
           //       this.$message.error('服务器错误')
           //     })
         },
+        //权限操作
         frameworkChange(date,node){
           // console.log("cs")
           // console.log(node);
           console.log(date)
           let directoryTreeIdItems=date.directoryTreeIdItems;
+          console.log(directoryTreeIdItems);
+          
           if(node.checkedKeys.indexOf(date.directoryTreeId)===-1){
-            console.log("取消")
-            console.log(directoryTreeIdItems)
-            // addJurisdictionList
-            // removeJurisdictionList
+            console.log("取消")            
+            for(let i=0;i<directoryTreeIdItems.length;i++){
+                let index=this.addJurisdictionList.indexOf(directoryTreeIdItems[i]);
+                if(index===-1){
+                  if(this.removeJurisdictionList.indexOf(directoryTreeIdItems[i])===-1);
+                  {
+                     this.removeJurisdictionList.push(directoryTreeIdItems[i])
+                  }
+                }
+                else 
+                {
+                  this.addJurisdictionList.splice(i,1);
+                }
+            }
           }
           else{
             console.log("选中")
+            for(let i=0;i<directoryTreeIdItems.length;i++){
+                let index=this.removeJurisdictionList.indexOf(directoryTreeIdItems[i]);
+                if(index===-1){
+                  if(this.addJurisdictionList.indexOf(directoryTreeIdItems[i])===-1);
+                  {
+                     this.addJurisdictionList.push(directoryTreeIdItems[i])
+                  }
+                }
+                else 
+                {
+                  this.removeJurisdictionList.splice(i,1);
+                }
+            }
+           
+
           }
-          
+           console.log(this.addJurisdictionList);
+            console.log(this.removeJurisdictionList);
         },
+        //组织树懒加载
         loadNode(node, resolve){
           console.log(node)
           if(node.label==undefined){

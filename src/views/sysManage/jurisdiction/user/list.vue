@@ -2,7 +2,8 @@
   <div class="list">
     <div class="tableHead">
       <div class="search">
-        <el-input class="coverStyle" v-model="sceneryName" placeholder="角色名称"></el-input>
+        <el-input class="coverStyle" v-model="userName" placeholder="用户名称"></el-input>
+        <el-input class="coverStyle" v-model="phone" placeholder="用户手机号"></el-input>
         <el-button type="info" size="medium" plain @click="clear()">重置</el-button>
         <el-button class="coverBut" type="primary" size="medium" @click="fetchData">查询</el-button>
       </div>
@@ -26,14 +27,24 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="角色名称">
+      <el-table-column label="用户昵称">
         <template slot-scope="scope">
-          <span style="cursor: pointer" >{{ scope.row.roleName }}</span>
+          <span style="cursor: pointer" >{{ scope.row.userNickName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="用户姓名">
+        <template slot-scope="scope">
+          <span style="cursor: pointer" >{{ scope.row.userName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="用户手机号">
+        <template slot-scope="scope">
+          <span style="cursor: pointer" >{{ scope.row.userPhone }}</span>
         </template>
       </el-table-column>
       <el-table-column label="归属机构">
         <template slot-scope="scope">
-          <span style="cursor: pointer" >{{ scope.row.frameworkName }}</span>
+          <span style="cursor: pointer" >{{ scope.row.userFrameworkName }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -42,7 +53,8 @@
         width="150"
       >
         <template slot-scope="scope">
-          <!-- <el-button type="text" size="small">分配权限</el-button> -->
+          <el-button type="text" size="small" @click="updatePassword(scope.row)">密码重置</el-button>
+          <el-button type="text" size="small">角色分配</el-button>
           <el-button type="text" size="small" @click="editScenery(scope.row.roleId)">编辑</el-button>
           <el-button type="text" size="small" @click="delScenery(scope.row)">删除</el-button>
         </template>
@@ -63,6 +75,7 @@
 
 <script>
   import { selectRolePage,delectRole} from '@/api/Role/Jurisdiction/role'
+  import { findPage,password,deleteUser} from '@/api/Role/Jurisdiction/user'
   export default {
 
     data() {
@@ -75,7 +88,8 @@
           pageIndex: 1, // 当前页数
           total: 0, // 总页数
         },
-        sceneryName: null, // 角色名称
+        userName: null, // 用户昵称
+        phone: null, // 手机号
       }
     },
     created() {
@@ -84,7 +98,28 @@
     methods: {
       //清空
       clear(){
-        this.sceneryName = ''
+        this.userName = null;
+        this.phone =null;
+      },
+      //重置密码
+      updatePassword(date){
+        this.$confirm(`此操作将重置用户'${date.userName}', 是否继续?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        .then( () => {
+            password(date.userId).then(v=>{
+                 this.$message({
+                    type: 'success',
+                    message: '密码重置成功,已重置成用户手机号'
+                  });
+            })
+            .catch( err => {
+              this.$message.error(err)
+           })
+        })
+
       },
       //分页数据查询
       fetchData() {
@@ -93,10 +128,13 @@
           curPage: this.pages.pageIndex,
           pageSize: this.pages.pageSize,
         }
-        if(this.sceneryName!=null&&this.sceneryName!=''){
-          params.roleName=this.sceneryName;
+        if(this.userName!=null&&this.userName!=''){
+          params.userName=this.userName;
         }
-        selectRolePage(params)
+        if(this.phone!=null&&this.phone!=''){
+          params.phone=this.phone;
+        }
+        findPage(params)
           .then( res => {
             let data = res.data
             this.list = data.items
@@ -110,16 +148,13 @@
       },
       // 删除
       delScenery(date){
-        this.$confirm(`此操作将删除角色${date.roleName}, 是否继续?`, '提示', {
+        this.$confirm(`此操作将删除用户'${date.userName}', 是否继续?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         })
         .then( () => {
-          let params = {
-            id: date.roleId
-          }
-          delectRole(params)
+          deleteUser(date.userId)
             .then( res => {
               this.$message.success(res.msg)
                 setTimeout( () => {
@@ -127,7 +162,7 @@
                 })
             })
             .catch( err => {
-               this.$message.error('服务器错误')
+               this.$message.error(err)
             })
         })
       },

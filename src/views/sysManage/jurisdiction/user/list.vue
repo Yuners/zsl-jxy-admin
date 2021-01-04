@@ -11,7 +11,7 @@
         class="coverBut"
         type="success"
         size="medium"
-        @click="routingHop('/sysManage/jurisdiction/role/compile')"
+        @click="routingHop('/sysManage/jurisdiction/user/compile')"
       >添加</el-button>
     </div>
     <el-table
@@ -54,8 +54,8 @@
       >
         <template slot-scope="scope">
           <el-button type="text" size="small" @click="updatePassword(scope.row)">密码重置</el-button>
-          <el-button type="text" size="small">角色分配</el-button>
-          <el-button type="text" size="small" @click="editScenery(scope.row.roleId)">编辑</el-button>
+          <!-- <el-button type="text" size="small">角色分配</el-button> -->
+          <el-button type="text" size="small" @click="editScenery(scope.row.userId)">编辑</el-button>
           <el-button type="text" size="small" @click="delScenery(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -183,11 +183,11 @@
         });
       },
       //编辑
-      editScenery(roleId){
+      editScenery(userId){
         this.$router.push({
-          path:'/sysManage/jurisdiction/role/compile',
+          path:'/sysManage/jurisdiction/user/compile',
           query:{
-            roleId
+            userId
           }
         })
       },

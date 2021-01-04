@@ -22,7 +22,7 @@
               <el-input v-model="summary.infrastructureYear" disabled show-word-limit ></el-input>
             </el-form-item>
             <el-form-item  :label="item.dictionaryName" v-for="item in showLIst" :key="item.dictionaryId">
-              <el-input v-model="item.infrastructureNumber" show-word-limit ></el-input>
+              <el-input v-model="item.infrastructureNumber" show-word-limit placeholder="请填写数字" ></el-input>
             </el-form-item>
             <el-form-item style="width:100%;text-align:center">
               <el-button type="primary" style="margin-left: 50px;" @click="submitForm">保存</el-button>
@@ -108,21 +108,30 @@ export default {
         let params = {
           infrastructureSummaryId: id
         }
-        // this.checkedIdList = [];
+        this.checkedIdList = [];
+        this.showLIst=[];
         getInfrastructureById(params)
           .then(res => {
             if (res.data.code == '1'){
               let data = res.data.data
               // this.showLIst = data
+              let checkedIdList = [];
+              let showLIst=[];
               data.infrastructureList.forEach(res => {
+                console.log(res)
                 // 在后台将月份与组织机构代码添加进去 infrastructure_location_id
-                this.showLIst.push(res)
-                this.checkedIdList.push(res.dictionaryId)
+                let ress={
+                  ...res
+                }
+                showLIst.push(ress)
+                checkedIdList.push(res.dictionaryId)
                 // this.$nextTick(() => {
                 //   this.$refs.tree2.setCheckedKeys(this.checkedIdList);
                 // });
 
               });
+              this.showLIst=showLIst;
+              this.checkedIdList=checkedIdList;
               console.info(this.showLIst)
               console.info(this.checkedIdList)
             } else {
@@ -140,11 +149,14 @@ export default {
       if(data.dictionaryLevel>1){// 为了不让一级数据加入到右面的显示中
         //如果是选中
         if(checked){
-          this.showLIst.push(data)
-          this.showLIst.sort(function(a,b){
+         if(this.checkedIdList.indexOf(data.dictionaryId)===-1){
+            this.showLIst.push(data)
+            this.showLIst.sort(function(a,b){
               return a.sort - b.sort;
           });
           this.checkedIdList.push(data.dictionaryId)
+         }
+          
         }else{
           for(let i=0;i<this.showLIst.length;i++){
             if(this.showLIst[i].dictionaryId == data.dictionaryId){

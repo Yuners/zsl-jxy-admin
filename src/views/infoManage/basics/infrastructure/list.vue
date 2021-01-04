@@ -349,22 +349,22 @@
         console.log(value);
       },
       handleVillageFlag(){
-        // this.routingHop('/infoManage/basics/infrastructure/compile')
-        let params = {
-          infrastructureYear: new Date().getFullYear(),
-          infrastructureLocationId: '1338353936444280822' // 测试
-        }
-        console.info(params)
-        getInfrastructureFlag(params)
-          .then( res => {
-            let data = res.data.data
-            console.info(data)
-            if(data != null){
-              this.$message.error("该年记录已被录入,有问题请去编辑")
-            }else{
-              this.routingHop('/infoManage/basics/infrastructure/compile')
-            }
-          })
+        this.routingHop('/infoManage/basics/infrastructure/compile')
+        // let params = {
+        //   infrastructureYear: new Date().getFullYear(),
+        //   infrastructureLocationId: '1338353936444280822' // 测试
+        // }
+        // console.info(params)
+        // getInfrastructureFlag(params)
+        //   .then( res => {
+        //     let data = res.data.data
+        //     console.info(data)
+        //     if(data != null){
+        //       this.$message.error("该年记录已被录入,有问题请去编辑")
+        //     }else{
+        //       this.routingHop('/infoManage/basics/infrastructure/compile')
+        //     }
+        //   })
       },
       search() {
         this.listLoading = true

@@ -22,7 +22,7 @@
               <el-input v-model="summary.infrastructureYear" disabled show-word-limit ></el-input>
             </el-form-item>
             <el-form-item  :label="item.dictionaryName" v-for="item in showLIst" :key="item.dictionaryId">
-              <el-input v-model="item.infrastructureNumber" show-word-limit placeholder="请填写数字" ></el-input>
+              <el-input v-model.trim="item.infrastructureNumber" show-word-limit placeholder="请填写正整数"></el-input>
             </el-form-item>
             <el-form-item style="width:100%;text-align:center">
               <el-button type="primary" style="margin-left: 50px;" @click="submitForm">保存</el-button>
@@ -153,17 +153,21 @@ export default {
             this.showLIst.push(data)
             this.showLIst.sort(function(a,b){
               return a.sort - b.sort;
-          });
+            });
+            console.info(this.showLIst)
           this.checkedIdList.push(data.dictionaryId)
          }
           
-        }else{
-          for(let i=0;i<this.showLIst.length;i++){
+        }else{//如果是解除选中
+          for(let i=0;i<this.showLIst.length;i++){//右侧显示删除
             if(this.showLIst[i].dictionaryId == data.dictionaryId){
+              if(this.showLIst[i].infrastructureNumber != '' && this.showLIst[i].infrastructureNumber != null){
+                this.showLIst[i].infrastructureNumber = null
+              }
               this.showLIst.splice(i,1)
             }
           }
-          for(let i=0;i<this.checkedIdList.length;i++){
+          for(let i=0;i<this.checkedIdList.length;i++){//选中列表删除
             if(this.checkedIdList[i] == data.dictionaryId){
               this.checkedIdList.splice(i,1)
             }
@@ -178,11 +182,12 @@ export default {
     },
     // 提交 todo 需要获取所属地区码与村名
     submitForm(formName) {
+      if(this.showLIst.length === 0){
+        this.$message.error("至少要选一个")
+        return;
+      }
       if(this.validateCheckout()){
-        this.$message({
-          message: '选中的元素不能为空，请填写对应数量',
-          type: 'error'
-        })
+        
         return;
       }
       
@@ -216,23 +221,44 @@ export default {
         }
       })
       if(flag){
-        return this.showLIst.some(item =>{
-        console.info(item.infrastructureNumber)
-        item.infrastructureNumber == null || item.infrastructureNumber =='' || item.infrastructureNumber =='undefined'
+        let flag1 = this.showLIst.some(item =>{
+          console.info(item.infrastructureNumber)
+          item.infrastructureNumber == null || item.infrastructureNumber =='' || item.infrastructureNumber =='undefined'
         });
+        if(flag1){// 判断是否有元素为空
+          this.$message({
+            message: '选中的元素不能为空，请填写对应数量',
+            type: 'error'
+          })
+          return true;
+        }else{//判断是否有元素不是正整数 RegExp("^[1-9]([0-9])*$")
+            let flag2 = this.showLIst.some(item =>{
+              // let ret='/^([0-9]*)$/';
+              return !new RegExp("^[1-9]([0-9])*$").test(item.infrastructureNumber);//正整数判断
+            });
+            // let flag3 = this.showLIst.some(item =>{
+            //   // let ret='/^([0-9]*)$/';
+            //   return !item.infrastructureNumber.indexOf('.') === -1?true:false;//正整数判断
+            // });
+            console.info(flag2)
+            if(flag2){
+              this.$message({
+                message: '请填写正整数',
+                type: 'error'
+              })
+            }
+          return flag2
+        }
       }else{
+        this.$message({
+          message: '选中的元素不能为空，请填写对应数量',
+          type: 'error'
+        })
         return true;
       }
     },
     // 发送新增请求
       addSummary() {
-        // if(this.validateCheckout()){
-        //   this.$message({
-        //     message: '选中的元素不能为空，请填写对应数量',
-        //     type: 'error'
-        //   })
-        //   return;
-        // }
         let data = {
           infrastructureList:null,
           infrastructureYear:this.summary.infrastructureYear,

@@ -71,14 +71,12 @@ export default {
       }
     },
     search(){
-      console.info("sss")
       let params = {
         dictionaryPcode: 'BASICS_INFRASTRUCTURE',
       };
       getDictionaryAllByPCode(params).then(v=>{
         this.listLoading = false;
         let data = v.data.data
-        console.info(data)
         this.tree = [{"dictionaryId":1,"dictionaryName":"基础设施","item":data}]
         // 右边显示列处理
         if(this.summaryId == null){
@@ -87,6 +85,7 @@ export default {
             this.showLIst.push(res)
             this.checkedIdList.push(res.dictionaryId)
           });
+          console.info(this.checkedIdList)
         }
         this.listLoading = false
       })
@@ -102,17 +101,17 @@ export default {
         }
         getInfrastructureById(params)
           .then(res => {
-            console.info(res)
             if (res.data.code == '1'){
               let data = res.data.data
-              console.info(data)
               // this.showLIst = data
               data.infrastructureList.forEach(res => {
                 // 在后台将月份与组织机构代码添加进去 infrastructure_location_id
                 this.showLIst.push(res)
-                this.checkedIdList.push(res.infrastructureType)
+                this.checkedIdList.push(res.dictionaryId)
                 
               });
+              console.info(this.showLIst)
+              console.info(this.checkedIdList)
             } else {
               this.$message.error(res.data.msg)
             }
@@ -131,7 +130,7 @@ export default {
           this.showLIst.sort(function(a,b){
               return a.sort - b.sort;
           });
-          console.info(data.dictionaryId)
+          debugger
           this.checkedIdList.push(data.dictionaryId)
         }else{
           for(let i=0;i<this.showLIst.length;i++){
@@ -173,11 +172,9 @@ export default {
           infrastructureList:null,
           infrastructureYear:null
         };
-        console.info(this.showLIst)
         data.infrastructureList = this.showLIst
         data.infrastructureYear = new Date().getFullYear()
         // data.foodRelease = this.form.foodRelease ? '1' : '0'
-        console.info(data)
         addInfrastructure(data)
           .then(res => {
             let data = res.data
@@ -201,10 +198,8 @@ export default {
           infrastructureList:null,
           infrastructureSummaryId:this.summaryId
         };
-        console.info(this.showLIst)
         data.infrastructureList = this.showLIst
         // data.foodRelease = this.form.foodRelease ? '1' : '0'
-        console.info(data)
         updateInfrastructure(data)
           .then(res => {
             let data = res.data

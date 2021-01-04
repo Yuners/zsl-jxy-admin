@@ -69,6 +69,22 @@ export function validNickName(str) {
 export function validPassword(str) {
   return /^[a-zA-Z0-9]{6,16}$/.test(str);
 }
+/**
+ * 密码校验：密码只能输入6-20个字母、数字、下划线
+ * @param str
+ * @returns {boolean}
+ */
+export function isPassword(str) {
+  return /^(\w){6,20}$/.test(str);
+}
+/**
+ * 手机号校验：
+ * @param str
+ * @returns {boolean}
+ */
+export function isPhones(str) {
+  return /^[1](([3|5|8][\d])|([4][4,5,6,7,8,9])|([6][2,5,6,7])|([7][^9])|([9][1,8,9]))[\d]{8}$/.test(str);
+}
 
 /**
  * 校验支付密码
@@ -81,13 +97,13 @@ export function validPayPassword(str) {
 /**
  * 页面昵称校验：只能中文，数字，英文且长度为2-18
  * @param str
- * @returns {boolean}
+ * @returns {boolean}a
  */
 export function isPathName(str) {
   return !(
-    /[^\a-\z\A-\Z0-9\u4E00-\u9FA5]$/g.test(str) ||
+    /[^\a-\z\A-\Z0-9\u4E00-\u9FA5]$/.test(str) ||
     str.length < 2 ||
-    str.length > 18
+    str.length > 17
   );
 }
 /**

@@ -89,6 +89,36 @@ const infoManageRouter = {
                 hidden: true
               },
             ]
+          },
+          {
+            path: 'land',
+            name: 'Land',
+            redirect: '/infoManage/basics/land/list',
+            component: () => import('@/views/infoManage/basics/land'),
+            meta: {title: '土地信息', icon: 'table'},
+            children: [
+              {
+              path: 'list',
+              name: 'List',
+              component: () => import('@/views/infoManage/basics/land/list'),
+              meta: {title: '土地信息列表', icon: 'table'},
+              hidden: true
+              },
+              {
+                path: 'compile',
+                name: 'Compile',
+                component: () => import('@/views/infoManage/basics/land/compile'),
+                meta: {title: '土地信息编辑'},
+                hidden: true
+              },
+              {
+                path: 'details',
+                name: 'Details',
+                component: () => import('@/views/infoManage/basics/land/details'),
+                meta: {title: '土地信息详情'},
+                hidden: true
+              },
+            ]
           }
         ]
       },

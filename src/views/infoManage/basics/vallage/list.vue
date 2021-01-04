@@ -159,7 +159,7 @@
             let data = res.data.data
             console.info(data)
             if(data != null){
-              this.$message.error("该年记录已被录入")
+              this.$message.error("该年记录已被录入,有问题请去编辑")
             }else{
               this.routingHop('/infoManage/basics/vallage/compile')
             }

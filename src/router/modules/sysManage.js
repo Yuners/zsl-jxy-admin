@@ -35,13 +35,13 @@ const sysManageRouter = {
                 name: 'Framework',
                 redirect: '/sysManage/jurisdiction/framework/tree',
                 component: () => import('@/views/sysManage/jurisdiction/framework'),
-                meta: {title: '组织机构', icon: 'scenery'},
+                meta: {title: '行政区划', icon: 'scenery'},
                 children: [
                     {
                         path: 'tree',
                         name: 'Tree',
                         component: () => import('@/views/sysManage/jurisdiction/framework/tree'),
-                        meta: {title: '组织树'},
+                        meta: {title: '行政树'},
                         hidden: true
                     }
                 ]
@@ -69,6 +69,22 @@ const sysManageRouter = {
                 ]
             },
             {
+                path: 'user',
+                name: 'User',
+                redirect: '/sysManage/jurisdiction/user/list',
+                component: () => import('@/views/sysManage/jurisdiction/user'),
+                meta: {title: '权限用户', icon: 'scenery'},
+                children: [
+                    {
+                        path: 'list',
+                        name: 'List',
+                        component: () => import('@/views/sysManage/jurisdiction/user/list'),
+                        meta: {title: '权限用户列表'},
+                        hidden: true
+                    }
+                ]
+            },
+            {
                 path: 'directoryTree',
                 name: 'DirectoryTree',
                 redirect: '/sysManage/jurisdiction/directoryTree/tree',
@@ -84,6 +100,7 @@ const sysManageRouter = {
                     }
                 ]
             },
+            
         ]
     }
     ]

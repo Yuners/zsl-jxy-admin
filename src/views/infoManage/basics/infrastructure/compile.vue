@@ -14,7 +14,7 @@
       </el-aside>
       <el-container >
         <div>
-          <el-form class="flex-item" ref="treeFrom" inline :model="items" label-width="120px" >
+          <el-form class="flex-item" ref="treeFrom" inline :model="form" label-width="120px" >
             <el-form-item  :label="item.dictionaryName" v-for="item in showLIst" :key="item.dictionaryId">
               <el-input v-model="item.infrastructureNumber" show-word-limit ></el-input>
             </el-form-item>
@@ -31,6 +31,7 @@
 <script>
 // import { selectDirectoryTree,updateDirectoryTree, addDirectoryTree,delectDirectoryTree} from '@/api/Role/Jurisdiction/directoryTree'
 import { isPathName } from '@/utils/validate'
+import { addInfrastructure, getInfrastructureById, updateInfrastructure } from '@/api/infoMng/basics/infrastructure'
 import { getDictionaryAllByPCode } from '@/api/dictionary'
 export default {
 
@@ -47,7 +48,9 @@ export default {
       count: 1,
       items:{},
       checkedIdList:[],
-      showLIst:[]
+      showLIst:[],
+      summaryId:null,
+      form:null
     }
   },
   watch: {
@@ -57,8 +60,16 @@ export default {
   },
   mounted() {
     this.search();
+    this.init()
   },
   methods: {
+    init(){
+      this.summaryId = this.$route.query.infrastructureSummaryId
+      
+      if(this.summaryId){
+        this.getDetails(this.summaryId)
+      }
+    },
     search(){
       console.info("sss")
       let params = {
@@ -67,20 +78,49 @@ export default {
       getDictionaryAllByPCode(params).then(v=>{
         this.listLoading = false;
         let data = v.data.data
+        console.info(data)
         this.tree = [{"dictionaryId":1,"dictionaryName":"基础设施","item":data}]
         // 右边显示列处理
-        data.forEach(res => {
-          this.showLIst.push(res)
-          this.checkedIdList.push(res.dictionaryId)
-        });
-        console.info(this.showLIst)
-        this.listLoading = false  
+        if(this.summaryId == null){
+          data.forEach(res => {
+            // 在后台将月份与组织机构代码添加进去 infrastructure_location_id
+            this.showLIst.push(res)
+            this.checkedIdList.push(res.dictionaryId)
+          });
+        }
+        this.listLoading = false
       })
       .catch( err => {
         this.$message.error('服务器错误')
         this.listLoading = false;
       })
     },
+    // 获取乡村详情
+      getDetails(id) {
+        let params = {
+          infrastructureSummaryId: id
+        }
+        getInfrastructureById(params)
+          .then(res => {
+            console.info(res)
+            if (res.data.code == '1'){
+              let data = res.data.data
+              console.info(data)
+              // this.showLIst = data
+              data.infrastructureList.forEach(res => {
+                // 在后台将月份与组织机构代码添加进去 infrastructure_location_id
+                this.showLIst.push(res)
+                this.checkedIdList.push(res.infrastructureType)
+                
+              });
+            } else {
+              this.$message.error(res.data.msg)
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
     //左侧树的处理
     //树点勾选事件
     handleCheckChange(data, checked, indeterminate) {
@@ -91,6 +131,7 @@ export default {
           this.showLIst.sort(function(a,b){
               return a.sort - b.sort;
           });
+          console.info(data.dictionaryId)
           this.checkedIdList.push(data.dictionaryId)
         }else{
           for(let i=0;i<this.showLIst.length;i++){
@@ -107,37 +148,80 @@ export default {
     },
     // 提交 todo 需要获取所属地区码与村名
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          if (this.villageId){
-            this.editVillage()
+      if (this.summaryId){
+            this.editSummary()
           }else {
-            this.addVillage()
+            this.addSummary()
           }
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
+      // this.$refs[formName].validate((valid) => {
+      //   if (valid) {
+      //     if (this.summaryId){
+      //       this.editSummary()
+      //     }else {
+      //       this.addSummary()
+      //     }
+      //   } else {
+      //     console.log('error submit!!');
+      //     return false;
+      //   }
+      // });
     },
-    // 提交
-    bySaving(data) {
-      if (this.graphicData.type === 'add') {
-        this.form.foodDescribeList.push(data)
-        this.$message({
-          type: 'success',
-          message: '添加成功!'
-        });
-      } else if (this.graphicData.type === 'edit') {
-        // this.form.foodDescribeList[this.graphicData.index] = data
-        this.$set(this.form.foodDescribeList, this.graphicData.index, data)
-        this.$message({
-          type: 'success',
-          message: '修改成功!'
-        });
-      }
-      this.addShow = false
-    },
+    // 发送新增请求
+      addSummary() {
+        // let data = JSON.parse(JSON.stringify(this.form))
+        let data = {
+          infrastructureList:null,
+          infrastructureYear:null
+        };
+        console.info(this.showLIst)
+        data.infrastructureList = this.showLIst
+        data.infrastructureYear = new Date().getFullYear()
+        // data.foodRelease = this.form.foodRelease ? '1' : '0'
+        console.info(data)
+        addInfrastructure(data)
+          .then(res => {
+            let data = res.data
+            if (data.code == '1') {
+              this.$message({
+                message: data.msg,
+                type: 'success'
+              })
+              this.$router.back()
+            } else {
+              this.$message.error(data.msg)
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
+      editSummary(){
+        // let data = JSON.parse(JSON.stringify(this.form))
+        let data = {
+          infrastructureList:null,
+          infrastructureSummaryId:this.summaryId
+        };
+        console.info(this.showLIst)
+        data.infrastructureList = this.showLIst
+        // data.foodRelease = this.form.foodRelease ? '1' : '0'
+        console.info(data)
+        updateInfrastructure(data)
+          .then(res => {
+            let data = res.data
+            if (data.code == '1') {
+              this.$message({
+                message: data.msg,
+                type: 'success'
+              })
+              this.$router.back()
+            } else {
+              this.$message.error(data.msg)
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
     // 取消乡村添加
     resetForm(formName) {
       this.$router.back()
@@ -154,7 +238,7 @@ export default {
     justify-content: space-between;
     font-size: 14px;
     padding-right: 8px;
-   
+
   }
   .flex-item{
     display: flex;

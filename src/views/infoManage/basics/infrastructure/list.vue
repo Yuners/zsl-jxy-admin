@@ -2,8 +2,7 @@
   <div class="list">
     <div class="tableHead">
       <div class="search">
-          <el-input class="coverStyle" v-model="foodName" placeholder="乡村名称"></el-input>
-
+          <el-input class="coverStyle" v-model="param.villageName" placeholder="乡村名称"></el-input>
           <el-cascader
             class="coverStyle"
             clearable
@@ -15,7 +14,7 @@
 
           <el-date-picker class="coverStyle"
             style="width: 350px"
-            v-model="param.villageYear"
+            v-model="param.infrastructureYear"
             type="year"
             value-format='yyyy'
             placeholder="选择年份">
@@ -44,25 +43,13 @@
         </template>
       </el-table-column>
       <el-table-column label="乡村名称">
-        <template slot-scope="scope">
-          <span style="cursor: pointer;color:blue" @click="details(scope.row.villageId)">{{ scope.row.villageName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="所属地区" width="150" align="center">
-        <template slot-scope="scope">
-          <el-popover trigger="hover" placement="top">
-            <p>{{ scope.row.villageLocationName }}</p>
-            <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.villageLocationName !='' && scope.row.villageLocationName !=null?scope.row.villageLocationName.substring(0,6)+'...':'暂无' }}</el-tag>
-            </div>
-          </el-popover>
-        </template>
-      </el-table-column>
-      <el-table-column label="记录年份">
         <template slot-scope="scope" >
-          <span style="cursor: pointer;" >{{ scope.row.villageYear }}</span>
+          <span style="cursor: pointer;color:blue" @click="details(scope.row.infrastructureSummaryId)">{{ scope.row.infrastructureVillageName }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="所属地区" width="150" align="center" show-overflow-tooltip prop="infrastructureLocationName">
+      </el-table-column>
+      <el-table-column label="记录年份" prop="infrastructureYear"></el-table-column>
       <el-table-column label="创建时间">
         <template slot-scope="scope">
           <span style="cursor: pointer;" >{{scope.row.createdOn|formatDate}}</span>
@@ -74,7 +61,7 @@
         width="150"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="edit(scope.row.villageId,scope.row.villageYear)">编辑</el-button>
+          <el-button type="text" size="small" @click="edit(scope.row.infrastructureSummaryId,scope.row.infrastructureYear)">编辑</el-button>
           <!-- <el-button type="text" size="small" @click="delVallage(scope.row.villageId)">删除</el-button> -->
         </template>
       </el-table-column>
@@ -95,7 +82,7 @@
 <script>
   import { formatDate } from '@/utils/index.js'
   import { getFreightList, delFreight} from '@/api/Operation/carriage'
-  import { getVillagePage, delVillage, getVillageFlag} from '@/api/infoMng/basics/vallage'
+  import { getInfrastructurePage, delInfrastructure, getInfrastructureFlag} from '@/api/infoMng/basics/infrastructure'
   export default {
     filters: {
       statusFilter(status) {
@@ -136,7 +123,8 @@
         list: null, // 渲染列表
         listLoading: true, // 加载
         param:{
-          villageYear:null
+          infrastructureYear:null,
+          villageName:''
         },
         pages:{
           pageSize: 10, // 每页多少条
@@ -144,6 +132,7 @@
           pageIndex: 1, // 当前页数
           total: 0, // 总页数
         },
+        affiliatingArea:'',
         AreaList: [
           {
             value: 'zhinan',
@@ -380,15 +369,16 @@
       search() {
         this.listLoading = true
         let params = {
-          villageYear: this.param.villageYear,
+          infrastructureYear: this.param.infrastructureYear,
           curPage: this.pages.pageIndex,
           pageSize: this.pages.pageSize,
           isDeleted: 0,
           isDisabled: 0
         }
-        getVillagePage(params)
+        getInfrastructurePage(params)
           .then( res => {
             let data = res.data
+            console.info(data)
             if (data.code == '1'){
               if (data.data.length){
                 this.list = data.data
@@ -457,22 +447,22 @@
         }
       },
       //修改
-      edit(villageId, villageYear){
-        if(!this.handelYear(villageYear)){
-          this.$message.error("当年记录已不满足修改条件")
-          return;
-        }
+      edit(infrastructureSummaryId, villageYear){
+        // if(!this.handelYear(villageYear)){
+        //   this.$message.error("当年记录已不满足修改条件")
+        //   return;
+        // }
         this.$router.push({
-          path:'/infoManage/basics/vallage/compile',
+          path:'/infoManage/basics/infrastructure/compile',
           query:{
-            villageId
+            infrastructureSummaryId
           }
         })
       },
       //乡村详细页面
       details(villageId){
         this.$router.push({
-          path:'/infoManage/basics/vallage/details',
+          path:'/infoManage/basics/infrastructure/details',
           query:{
             villageId
           }

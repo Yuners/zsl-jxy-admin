@@ -2,7 +2,7 @@
   <div class="list">
     <div class="tableHead">
       <div class="search">
-          <el-input class="coverStyle" v-model="param.villageName" placeholder="乡村名称"></el-input>
+          <el-input class="coverStyle" v-model="param.infrastructureVillageName" placeholder="乡村名称"></el-input>
           <el-cascader
             class="coverStyle"
             clearable
@@ -124,7 +124,7 @@
         listLoading: true, // 加载
         param:{
           infrastructureYear:null,
-          villageName:''
+          infrastructureVillageName:''
         },
         pages:{
           pageSize: 10, // 每页多少条
@@ -342,39 +342,41 @@
     },
     methods: {
       clear(){
-        this.param.villageYear = null
+        this.param.infrastructureYear = null,
+        this.param.infrastructureVillageName = null
       },
       handleChange(value) {
         console.log(value);
       },
       handleVillageFlag(){
-        this.routingHop('/infoManage/basics/infrastructure/compile')
-        // let params = {
-        //   villageYear: new Date().getFullYear(),
-        //   villageLocationId: '1338353936444280822' // 测试
-        // }
-        // console.info(params)
-        // getVillageFlag(params)
-        //   .then( res => {
-        //     let data = res.data.data
-        //     console.info(data)
-        //     if(data != null){
-        //       this.$message.error("该年记录已被录入")
-        //     }else{
-        //       this.routingHop('/infoManage/basics/infrastructure/compile')
-        //     }
-            
-        //   })
+        // this.routingHop('/infoManage/basics/infrastructure/compile')
+        let params = {
+          infrastructureYear: new Date().getFullYear(),
+          infrastructureLocationId: '1338353936444280822' // 测试
+        }
+        console.info(params)
+        getInfrastructureFlag(params)
+          .then( res => {
+            let data = res.data.data
+            console.info(data)
+            if(data != null){
+              this.$message.error("该年记录已被录入,有问题请去编辑")
+            }else{
+              this.routingHop('/infoManage/basics/infrastructure/compile')
+            }
+          })
       },
       search() {
         this.listLoading = true
         let params = {
           infrastructureYear: this.param.infrastructureYear,
+          infrastructureVillageName: this.param.infrastructureVillageName,
           curPage: this.pages.pageIndex,
           pageSize: this.pages.pageSize,
           isDeleted: 0,
-          isDisabled: 0
+          isDisabled: 0,
         }
+        this.list = null
         getInfrastructurePage(params)
           .then( res => {
             let data = res.data
@@ -435,23 +437,23 @@
         })
       },
       //判断是否是当年信息。修改只能修改当年的，或者去年的，前提是本年3月份之前。
-      handelYear(villageYear){
+      handelYear(infrastructureYear){
         let dayYear = new Date().getFullYear();
         let dayMonth = new Date().getMonth()+1;
-        if(villageYear == dayYear){
+        if(infrastructureYear == dayYear){
           return true;
-        }else if(villageYear+1 == dayYear){// 判断是否为去年的
+        }else if(infrastructureYear+1 == dayYear){// 判断是否为去年的
           return dayMonth <3?true:false;
         }else{
           return false;
         }
       },
       //修改
-      edit(infrastructureSummaryId, villageYear){
-        // if(!this.handelYear(villageYear)){
-        //   this.$message.error("当年记录已不满足修改条件")
-        //   return;
-        // }
+      edit(infrastructureSummaryId, infrastructureYear){
+        if(!this.handelYear(infrastructureYear)){
+          this.$message.error("当年记录已不满足修改条件")
+          return;
+        }
         this.$router.push({
           path:'/infoManage/basics/infrastructure/compile',
           query:{
@@ -460,11 +462,11 @@
         })
       },
       //乡村详细页面
-      details(villageId){
+      details(infrastructureSummaryId){
         this.$router.push({
           path:'/infoManage/basics/infrastructure/details',
           query:{
-            villageId
+            infrastructureSummaryId
           }
         })
       }

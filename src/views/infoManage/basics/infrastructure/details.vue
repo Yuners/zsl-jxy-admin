@@ -113,6 +113,8 @@ export default {
             if (res.data.code == '1'){
               let data = res.data.data
               // this.showLIst = data
+              this.summary.villageName = data.infrastructureVillageName
+              this.summary.infrastructureYear = data.infrastructureYear
               data.infrastructureList.forEach(res => {
                 // 在后台将月份与组织机构代码添加进去 infrastructure_location_id
                 this.showLIst.push(res)

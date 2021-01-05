@@ -24,24 +24,40 @@ const sysManageRouter = {
             ]
         },
         {
-            path: '/sysManage/jurisdiction',
-            redirect: '/sysManage/jurisdiction/framework',
+            path: '/sysManage/platform',
+            redirect: '/sysManage/platform/setting',
             component: Layout,
             name: 'Releases',
             meta: {title: '平台设置', icon: 'publish'},
             children: [
                 {
-                    path: 'framework',
-                    name: 'Framework',
-                    redirect: '/sysManage/jurisdiction/framework/tree',
-                    component: () => import('@/views/sysManage/jurisdiction/framework'),
-                    meta: {title: '个人信息', icon: 'scenery'},
+                    path: 'setting',
+                    name: 'Setting',
+                    redirect: '/sysManage/platform/setting/compile',
+                    component: () => import('@/views/sysManage/platform/setting'),
+                    meta: {title: '个人设置', icon: 'scenery'},
                     children: [
                         {
-                            path: 'tree',
-                            name: 'Tree',
-                            component: () => import('@/views/sysManage/jurisdiction/framework/tree'),
-                            meta: {title: '行政树'},
+                            path: 'compile',
+                            name: 'Compile',
+                            component: () => import('@/views/sysManage/platform/setting/compile'),
+                            meta: {title: '个人资料'},
+                            hidden: true
+                        }
+                    ]
+                },
+                {
+                    path: 'password',
+                    name: 'Password',
+                    redirect: '/sysManage/platform/password/compile',
+                    component: () => import('@/views/sysManage/platform/password'),
+                    meta: {title: '修改密码', icon: 'scenery'},
+                    children: [
+                        {
+                            path: 'compile',
+                            name: 'Compile',
+                            component: () => import('@/views/sysManage/platform/password/compile'),
+                            meta: {title: '修改密码'},
                             hidden: true
                         }
                     ]

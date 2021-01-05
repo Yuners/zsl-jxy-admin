@@ -332,7 +332,7 @@ export default {
   .flex-item{
     display: flex;
     flex-flow: wrap;
-    justify-content: center;
+    justify-content: left;
   }
   .block{
     width: 40%;

@@ -119,6 +119,36 @@ const infoManageRouter = {
                 hidden: true
               },
             ]
+          },
+          {
+            path: 'population',
+            name: 'Population',
+            redirect: '/infoManage/basics/population/list',
+            component: () => import('@/views/infoManage/basics/population'),
+            meta: {title: '人口信息', icon: 'table'},
+            children: [
+              {
+                path: 'list',
+                name: 'List',
+                component: () => import('@/views/infoManage/basics/population/list'),
+                meta: {title: '人口信息列表', icon: 'table'},
+                hidden: true
+              },
+              {
+                path: 'compile',
+                name: 'Compile',
+                component: () => import('@/views/infoManage/basics/population/compile'),
+                meta: {title: '人口信息编辑'},
+                hidden: true
+              },
+              {
+                path: 'details',
+                name: 'Details',
+                component: () => import('@/views/infoManage/basics/population/details'),
+                meta: {title: '人口信息详情'},
+                hidden: true
+              },
+            ]
           }
         ]
       },

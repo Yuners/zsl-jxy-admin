@@ -1,7 +1,7 @@
 <template>
     <el-container style="border: 1px solid #eee">
-      <!-- <el-aside width="300px" style="background-color: rgb(238, 241, 246)">
-        <el-tree
+      <el-aside width="200px">
+        <!-- <el-tree
           ref="tree2"
           node-key="dictionaryId"
           :props="props"
@@ -10,11 +10,11 @@
           default-expand-all
           :default-checked-keys="checkedIdList"
           @check-change="handleCheckChange">
-        </el-tree>
-      </el-aside> -->
+        </el-tree> -->
+      </el-aside>
       <el-container >
         <div>
-          <el-form class="flex-item" ref="treeFrom" inline :model="form" label-width="120px" >
+          <el-form class="flex-item" ref="treeFrom" inline :model="form" label-width="150px" >
             <el-form-item  label="乡村名称" >
               <el-input v-model="summary.villageName" disabled show-word-limit ></el-input>
             </el-form-item>
@@ -24,7 +24,7 @@
             <el-form-item  :label="item.dictionaryName" v-for="item in showLIst" :key="item.dictionaryId">
               <el-input v-model="item.infrastructureNumber" show-word-limit disabled></el-input>
             </el-form-item>
-            <el-form-item style="width:100%;text-align:center">
+            <el-form-item style="width:100%;text-align:right;padding-right:150px">
               <el-button type="info" @click="resetForm">返回</el-button>
              </el-form-item>
           </el-form>
@@ -277,7 +277,7 @@ export default {
   .flex-item{
     display: flex;
     flex-flow: wrap;
-    justify-content: center;
+    justify-content: left;
   }
   .block{
     width: 40%;

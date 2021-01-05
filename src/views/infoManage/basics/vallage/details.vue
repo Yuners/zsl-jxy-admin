@@ -118,6 +118,9 @@
                 </div>
               </span>
             </el-dialog>
+            <el-form-item style="width:100%;text-align:right;padding-right:150px">
+              <el-button type="info" @click="resetForm">返回</el-button>
+             </el-form-item>
             <!--            <div id="map"></div>-->
           </el-form-item>
         </div>
@@ -200,6 +203,11 @@
       toJson(v){
 
         return JSON.parse(v)
+      },
+      //返回上一层
+      resetForm(formName) {
+        this.$router.back()
+        // this.$refs[formName].resetFields();
       },
       // 逆解析地址
       getAddress(lnglat) {

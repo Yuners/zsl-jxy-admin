@@ -239,7 +239,7 @@
         let dayMonth = new Date().getMonth()+1;
         if(villageYear == dayYear){
           return true;
-        }else if(villageYear+1 == dayYear){// 判断是否为去年的
+        }else if(villageYear-0+1 == dayYear){// 判断是否为去年的
           return dayMonth <3?true:false;
         }else{
           return false;

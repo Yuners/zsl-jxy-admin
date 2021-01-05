@@ -114,6 +114,9 @@ export default {
           .then(res => {
             if (res.data.code == '1'){
               let data = res.data.data
+              // 名称月份默认值
+              this.summary.villageName = data.infrastructureVillageName
+              this.summary.infrastructureYear = data.infrastructureYear
               // this.showLIst = data
               let checkedIdList = [];
               let showLIst=[];

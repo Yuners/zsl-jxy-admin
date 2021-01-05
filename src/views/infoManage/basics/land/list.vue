@@ -349,22 +349,22 @@
         console.log(value);
       },
       handleVillageFlag(){
-        this.routingHop('/infoManage/basics/land/compile')
-        // let params = {
-        //   landYear: new Date().getFullYear(),
-        //   landLocationId: '1338353936444280822' // 测试
-        // }
-        // console.info(params)
-        // getLandFlag(params)
-        //   .then( res => {
-        //     let data = res.data.data
-        //     console.info(data)
-        //     if(data != null){
-        //       this.$message.error("该年记录已被录入,有问题请去编辑")
-        //     }else{
-        //       this.routingHop('/infoManage/basics/land/compile')
-        //     }
-        //   })
+        // this.routingHop('/infoManage/basics/land/compile')
+        let params = {
+          landYear: new Date().getFullYear(),
+          landLocationId: '1338353936444280822' // 测试
+        }
+        console.info(params)
+        getLandFlag(params)
+          .then( res => {
+            let data = res.data.data
+            console.info(data)
+            if(data != null){
+              this.$message.error("该年记录已被录入,有问题请去编辑")
+            }else{
+              this.routingHop('/infoManage/basics/land/compile')
+            }
+          })
       },
       search() {
         this.listLoading = true
@@ -377,7 +377,7 @@
           isDisabled: 0,
         }
         this.list = null
-        getlandPage(params)
+        getLandPage(params)
           .then( res => {
             let data = res.data
             console.info(data)
@@ -442,7 +442,7 @@
         let dayMonth = new Date().getMonth()+1;
         if(landYear == dayYear){
           return true;
-        }else if(landYear+1 == dayYear){// 判断是否为去年的
+        }else if(landYear-0+1 == dayYear){// 判断是否为去年的
           return dayMonth <3?true:false;
         }else{
           return false;

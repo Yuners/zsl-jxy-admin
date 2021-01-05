@@ -442,7 +442,8 @@
         let dayMonth = new Date().getMonth()+1;
         if(infrastructureYear == dayYear){
           return true;
-        }else if(infrastructureYear+1 == dayYear){// 判断是否为去年的
+        }else if(infrastructureYear-0+1 == dayYear){// 判断是否为去年的
+          
           return dayMonth <3?true:false;
         }else{
           return false;

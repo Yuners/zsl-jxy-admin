@@ -81,7 +81,7 @@ export default {
     },
     search(){
       let params = {
-        dictionaryPcode: 'BASICS_Land',
+        dictionaryPcode: 'BASICS_LAND',
       };
       getDictionaryAllByPCode(params).then(v=>{
         this.listLoading = false;
@@ -112,6 +112,8 @@ export default {
           .then(res => {
             if (res.data.code == '1'){
               let data = res.data.data
+              this.summary.villageName = data.landVillageName
+              this.summary.landYear = data.landYear
               // this.showLIst = data
               data.landList.forEach(res => {
                 // 在后台将月份与组织机构代码添加进去 land_location_id

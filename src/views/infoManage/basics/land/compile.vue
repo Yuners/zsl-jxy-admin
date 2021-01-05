@@ -22,7 +22,7 @@
               <el-input v-model="summary.landYear" disabled show-word-limit ></el-input>
             </el-form-item>
             <el-form-item  :label="item.dictionaryName" v-for="item in showLIst" :key="item.dictionaryId">
-              <el-input v-model.trim="item.landNumber" show-word-limit placeholder="请填写正整数"></el-input>
+              <el-input v-model.trim="item.landNumber" show-word-limit placeholder="请填写不小于零的数字,且小数点不可超过两位"></el-input>
             </el-form-item>
             <el-form-item style="width:100%;text-align:center">
               <el-button type="primary" style="margin-left: 50px;" @click="submitForm">保存</el-button>
@@ -79,7 +79,7 @@ export default {
     },
     search(){
       let params = {
-        dictionaryPcode: 'BASICS_INFRASTRUCTURE',
+        dictionaryPcode: 'BASICS_LAND',
       };
       getDictionaryAllByPCode(params).then(v=>{
         this.listLoading = false;
@@ -114,6 +114,8 @@ export default {
           .then(res => {
             if (res.data.code == '1'){
               let data = res.data.data
+              this.summary.villageName = data.landVillageName
+              this.summary.landYear = data.landYear
               // this.showLIst = data
               let checkedIdList = [];
               let showLIst=[];
@@ -234,16 +236,11 @@ export default {
         }else{//判断是否有元素不是正整数 RegExp("^[1-9]([0-9])*$")
             let flag2 = this.showLIst.some(item =>{
               // let ret='/^([0-9]*)$/';
-              return !new RegExp("^[1-9]([0-9])*$").test(item.landNumber);//正整数判断
+              return !new RegExp("^(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)$").test(item.landNumber);//请填写不小于零的数字,且小数点不可超过两位
             });
-            // let flag3 = this.showLIst.some(item =>{
-            //   // let ret='/^([0-9]*)$/';
-            //   return !item.landNumber.indexOf('.') === -1?true:false;//正整数判断
-            // });
-            console.info(flag2)
             if(flag2){
               this.$message({
-                message: '请填写正整数',
+                message: '请填写不小于零的数字,且小数点不可超过两位,且小数点不可超过两位',
                 type: 'error'
               })
             }

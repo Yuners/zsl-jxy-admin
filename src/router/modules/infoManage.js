@@ -149,6 +149,36 @@ const infoManageRouter = {
                 hidden: true
               },
             ]
+          },
+          {
+            path: 'economics',
+            name: 'Economics',
+            redirect: '/infoManage/basics/economics/list',
+            component: () => import('@/views/infoManage/basics/economics'),
+            meta: {title: '经济管理', icon: 'table'},
+            children: [
+              {
+                path: 'list',
+                name: 'List',
+                component: () => import('@/views/infoManage/basics/economics/list'),
+                meta: {title: '经济管理列表', icon: 'table'},
+                hidden: true
+              },
+              {
+                path: 'compile',
+                name: 'Compile',
+                component: () => import('@/views/infoManage/basics/economics/compile'),
+                meta: {title: '经济管理编辑'},
+                hidden: true
+              },
+              {
+                path: 'details',
+                name: 'Details',
+                component: () => import('@/views/infoManage/basics/economics/details'),
+                meta: {title: '经济管理详情'},
+                hidden: true
+              },
+            ]
           }
         ]
       },

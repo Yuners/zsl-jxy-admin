@@ -109,16 +109,16 @@
           label:"frameworkName",
           value:"frameworkId",
           // checkStrictly: true,
-          lazy: true, //懒加载
-          lazyLoad (node, resolve) {
-            console.info(node, resolve)
-            const { level } = node;
-            setTimeout(() => {
-              const nodes = node.children
-              // 通过调用resolve将子节点数据返回，通知组件数据加载完成
-              resolve(nodes);
-            }, 500);
-          }
+          // lazy: true, //懒加载
+          // lazyLoad (node, resolve) {
+          //   console.info(node, resolve)
+          //   const { level } = node;
+          //   setTimeout(() => {
+          //     const nodes = node.children
+          //     // 通过调用resolve将子节点数据返回，通知组件数据加载完成
+          //     resolve(nodes);
+          //   }, 500);
+          // }
         }, 
         cityList:[] // 地址选择表
       }
@@ -150,7 +150,7 @@
       getCity(){
         this.listLoading = true
         let params = {
-          id: "1338353936444280803" // 该人登录之后获取 去该人最后级别组织机构id
+          id: "1338353936444280819" // 该人登录之后获取 去该人最后级别组织机构id
         }
         getArea(params)
         .then( res => {
@@ -162,22 +162,22 @@
         })
       },
       handleVillageFlag(){
-        // this.routingHop('/infoManage/basics/land/compile')
-        let params = {
-          landYear: new Date().getFullYear(),
-          landLocationId: '1338353936444280822' // 测试
-        }
-        console.info(params)
-        getLandFlag(params)
-          .then( res => {
-            let data = res.data.data
-            console.info(data)
-            if(data != null){
-              this.$message.error("该年记录已被录入,有问题请去编辑")
-            }else{
-              this.routingHop('/infoManage/basics/land/compile')
-            }
-          })
+        this.routingHop('/infoManage/basics/economics/compile')
+        // let params = {
+        //   landYear: new Date().getFullYear(),
+        //   landLocationId: '1338353936444280822' // 测试
+        // }
+        // console.info(params)
+        // getLandFlag(params)
+        // .then( res => {
+        //   let data = res.data.data
+        //   console.info(data)
+        //   if(data != null){
+        //     this.$message.error("该年记录已被录入,有问题请去编辑")
+        //   }else{
+        //     this.routingHop('/infoManage/basics/land/compile')
+        //   }
+        // })
       },
       search() {
         this.listLoading = true

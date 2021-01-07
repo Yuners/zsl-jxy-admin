@@ -31,6 +31,11 @@
           <span style="cursor: pointer" >{{ scope.row.roleName }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="职能描述">
+        <template slot-scope="scope">
+          <span style="cursor: pointer" >{{ roleFunctionDate(scope.row.roleFunction) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="归属机构">
         <template slot-scope="scope">
           <span style="cursor: pointer" >{{ scope.row.frameworkName }}</span>
@@ -85,6 +90,18 @@
       //清空
       clear(){
         this.sceneryName = ''
+      },
+      roleFunctionDate(data)
+      {
+          if(data===null||data===''||data===undefined){
+            return '暂时没有描述'
+          }
+          if(data.length<=20){
+            return data;
+          }
+          else {
+            return data.substring(0,20)+'...';
+          }
       },
       //分页数据查询
       fetchData() {

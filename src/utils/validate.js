@@ -107,10 +107,34 @@ export function isPathName(str) {
   );
 }
 /**
+ * 密保问题校验：只能中文，数字，英文且长度为2-20
+ * @param str
+ * @returns {boolean}a
+ */
+export function isSecurityQuestion(str) {
+  return !(
+    /[^\a-\z\A-\Z0-9\u4E00-\u9FA5]$/.test(str) ||
+    str.length < 2 ||
+    str.length > 20
+  );
+}
+/**
+ * 校验验证码
+ */
+export function isCode (s) {
+  return /^[0-9]{6}$/.test(s);
+};
+/**
  * 是否符合行政编码要求
  */
 export function isAdministrative(s) {
   return /^[0-9]{12}$/.test(s);
+};
+/**
+ * 是否符合行政编码要求
+ */
+export function isSort(s) {
+  return /^([1-9]{1}[0-9]{0,5})|0$/.test(s);
 };
 export const isEmail = (s) => {
   return /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(

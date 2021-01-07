@@ -3,19 +3,22 @@
     <div class="compileHead">
       <h1>角色编辑</h1>
     </div>
-    <el-form ref="addTreeFrom" :model="addItems" label-width="80px" >
-        <el-form-item label="角色名称" >
+    <el-form ref="addTreeFrom" :model="addItems" label-width="100px" :rules="addTreeRules" >
+        <el-form-item label="角色名称" prop="roleName">
             <el-input v-model="addItems.roleName"  maxlength="17" show-word-limit></el-input>
         </el-form-item>
-        <el-form-item label="归属机构" >
+        <el-form-item label="职能描述" prop="roleFunction">
+            <el-input v-model="addItems.roleFunction"  maxlength="50" show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item label="归属机构" prop="roleFrameworkId" >
             <el-input v-model="addItems.frameworkName" readonly>
               <template slot="append">
                   <el-button type="primary" size="medium" @click="frameworkShow">选择机构</el-button>
               </template>
             </el-input>
         </el-form-item>
-        <el-form-item label="排序" >
-            <el-input v-model="addItems.sort"  ></el-input>
+        <el-form-item label="排序" prop="sort">
+            <el-input v-model="addItems.sort"  maxlength="6"></el-input>
         </el-form-item>
         <el-form-item label="权限" >
             <el-tree
@@ -84,8 +87,23 @@
  import { selectFramework} from '@/api/Role/Jurisdiction/framework'
  import { selectJurisdictionTree} from '@/api/Role/Jurisdiction/jurisdiction'
 import sysManageRouter from '@/router/modules/sysManage'
+import { isPathName,isSort } from '@/utils/validate'
   export default {
     data() {
+      let validatePathName = (rule, value, callback) => {
+        if (!isPathName(value)) {
+          callback(new Error("只能中文，数字，英文且长度为2-17"));
+        } else {
+          callback();
+        }
+      };
+      let validateSort = (rule, value, callback) => {
+        if (!isSort(value)) {
+          callback(new Error("请输入6位已内数字"));
+        } else {
+          callback();
+        }
+      };
       return {
         // 表单字段
         addItems:{
@@ -93,6 +111,23 @@ import sysManageRouter from '@/router/modules/sysManage'
             sort:null,
             frameworkName:null,
             roleFrameworkId:null,
+            roleFunction:null,
+        },
+        addTreeRules:{
+            roleName:[
+              {required: true, message: '请填写角色名称', trigger: 'blue'},
+              {validator: validatePathName, trigger: "blue"}
+            ],
+            roleFunction:[
+              {required: true, message: '请填写职能描述', trigger: 'blue'},
+            ],
+            roleFrameworkId:[
+              {required: true, message: '请填写行政编码', trigger: 'blue'},
+            ],
+            sort:[
+              {required: true, message: '请输入排序信息', trigger: 'blue'},
+              {validator: validateSort, trigger: "blue"}
+            ],
         },
         frameworkItems:{
           frameworkName:null,
@@ -219,6 +254,7 @@ import sysManageRouter from '@/router/modules/sysManage'
           let items={
             roleName:this.addItems.roleName,
             roleFrameworkId:this.addItems.roleFrameworkId,
+            roleFunction:this.addItems.roleFunction,
             sort:this.addItems.sort,
             reqJurisdiction:{
               addJurisdictionList:this.addJurisdictionList,
@@ -242,6 +278,7 @@ import sysManageRouter from '@/router/modules/sysManage'
             roleId:this.roleId,
             roleName:this.addItems.roleName,
             roleFrameworkId:this.addItems.roleFrameworkId,
+            roleFunction:this.addItems.roleFunction,
             sort:this.addItems.sort,
             reqJurisdiction:{
               addJurisdictionList:this.addJurisdictionList,

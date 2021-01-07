@@ -19,10 +19,10 @@
               <el-input v-model="summary.villageName" disabled show-word-limit ></el-input>
             </el-form-item>
             <el-form-item  label="年份" >
-              <el-input v-model="summary.landYear" disabled show-word-limit ></el-input>
+              <el-input v-model="summary.populationYear" disabled show-word-limit ></el-input>
             </el-form-item>
             <el-form-item  :label="item.dictionaryName" v-for="item in showLIst" :key="item.dictionaryId">
-              <el-input v-model="item.landNumber" show-word-limit disabled></el-input>
+              <el-input v-model="item.populationNumber" show-word-limit disabled></el-input>
             </el-form-item>
             <el-form-item style="width:100%;text-align:right;padding-right:150px">
               <el-button type="info" @click="resetForm">返回</el-button>
@@ -36,7 +36,7 @@
 <script>
 // import { selectDirectoryTree,updateDirectoryTree, addDirectoryTree,delectDirectoryTree} from '@/api/Role/Jurisdiction/directoryTree'
 import { isPathName } from '@/utils/validate'
-import { addLand, getLandById, updateLand } from '@/api/infoMng/basics/land'
+import { addPopulation, getPopulationById, updatePopulation } from '@/api/infoMng/basics/population'
 import { getDictionaryAllByPCode } from '@/api/dictionary'
 export default {
 
@@ -57,7 +57,7 @@ export default {
       summaryId:null,
       form:null,
       summary:{
-        landYear:new Date().getFullYear(),
+        populationYear:new Date().getFullYear(),
         villageName:'丈河村'
       }
     }
@@ -73,7 +73,7 @@ export default {
   },
   methods: {
     init(){
-      this.summaryId = this.$route.query.landSummaryId
+      this.summaryId = this.$route.query.populationSummaryId
       
       if(this.summaryId){
         this.getDetails(this.summaryId)
@@ -81,16 +81,16 @@ export default {
     },
     search(){
       let params = {
-        dictionaryPcode: 'BASICS_LAND',
+        dictionaryPcode: 'BASICS_POPULATION',
       };
       getDictionaryAllByPCode(params).then(v=>{
         this.listLoading = false;
         let data = v.data.data
-        this.tree = [{"dictionaryId":1,"dictionaryName":"土地管理","item":data}]
+        this.tree = [{"dictionaryId":1,"dictionaryName":"人口管理","item":data}]
         // 右边显示列处理
         if(this.summaryId == null){
           data.forEach(res => {
-            // 在后台将月份与组织机构代码添加进去 land_location_id
+            // 在后台将月份与组织机构代码添加进去 population_location_id
             this.showLIst.push(res)
             this.checkedIdList.push(res.dictionaryId)
           });
@@ -106,17 +106,17 @@ export default {
     // 获取乡村详情
       getDetails(id) {
         let params = {
-          landSummaryId: id
+          populationSummaryId: id
         }
-        getLandById(params)
+        getPopulationById(params)
           .then(res => {
             if (res.data.code == '1'){
               let data = res.data.data
-              this.summary.villageName = data.landVillageName
-              this.summary.landYear = data.landYear
+              this.summary.villageName = data.populationVillageName
+              this.summary.populationYear = data.populationYear
               // this.showLIst = data
-              data.landList.forEach(res => {
-                // 在后台将月份与组织机构代码添加进去 land_location_id
+              data.populationList.forEach(res => {
+                // 在后台将月份与组织机构代码添加进去 population_location_id
                 this.showLIst.push(res)
                 this.checkedIdList.push(res.dictionaryId)
                 
@@ -181,16 +181,16 @@ export default {
       console.info(this.showLIst)
       let flag = true;
       this.showLIst.forEach(v => {
-        if(!v.landNumber){
-          console.info(v.landNumber)
+        if(!v.populationNumber){
+          console.info(v.populationNumber)
           flag = false;
           return;
         }
       })
       if(flag){
         return this.showLIst.some(item =>{
-        console.info(item.landNumber)
-        item.landNumber == null || item.landNumber =='' || item.landNumber =='undefined'
+        console.info(item.populationNumber)
+        item.populationNumber == null || item.populationNumber =='' || item.populationNumber =='undefined'
         });
       }else{
         return true;
@@ -208,13 +208,13 @@ export default {
           return;
         }
         let data = {
-          landList:null,
-          landYear:this.summary.landYear,
-          landVillageName:this.summary.villageName
+          populationList:null,
+          populationYear:this.summary.populationYear,
+          populationVillageName:this.summary.villageName
         };
-        data.landList = this.showLIst
+        data.populationList = this.showLIst
         // data.foodRelease = this.form.foodRelease ? '1' : '0'
-        addLand(data)
+        addPopulation(data)
           .then(res => {
             let data = res.data
             if (data.code == '1') {
@@ -234,12 +234,12 @@ export default {
       editSummary(){
         // let data = JSON.parse(JSON.stringify(this.form))
         let data = {
-          landList:null,
-          landSummaryId:this.summaryId
+          populationList:null,
+          populationSummaryId:this.summaryId
         };
-        data.landList = this.showLIst
+        data.populationList = this.showLIst
         // data.foodRelease = this.form.foodRelease ? '1' : '0'
-        updateLand(data)
+        updatePopulation(data)
           .then(res => {
             let data = res.data
             if (data.code == '1') {

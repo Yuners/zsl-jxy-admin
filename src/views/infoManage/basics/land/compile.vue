@@ -22,7 +22,7 @@
               <el-input v-model="summary.landYear" disabled show-word-limit ></el-input>
             </el-form-item>
             <el-form-item  :label="item.dictionaryName" v-for="item in showLIst" :key="item.dictionaryId">
-              <el-input v-model.trim="item.landNumber" show-word-limit placeholder="请填写不小于零的数字,且小数点不可超过两位"></el-input>
+              <el-input v-model.trim="item.landNumber" show-word-limit placeholder="所占面积(亩)"></el-input>
             </el-form-item>
             <el-form-item style="width:100%;text-align:center">
               <el-button type="primary" style="margin-left: 50px;" @click="submitForm">保存</el-button>
@@ -326,7 +326,7 @@ export default {
   .flex-item{
     display: flex;
     flex-flow: wrap;
-    justify-content: center;
+    justify-content: left;
   }
   .block{
     width: 40%;

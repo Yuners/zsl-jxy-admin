@@ -83,9 +83,9 @@
 </template>
 
 <script>
- import { selectRole,addRole,updateRole} from '@/api/Role/Jurisdiction/role'
- import { selectFramework} from '@/api/Role/Jurisdiction/framework'
- import { selectJurisdictionTree} from '@/api/Role/Jurisdiction/jurisdiction'
+ import { selectRole,addRole,updateRole} from '@/api/Role/role'
+ import { selectFramework} from '@/api/Role/framework'
+ import { selectJurisdictionTree} from '@/api/Role/jurisdiction'
 import sysManageRouter from '@/router/modules/sysManage'
 import { isPathName,isSort } from '@/utils/validate'
   export default {

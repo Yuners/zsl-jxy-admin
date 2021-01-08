@@ -74,8 +74,8 @@
 </template>
 
 <script>
-  import { selectRolePage,delectRole} from '@/api/Role/Jurisdiction/role'
-  import { findPage,password,deleteUser} from '@/api/Role/Jurisdiction/user'
+  import { selectRolePage,delectRole} from '@/api/Role/role'
+  import { findPage,password,deleteUser} from '@/api/Role/user'
   export default {
 
     data() {

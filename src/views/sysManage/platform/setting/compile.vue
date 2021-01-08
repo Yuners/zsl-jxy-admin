@@ -87,8 +87,8 @@
 </template>
 
 <script>
-import {getUser} from '@/api/Role/Platform/user'
-import {roleList,updateUserInfo} from '@/api/Role/Jurisdiction/user'
+import {getUsers} from '@/api/Role/user'
+import {roleList,updateUserInfo} from '@/api/Role/user'
 import { isPathName} from "@/utils/validate";
 import FileApi from "@/api/FileApi";
   export default {
@@ -148,7 +148,7 @@ import FileApi from "@/api/FileApi";
         },
         //初始数据获取
         search(){
-          getUser().then(res=>{
+          getUsers().then(res=>{
             
               this.value.user=res.data;
               this.getRoleDate(res.data.userId);

@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { selectFramework,updateFramework, addFramework,delectFramework} from '@/api/Role/Jurisdiction/framework'
+import { selectFramework,updateFramework, addFramework,delectFramework} from '@/api/Role/framework'
 import { isPathName,isAdministrative,isSort } from '@/utils/validate'
 export default {
   

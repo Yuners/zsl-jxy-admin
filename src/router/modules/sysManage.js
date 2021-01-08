@@ -57,7 +57,7 @@ const sysManageRouter = {
                             path: 'compile',
                             name: 'Compile',
                             component: () => import('@/views/sysManage/platform/password/compile'),
-                            meta: {title: '修改密码'},
+                            meta: {title: '安全认证'},
                             hidden: true
                         }
                     ]

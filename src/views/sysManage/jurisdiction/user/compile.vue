@@ -132,7 +132,6 @@
             userPassword:[
               {required: true, message: '请填写密码', trigger: 'blue'},
               {validator: validateisPassword, trigger: "blue"}
-
             ],
             userSex:[
               {required: true, message: '请填写性别', trigger: 'blue'}

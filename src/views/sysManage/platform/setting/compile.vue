@@ -154,7 +154,7 @@ import FileApi from "@/api/FileApi";
               this.getRoleDate(res.data.userId);
           })
           .catch( err => {
-            this.$message.error(err)
+            // this.$message.error(err)
            })
         },
         handleExceed(files, fileList) {
@@ -260,7 +260,6 @@ import FileApi from "@/api/FileApi";
       border-bottom: 1px solid #EBEEF5;
       line-height: 60px;
       background-color: #eeeeee;
-
       h1 {
         font-size: 24px;
         padding-left: 20px;

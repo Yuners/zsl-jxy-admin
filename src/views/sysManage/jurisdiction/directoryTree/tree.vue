@@ -13,20 +13,20 @@
       </el-aside>
       <el-container >
         <div>
-          <el-form ref="treeFrom" :model="items" label-width="80px" >
-            <el-form-item label="页面名称" >
+          <el-form ref="treeFrom" :model="items" label-width="100px" :rules="treeRules">
+            <el-form-item label="页面名称" prop="directoryTreeName">
               <el-input v-model="items.directoryTreeName" :disabled="tabShow" maxlength="17" show-word-limit ></el-input>
             </el-form-item>
-            <el-form-item label="页面简称" >
+            <el-form-item label="页面简称" prop="directoryTreeAbbreviation">
               <el-input v-model="items.directoryTreeAbbreviation" :disabled="tabShow" maxlength="17" show-word-limit></el-input>
             </el-form-item>
-             <el-form-item label="页面路径" >
+             <el-form-item label="页面路径" prop="directoryTreePath">
               <el-input v-model="items.directoryTreePath" :disabled="tabShow" maxlength="250" show-word-limit></el-input>
             </el-form-item>
-             <el-form-item label="显示路径" >
+             <el-form-item label="显示路径" prop="directoryTreeAccordingPath">
               <el-input v-model="items.directoryTreeAccordingPath" :disabled="tabShow" maxlength="250" show-word-limit></el-input>
             </el-form-item>
-             <el-form-item label="重定向" >
+             <el-form-item label="重定向" prop="directoryTreeRedirectPath">
               <el-input v-model="items.directoryTreeRedirectPath" :disabled="tabShow" maxlength="250" show-word-limit></el-input>
             </el-form-item>
              <el-form-item label="图标" >
@@ -35,11 +35,15 @@
             <el-form-item label="目录类型" >
               <el-input :value="items.typeName" disabled ></el-input>
             </el-form-item>
+            <el-form-item label="排序" prop="sort">
+              <el-input v-model="items.sort"  maxlength="6" :disabled="tabShow"></el-input>
+            </el-form-item>
+            
             <el-form-item>
                 <el-button type="warning" v-if="tabShow" :disabled="this.items.directoryTreeId<0"  @click="isUpdate">修改</el-button>
                 <el-button type="primary" v-if="tabShow" @click="addTree" :disabled="items.directoryTreeType!=1">添加下一级</el-button>
                 <el-button type="danger" v-if="tabShow" :disabled="this.items.directoryTreeId<0" @click="delect">删除</el-button>
-                <el-button type="primary" v-if="!tabShow&&this.items.directoryTreeId>=0" style="margin-left: 20px;" @click="onSubmit">保存</el-button>
+                <el-button type="primary" v-if="!tabShow&&this.items.directoryTreeId>=0" style="margin-left: 20px;" @click="onSubmit('treeFrom')">保存</el-button>
              </el-form-item>
           </el-form>
         </div>
@@ -51,38 +55,39 @@
           <!-- <span slot="footer" class="dialog-footer">
           </span> -->
           <!-- <span slot="footer" class="dialog-footer"> -->
-            <el-form ref="addTreeFrom" :model="addItems" label-width="80px" >
-              <el-form-item label="上级页面" >
+            <el-form ref="addTreeFrom" :model="addItems" label-width="100px" :rules="addTreeRules" >
+              <el-form-item label="上级页面" prop="directoryTreePpIdName">
                 <el-input v-model="addItems.directoryTreePpIdName"  disabled></el-input>
               </el-form-item>
-              <el-form-item label="页面名称" >
+              <el-form-item label="页面名称" prop="directoryTreeName">
                 <el-input v-model="addItems.directoryTreeName"  maxlength="17" show-word-limit ></el-input>
               </el-form-item>
-              <el-form-item label="页面简称" >
+              <el-form-item label="页面简称" prop="directoryTreeAbbreviation">
                 <el-input v-model="addItems.directoryTreeAbbreviation"  maxlength="17" show-word-limit></el-input>
               </el-form-item>
-              <el-form-item label="页面路径" >
+              <el-form-item label="页面路径" prop="directoryTreePath">
                 <el-input v-model="addItems.directoryTreePath"  maxlength="250" show-word-limit></el-input>
               </el-form-item>
-              <el-form-item label="显示路径" >
+              <el-form-item label="显示路径" prop="directoryTreeAccordingPath">
                 <el-input v-model="addItems.directoryTreeAccordingPath"  maxlength="250" show-word-limit></el-input>
               </el-form-item>
-              <el-form-item label="重定向" >
+              <el-form-item label="重定向" prop="directoryTreeRedirectPath">
                 <el-input v-model="addItems.directoryTreeRedirectPath"  maxlength="250" show-word-limit></el-input>
               </el-form-item>
-              <el-form-item label="图标" >
+              <el-form-item label="图标" prop="">
                 <el-input v-model="addItems.directoryTreeIcon" maxlength="50" show-word-limit></el-input>
               </el-form-item>
-              <el-form-item label="页面类型" >
+              <el-form-item label="页面类型" prop="directoryTreeType">
                 <el-radio v-model="addItems.directoryTreeType" label='1'>目录</el-radio>
                 <el-radio v-model="addItems.directoryTreeType" label='2'>页面</el-radio>
               </el-form-item>
+              <el-form-item label="排序" prop="sort">
+              <el-input v-model="addItems.sort"  maxlength="6"></el-input>
+            </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-              
                   <el-button type="danger" @click="noAddCanl">取消</el-button>
-                  <el-button type="primary" @click="add">提交</el-button>
-                
+                  <el-button type="primary" @click="add('addTreeFrom')">提交</el-button>
              </span>
           
         </el-dialog>
@@ -92,11 +97,75 @@
 
 <script>
 import { selectDirectoryTree,updateDirectoryTree, addDirectoryTree,delectDirectoryTree} from '@/api/Role/Jurisdiction/directoryTree'
-import { isPathName } from '@/utils/validate'
+
+import { isPathName,isSort } from '@/utils/validate'
 export default {
 
   data() {
+       let validatePathName = (rule, value, callback) => {
+        if (!isPathName(value)) {
+          callback(new Error("只能中文，数字，英文且长度为2-17"));
+        } else {
+          callback();
+        }
+      };
+      let validateSort = (rule, value, callback) => {
+        if (!isSort(value)) {
+          callback(new Error("请输入6位已内数字"));
+        } else {
+          callback();
+        }
+      };
     return {
+      treeRules:{
+        directoryTreeName:[
+            {required: true, message: '请填写页面名称', trigger: 'blue'},
+            {validator: validatePathName, trigger: "blue"}
+        ],
+        directoryTreeAbbreviation:[
+          {required: true, message: '请填写页面简称', trigger: 'blue'},
+          {validator: validatePathName, trigger: "blue"}
+        ],
+        directoryTreePath:[
+          {required: true, message: '请填写页面路径', trigger: 'blue'},
+        ],
+        directoryTreeAccordingPath:[
+          {required: true, message: '请填写显示路径', trigger: 'blue'},
+        ],
+        directoryTreeRedirectPath:[
+          {required: true, message: '请填写重定向路径', trigger: 'blue'},
+        ],
+        sort:[
+          {required: true, message: '请填写页面名称', trigger: 'blue'},
+          {validator: validateSort, trigger: "blue"}
+        ]
+      },
+      addTreeRules:{
+        directoryTreeName:[
+            {required: true, message: '请填写页面名称', trigger: 'blue'},
+            {validator: validatePathName, trigger: "blue"}
+        ],
+        directoryTreeAbbreviation:[
+          {required: true, message: '请填写页面简称', trigger: 'blue'},
+          {validator: validatePathName, trigger: "blue"}
+        ],
+        directoryTreePath:[
+          {required: true, message: '请填写页面路径', trigger: 'blue'},
+        ],
+        directoryTreeAccordingPath:[
+          {required: true, message: '请填写显示路径', trigger: 'blue'},
+        ],
+        directoryTreeRedirectPath:[
+          {required: true, message: '请填写重定向路径', trigger: 'blue'},
+        ],
+        directoryTreeType:[
+          {required: true, message: '请填写排序信息', trigger: 'blue'},
+        ],
+        sort:[
+          {required: true, message: '请填写排序信息', trigger: 'blue'},
+          {validator: validateSort, trigger: "blue"}
+        ]
+      },
       listLoading: true, // 加载
       tree:[],
       defaultProps: {
@@ -118,6 +187,7 @@ export default {
         directoryTreeRedirectPath:null,//重定向路径
         directoryTreePpIdName:null,//父id名称
         directoryTreeType: '1',//页面类型
+        sort:0,
       }
     }
   },
@@ -213,6 +283,7 @@ export default {
         directoryTreeRedirectPath:null,//重定向路径
         directoryTreePpIdName:null,//父id名称
         directoryTreeType: '1',//页面类型
+        sort:0,
       };
       if(this.items.directoryTreeId<0){
         addItems.directoryTreePpId=0;
@@ -257,92 +328,102 @@ export default {
             })
         })
     },
-    add(){
-      if(!isPathName(this.addItems.directoryTreeName)){
-        this.$message.error('页面名称应在2-17之间')
-      }
-      else{
-        this.$confirm('是否确认添加该页面?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-        .then(()=>{
-            addDirectoryTree(this.addItems).then(v=>{ 
-              // if (v.data.code == '1'){
-                this.addShow=false;
-                this.search(true);
-                  this.$message({
-                    type: 'success',
-                    message: '添加成功!'
-                  });
-              // }
-              // else{
-              //   this.$message.error(v.data.msg)
-              // }
-             
+    add(formName){
+      this.$refs[formName].validate(async (valid) => {
+        if (valid) {
+          if(!isPathName(this.addItems.directoryTreeName)){
+            this.$message.error('页面名称应在2-17之间')
+          }
+          else{
+            this.$confirm('是否确认添加该页面?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
             })
-            .catch( err => {
-              this.$message.error('服务器错误')
+            .then(()=>{
+                addDirectoryTree(this.addItems).then(v=>{ 
+                  // if (v.data.code == '1'){
+                    this.addShow=false;
+                    this.search(true);
+                      this.$message({
+                        type: 'success',
+                        message: '添加成功!'
+                      });
+                  // }
+                  // else{
+                  //   this.$message.error(v.data.msg)
+                  // }
+                
+                })
+                .catch( err => {
+                  this.$message.error('服务器错误')
+                })
             })
-        })
-      }
+          }
+        }
+        else
+        {
+          console.log('error submit!!');
+          return false;
+        }
+      })
+      
        
         
     },
     noAddCanl() {
         this.addShow=false;
     },
-    onSubmit(){
-      if(this.items.directoryTreeId<0){
-        this.$message.error('系统级不能修改')
-      }
-      else if(!isPathName(this.items.directoryTreeName)){
-       this.$message.error('页面名称应在2-17之间')
-      }
-      else{
-        this.$confirm('是否确认修改页面信息?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-        .then( () => {
-          
-            let path={
-              directoryTreeId:this.items.directoryTreeId,
-              directoryTreePath:this.items.directoryTreePath,
-              directoryTreeName:this.items.directoryTreeName,
-              directoryTreeRedirectPath:this.items.directoryTreeRedirectPath,
-              directoryTreeIcon:this.items.directoryTreeIcon,
-              directoryTreeAbbreviation:this.items.directoryTreeAbbreviation,
-              directoryTreeAccordingPath:this.items.directoryTreeAccordingPath,
-            };
-            updateDirectoryTree(path).then(v=>{
-              // if (v.data.code == '1'){
-                // console.log(v);
-                this.tabShow=true;
-                this.search(true);
-                this.$message({
-                  type: 'success',
-                  message: '修改成功!'
-                });
-              // }
-              // else{
-              //   this.$message.error(v.data.msg)
-              // }
-                
+    onSubmit(formName){
+      this.$refs[formName].validate(async (valid) => {
+        if (valid) {
+          if(this.items.directoryTreeId<0){
+            this.$message.error('系统级不能修改')
+          }
+          else if(!isPathName(this.items.directoryTreeName)){
+             this.$message.error('页面名称应在2-17之间')
+          }
+          else if(!isSort(this.items.sort)){
+              this.$message.error('请输入6位已内数字')
+          }
+          else{
+            this.$confirm('是否确认修改页面信息?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
             })
-            .catch( err => {
-              this.$message.error('服务器错误')
-            
+            .then( () => {
+                let path={
+                  directoryTreeId:this.items.directoryTreeId,
+                  directoryTreePath:this.items.directoryTreePath,
+                  directoryTreeName:this.items.directoryTreeName,
+                  directoryTreeRedirectPath:this.items.directoryTreeRedirectPath,
+                  directoryTreeIcon:this.items.directoryTreeIcon,
+                  directoryTreeAbbreviation:this.items.directoryTreeAbbreviation,
+                  directoryTreeAccordingPath:this.items.directoryTreeAccordingPath,
+                  sort:this.items.sort
+                };
+                updateDirectoryTree(path).then(v=>{
+                    this.tabShow=true;
+                    this.search(true);
+                    this.$message({
+                      type: 'success',
+                      message: '修改成功!'
+                    });
+                })
+                .catch( err => {
+                  this.$message.error('服务器错误')
+                })
             })
-          
-          
-          
-        })
-        
-
-      }
+          }
+        }
+        else
+          {
+            console.log('error submit!!');
+            return false;
+          }
+      })
+      
     
     }
   }

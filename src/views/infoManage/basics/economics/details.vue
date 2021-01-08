@@ -47,19 +47,23 @@
                   </el-form-item>
                 </div>
               </div>
-                 <el-tabs v-model="activeName" @tab-click="handleClick" type="border-card">
-                  <el-tab-pane  v-for="(ti,i) in treesInfo" :key="i" :label="ti.name" :name="ti.type">
+                 <el-tabs v-model="activeName" type="border-card">
+                  <el-tab-pane  v-for="(ti,i) in treesInfo" :key="i" :label="ti.name" :name="ti.type+''">
                     <div v-if="ti.showLIst.length != 0">
-                      <div>
-                        <el-form-item>
+                      <div >
+                        <el-form-item style="height:1px">
                         </el-form-item>
-                        <el-form-item v-if="(ti.type == 0 || ti.type == 1 || ti.type == 4)" label="名称">
+                        <el-form-item style="height:1px" v-if="(ti.type == 0 || ti.type == 1 || ti.type == 4)" label="名称">
                         </el-form-item>
-                        <el-form-item v-if="(ti.type == 0 || ti.type == 1 || ti.type == 4)" label="面积">
+                        <el-form-item style="height:1px" v-if="(ti.type == 0 || ti.type == 1 || ti.type == 4)" label="面积">
                         </el-form-item>
-                        <el-form-item label="数量">
-                        </el-form-item>  
-                    </div>
+                        <el-form-item style="height:1px" label="数量">
+                        </el-form-item> 
+                        <el-divider></el-divider> 
+                      </div>
+                      <div style="padding-left:180px; margin-bottom:8px;font-size:10px;color:red">
+                        {{getPlaceholder(ti.type).alert}}
+                      </div>
                       <div v-for="(item, index) in ti.showLIst" :key="index" >
                         <el-form-item :label="item.addFlag==1?null:item.dictionaryName">
                         </el-form-item>
@@ -76,7 +80,7 @@
                     </div>
                     <div v-else>
                       <div style="padding-left:20px; margin:8px;font-size:12px;color:red" >
-                        没有任何信息
+                        该块没有录入任何信息
                       </div>
                     </div>
                   </el-tab-pane>
@@ -271,19 +275,19 @@ export default {
     getPlaceholder(type){
       switch(type){
         case 0:
-          return "单位产量(吨)"
+          return {"placeholder":"单位产量(吨)", "alert":"提示：种植面积 (亩)单位产量(吨)"}
         break;
         case 1:
-          return "单位产量(棵)"
+          return {"placeholder":"单位产量(棵)", "alert":"提示：种植面积 (亩),单位产量(棵)"}
         break;
         case 2:
-          return "销售数量"
+          return {"placeholder":"销售数量", "alert":"提示：（蛋、奶的单位为吨，其他为活物数量"}
         break;
         case 3:
-          return "数量"
+          return {"placeholder":"数量", "alert":"提示：单位为实际个数"}
         break;
         case 4:
-          return "单位产量(吨)"
+          return {"placeholder":"单位产量(吨)", "alert":"提示：种植面积 (亩),单位产量(棵)"}
         break;
       }
     },

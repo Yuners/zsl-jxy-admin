@@ -24,11 +24,28 @@
             <el-form-item  :label="item.dictionaryName" v-for="item in showLIst" :key="item.dictionaryId">
               <el-input v-model.trim="item.landNumber" show-word-limit placeholder="所占面积(亩)"></el-input>
             </el-form-item>
-            <el-form-item style="width:100%;text-align:center">
-              <el-button type="primary" style="margin-left: 50px;" @click="submitForm">保存</el-button>
+            <div style="width:80%;text-align:center;padding-bottom:10px">
+              <a @click="dialogVisible = true" title="国家关于土地分类说明" style="color:blue;font-size:12px"><i style="color:blue" class="el-icon-question"></i>国家关于土地分类说明</a>
+            </div>
+            <el-form-item style="width:80%;text-align:center">
+              <el-button type="primary" @click="submitForm">保存</el-button>
               <el-button type="danger" @click="resetForm">取消</el-button>
-             </el-form-item>
+            </el-form-item>
           </el-form>
+          <el-dialog style="text-align:center"
+            title="国家关于土地分类说明"
+            :visible.sync="dialogVisible"
+            width="50%">
+            <el-image v-if="imgUrl"
+              style="width: 100%; height: 100%;"
+              :src="imgUrl"
+              :lazy="true"
+              fit="国家关于土地分类说明">
+            </el-image>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="dialogVisible = false">关闭</el-button>
+            </span>
+          </el-dialog>
         </div>
       </el-container>
     </el-container>
@@ -46,11 +63,13 @@ export default {
       listLoading: true, // 加载
       tree:[],
       show:true,
+      dialogVisible: false,
       props: {
-          label: 'dictionaryName',
-          id:'dictionaryId',
-          children: 'item'
-        },
+        label: 'dictionaryName',
+        id:'dictionaryId',
+        children: 'item'
+      },
+      imgUrl:"https://z-i.obs.cn-north-4.myhuaweicloud.com:443/jxy-static/landType.png",
       count: 1,
       items:{},
       checkedIdList:[],

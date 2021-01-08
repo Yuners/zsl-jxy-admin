@@ -7,7 +7,7 @@
             <el-step title="林"></el-step>
             <el-step title="牧"></el-step>
             <el-step title="副"></el-step>
-            <el-step title="🐟"></el-step>
+            <el-step title="渔"></el-step>
           </el-steps>
         </div>
         <el-aside width="300px" style="background-color: rgb(238, 241, 246)" v-for="(item, index) in treesInfo" :key="index">
@@ -26,9 +26,6 @@
       </div>
       <el-container >
         <div>
-          <div style="padding-left:200px; margin:8px;font-size:10px;color:red" v-if="active == 2">
-          提示：（蛋、奶的单位为吨，其他为活物数量）
-          </div>
           <el-form class="flex-item" ref="treeFrom" inline :model="form" label-width="120px" >
             <div>
               <div>
@@ -48,22 +45,32 @@
                 </div>
               </div>
               <div v-for="(ti,i) in treesInfo" :key="i" class="flex-item">
-                <div v-for="(item, index) in ti.showLIst" :key="index" >
-                  <el-form-item  :label="item.addFlag==1?null:item.dictionaryName" v-if="ti.type == active">
-                  </el-form-item>
-                  <el-form-item v-if="(ti.type == 0 || ti.type == 1 || ti.type == 4)&&ti.type == active">
-                    <el-input v-model.trim="item.economicsName" show-word-limit placeholder="请输入名称"></el-input>
-                  </el-form-item>
-                  <el-form-item v-if="(ti.type == 0 || ti.type == 1 || ti.type == 4)&&ti.type == active" >
-                    <el-input-number style="width:145px" :precision="2" :step="0.1" controls-position="right" v-model.trim="item.economicsArea" show-word-limit placeholder="种植面积(亩)"></el-input-number>
-                  </el-form-item>
-                  <el-form-item v-if="ti.type == active">
-                    <el-input-number v-model.trim="item.economicsNumber" style="width:145px" :precision="2" :step="0.1" controls-position="right" show-word-limit :placeholder="getPlaceholder(ti.type)"></el-input-number>
-                  </el-form-item>  
-                  <el-form-item v-if="ti.type == active && (ti.type == 0 || ti.type == 1 || ti.type == 4)" >
-                    <el-button size="small" v-if="item.dictionaryName !=null && item.addFlag!=1 "  @click="addInfo(i,index,item)" >+</el-button>
-                    <el-button size="small" v-if="item.dictionaryName ==null || item.addFlag==1"  @click="reduceInfo(i,index,item)">-</el-button>
-                  </el-form-item>
+                <div v-if="ti.showLIst.length != 0&&ti.type == active">
+                  <div style="padding-left:180px; margin-bottom:8px;font-size:10px;color:red">
+                    {{getPlaceholder(ti.type).alert}}
+                  </div>
+                  <div v-for="(item, index) in ti.showLIst" :key="index" >
+                    <el-form-item  :label="item.addFlag==1?null:item.dictionaryName" v-if="ti.type == active">
+                    </el-form-item>
+                    <el-form-item v-if="(getTypeFlag(ti.type))&&ti.type == active">
+                      <el-input v-model.trim="item.economicsName" show-word-limit placeholder="请输入名称"></el-input>
+                    </el-form-item>
+                    <el-form-item v-if="(getTypeFlag(ti.type))&&ti.type == active" >
+                      <el-input-number style="width:145px" :precision="2" :step="0.1" controls-position="right" v-model.trim="item.economicsArea" show-word-limit placeholder="种植面积(亩)"></el-input-number>
+                    </el-form-item>
+                    <el-form-item v-if="ti.type == active">
+                      <el-input-number v-model.trim="item.economicsNumber" style="width:145px" :precision="getTypeFlag(ti.type)?2:0" :step="getTypeFlag(ti.type)?0.1:1" controls-position="right" show-word-limit :placeholder="getPlaceholder(ti.type).placeholder"></el-input-number>
+                    </el-form-item>  
+                    <el-form-item v-if="ti.type == active && (getTypeFlag(ti.type))" >
+                      <a v-if="item.dictionaryName !=null && item.addFlag!=1 " @click="addInfo(i,index,item)" style="font-size:24px"><i style="color:blue" class="el-icon-circle-plus"></i></a>
+                      <a v-if="item.dictionaryName ==null || item.addFlag==1" @click="reduceInfo(i,index,item)" style="font-size:24px"><i style="color:red" class="el-icon-remove"></i></a>
+                    </el-form-item>
+                  </div>
+                </div>
+                <div v-if="ti.showLIst.length == 0&&ti.type == active ">
+                  <div style="padding-left:180px; margin:8px;font-size:12px;color:red" >
+                    目前该块没有添加任何内容，可以选择左侧类别添加数据哦！
+                  </div>
                 </div>
               </div>
             </div>
@@ -131,6 +138,13 @@ export default {
     this.search()
   },
   methods: {
+    getTypeFlag(type){
+      if(type == 0 || type == 1 || type == 4){
+        return true
+      }else{
+        return false
+      }
+    },
     next() {
       if (this.active++ > 5) this.active = 0;
     },
@@ -258,19 +272,19 @@ export default {
     getPlaceholder(type){
       switch(type){
         case 0:
-          return "单位产量(吨)"
+          return {"placeholder":"单位产量(吨)", "alert":"提示：种植面积 (亩)单位产量(吨)"}
         break;
         case 1:
-          return "单位产量(棵)"
+          return {"placeholder":"单位产量(棵)", "alert":"提示：种植面积 (亩),单位产量(棵)"}
         break;
         case 2:
-          return "销售数量"
+          return {"placeholder":"销售数量", "alert":"提示：（蛋、奶的单位为吨，其他为活物数量"}
         break;
         case 3:
-          return "数量"
+          return {"placeholder":"数量", "alert":"提示：单位为实际个数"}
         break;
         case 4:
-          return "单位产量(吨)"
+          return {"placeholder":"单位产量(吨)", "alert":"提示：种植面积 (亩),单位产量(棵)"}
         break;
       }
     },
@@ -388,6 +402,7 @@ export default {
     },
     // 提交 todo 需要获取所属地区码与村名
     submitForm(formName) {
+      this.next()
       let flag = this.treesInfo.some(v=>{
         console.info(v.showLIst)
         return v.showLIst.length !=0
@@ -399,7 +414,7 @@ export default {
       console.info(this.validateCheckout())
       if(this.validateCheckout()){
           this.$message({
-            message: '选中项不能为空,请填写不小于零的数字,且小数点不可超过两位,且小数点不可超过两位',
+            message: '请检查，选中项不能为空',
             type: 'error'
           })
         return;

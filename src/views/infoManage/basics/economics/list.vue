@@ -162,22 +162,21 @@
         })
       },
       handleVillageFlag(){
-        this.routingHop('/infoManage/basics/economics/compile')
-        // let params = {
-        //   economicsYear: new Date().getFullYear(),
-        //   economicsLocationId: '1338353936444280822' // 测试
-        // }
-        // console.info(params)
-        // geteconomicsFlag(params)
-        // .then( res => {
-        //   let data = res.data.data
-        //   console.info(data)
-        //   if(data != null){
-        //     this.$message.error("该年记录已被录入,有问题请去编辑")
-        //   }else{
-        //     this.routingHop('/infoManage/basics/economics/compile')
-        //   }
-        // })
+        let params = {
+          economicsYear: new Date().getFullYear(),
+          economicsLocationId: '1338353936444280822' // 测试
+        }
+        console.info(params)
+        getEconomicsFlag(params)
+        .then( res => {
+          let data = res.data.data
+          console.info(data)
+          if(data != null){
+            this.$message.error("该年记录已被录入,有问题请去编辑")
+          }else{
+            this.routingHop('/infoManage/basics/economics/compile')
+          }
+        })
       },
       search() {
         this.listLoading = true

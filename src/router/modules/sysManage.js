@@ -150,7 +150,33 @@ const sysManageRouter = {
                 },
                 
             ]
-        }
+        },
+        {
+            path: '/sysManage/user',
+            redirect: '/sysManage/user/user',
+            component: Layout,
+            name: 'user',
+            meta: {title: '用户管理', icon: 'publish'},
+            children: [
+                {
+                    path: 'user',
+                    name: 'User',
+                    redirect: '/sysManage/user/user/list',
+                    component: () => import('@/views/sysManage/user/user'),
+                    meta: {title: '用户管理', icon: 'scenery'},
+                    children: [
+                        {
+                            path: 'list',
+                            name: 'List',
+                            component: () => import('@/views/sysManage/user/user/list'),
+                            meta: {title: '用户管理列表'},
+                            hidden: true
+                        }
+                    ]
+                },
+                
+            ]
+        },
     ]
   }
 

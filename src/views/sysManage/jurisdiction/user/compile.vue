@@ -86,9 +86,9 @@
 </template>
 
 <script>
- import { selectRole,addRole,updateRole,selectRoleList} from '@/api/Role/Jurisdiction/role'
- import { selectFramework} from '@/api/Role/Jurisdiction/framework'
- import { getUser,roleList,userCreated,updateUserInfo} from '@/api/Role/Jurisdiction/user'
+ import { selectRole,addRole,updateRole,selectRoleList} from '@/api/Role/role'
+ import { selectFramework} from '@/api/Role/framework'
+ import { getUser,roleList,userCreated,updateUserInfo} from '@/api/Role/user'
  import { isPhones,isPassword,isPathName} from "@/utils/validate";
  
  import sysManageRouter from '@/router/modules/sysManage'

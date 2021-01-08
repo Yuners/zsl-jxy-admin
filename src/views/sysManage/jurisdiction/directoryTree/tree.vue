@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import { selectDirectoryTree,updateDirectoryTree, addDirectoryTree,delectDirectoryTree} from '@/api/Role/Jurisdiction/directoryTree'
+import { selectDirectoryTree,updateDirectoryTree, addDirectoryTree,delectDirectoryTree} from '@/api/Role/directoryTree'
 
 import { isPathName,isSort } from '@/utils/validate'
 export default {

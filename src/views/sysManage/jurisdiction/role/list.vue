@@ -67,7 +67,7 @@
 </template>
 
 <script>
-  import { selectRolePage,delectRole} from '@/api/Role/Jurisdiction/role'
+  import { selectRolePage,delectRole} from '@/api/Role/role'
   export default {
 
     data() {

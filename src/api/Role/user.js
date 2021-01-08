@@ -8,7 +8,14 @@ import request from "@/utils/request"
 export function findPage( params ) {
   return request.get('http://192.168.31.161:10202/user/select/pages', {params})
 }
-
+/**
+ * 查询用户列表
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export function find( params ) {
+  return request.get('http://192.168.31.161:10202/user/pages', {params})
+}
 /**
  * 密码重置
  * @param params
@@ -26,7 +33,14 @@ export function password( userId ) {
 export function deleteUser( userId ) {
   return request.delete(`http://192.168.31.161:10202/user/${userId}`)
 }
-
+/**
+ * 查询个人用户信息
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export function getUsers() {
+  return request.get('http://192.168.31.161:10202/user')
+}
 /**
  * 用户信息查询
  * @param params
@@ -60,4 +74,46 @@ export function userCreated ( params ) {
  */
 export function updateUserInfo ( params ) {
   return request.put(`http://192.168.31.161:10202/user/info`,params)
+}
+
+/**
+ * 修改密码
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export function updatePassword(parms) {
+  return request.post('http://192.168.31.161:10202/secret/password',parms)
+}
+/**
+ * 修改手机号
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export function updatePhone(parms) {
+  return request.post('http://192.168.31.161:10202/secret/phone',parms)
+}
+/**
+ * 修改密保
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export function updateSecurity(parms) {
+  return request.post('http://192.168.31.161:10202/secret/security',parms)
+}
+/**
+ * 获取安全密钥
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export function postSecret(parms) {
+  return request.post('http://192.168.31.161:10202/secret',parms)
+}
+
+/**
+ * 禁用/解禁用户
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export function disabledUser(userId) {
+  return request.put(`http://192.168.31.161:10202/user/disabled/${userId}`)
 }

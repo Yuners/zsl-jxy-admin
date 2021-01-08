@@ -147,8 +147,8 @@
 </template>
 
 <script>
-import {getUser,postSecret,updatePassword,updatePhone,updateSecurity} from '@/api/Role/Platform/user'
-import { selectListSecurityQuestion}from '@/api/Role/Platform/securityQuestion'
+import {getUsers,postSecret,updatePassword,updatePhone,updateSecurity} from '@/api/Role/user'
+import { selectListSecurityQuestion}from '@/api/Role/securityQuestion'
 import {getSmsCode} from '@/api/SmsApi'
 import {isCode,isPassword,isPhones,isSecurityQuestion} from '@/utils/validate'
   export default {
@@ -673,7 +673,7 @@ import {isCode,isPassword,isPhones,isSecurityQuestion} from '@/utils/validate'
         },
         //初始数据获取
         search(){
-          getUser().then(res=>{
+          getUsers().then(res=>{
             
               this.user=res.data;
               console.log(res.data);

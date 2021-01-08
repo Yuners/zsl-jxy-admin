@@ -2,13 +2,13 @@
   <div class="list">
     <div class="tableHead">
       <div class="search">
-          <el-input class="coverStyle" v-model="param.landVillageName" placeholder="乡村名称"></el-input>
+          <el-input class="coverStyle" v-model="param.economicsVillageName" placeholder="乡村名称"></el-input>
           <!-- 可以存一个级别 判断为省市县镇 -->
           <el-cascader
             ref="cascader"
             class="coverStyle"
             clearable
-            v-model="param.landLocationId"
+            v-model="param.economicsLocationId"
             placeholder="选择所属地区"
             :options="cityList"
             :props="props"
@@ -18,7 +18,7 @@
           </el-cascader>
           <el-date-picker class="coverStyle"
             style="width: 350px"
-            v-model="param.landYear"
+            v-model="param.economicsYear"
             type="year"
             value-format='yyyy'
             placeholder="选择年份">
@@ -48,12 +48,12 @@
       </el-table-column>
       <el-table-column label="乡村名称">
         <template slot-scope="scope" >
-          <span style="cursor: pointer;color:blue" @click="details(scope.row.landSummaryId)">{{ scope.row.landVillageName }}</span>
+          <span style="cursor: pointer;color:blue" @click="details(scope.row.economicsSummaryId)">{{ scope.row.economicsVillageName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="所属地区" width="150" align="center" show-overflow-tooltip prop="landLocationName">
+      <el-table-column label="所属地区" width="150" align="center" show-overflow-tooltip prop="economicsLocationName">
       </el-table-column>
-      <el-table-column label="记录年份" prop="landYear"></el-table-column>
+      <el-table-column label="记录年份" prop="economicsYear"></el-table-column>
       <el-table-column label="创建时间">
         <template slot-scope="scope">
           <span style="cursor: pointer;" >{{scope.row.createdOn|formatDate}}</span>
@@ -65,7 +65,7 @@
         width="150"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="edit(scope.row.landSummaryId,scope.row.landYear)">编辑</el-button>
+          <el-button type="text" size="small" @click="edit(scope.row.economicsSummaryId,scope.row.economicsYear)">编辑</el-button>
           <!-- <el-button type="text" size="small" @click="delVallage(scope.row.villageId)">删除</el-button> -->
         </template>
       </el-table-column>
@@ -86,7 +86,7 @@
 <script>
   import { formatDate } from '@/utils/index.js'
   import { getFreightList, delFreight} from '@/api/Operation/carriage'
-  import { getLandPage, delLand, getLandFlag} from '@/api/infoMng/basics/land'
+  import { getEconomicsPage, delEconomics, getEconomicsFlag} from '@/api/infoMng/basics/economics'
   import { getArea } from '@/api/common' 
   export default {
     data() {
@@ -94,9 +94,9 @@
         list: null, // 渲染列表
         listLoading: true, // 加载
         param:{
-          landYear:null,
-          landVillageName:'',
-          landLocationId:[]
+          economicsYear:null,
+          economicsVillageName:'',
+          economicsLocationId:[]
         },
         pages:{
           pageSize: 10, // 每页多少条
@@ -135,9 +135,9 @@
     },
     methods: {
       clear(){
-        this.param.landYear = null
-        this.param.landVillageName = null
-        this.param.landLocationId = []
+        this.param.economicsYear = null
+        this.param.economicsVillageName = null
+        this.param.economicsLocationId = []
       },
       handleChange(value) {
         console.log(value);
@@ -164,27 +164,27 @@
       handleVillageFlag(){
         this.routingHop('/infoManage/basics/economics/compile')
         // let params = {
-        //   landYear: new Date().getFullYear(),
-        //   landLocationId: '1338353936444280822' // 测试
+        //   economicsYear: new Date().getFullYear(),
+        //   economicsLocationId: '1338353936444280822' // 测试
         // }
         // console.info(params)
-        // getLandFlag(params)
+        // geteconomicsFlag(params)
         // .then( res => {
         //   let data = res.data.data
         //   console.info(data)
         //   if(data != null){
         //     this.$message.error("该年记录已被录入,有问题请去编辑")
         //   }else{
-        //     this.routingHop('/infoManage/basics/land/compile')
+        //     this.routingHop('/infoManage/basics/economics/compile')
         //   }
         // })
       },
       search() {
         this.listLoading = true
         let params = {
-          landYear: this.param.landYear,
-          landVillageName: this.param.landVillageName,
-          landLocationId: this.param.landLocationId[this.param.landLocationId.length-1],// 选择的是一个数组
+          economicsYear: this.param.economicsYear,
+          economicsVillageName: this.param.economicsVillageName,
+          economicsLocationId: this.param.economicsLocationId[this.param.economicsLocationId.length-1],// 选择的是一个数组
           curPage: this.pages.pageIndex,
           pageSize: this.pages.pageSize,
           isDeleted: 0,
@@ -192,7 +192,7 @@
         }
         console.info(params)
         this.list = null
-        getLandPage(params)
+        getEconomicsPage(params)
           .then( res => {
             let data = res.data
             console.info(data)
@@ -252,36 +252,36 @@
         })
       },
       //判断是否是当年信息。修改只能修改当年的，或者去年的，前提是本年3月份之前。
-      handelYear(landYear){
+      handelYear(economicsYear){
         let dayYear = new Date().getFullYear();
         let dayMonth = new Date().getMonth()+1;
-        if(landYear == dayYear){
+        if(economicsYear == dayYear){
           return true;
-        }else if(landYear-0+1 == dayYear){// 判断是否为去年的
+        }else if(economicsYear-0+1 == dayYear){// 判断是否为去年的
           return dayMonth <3?true:false;
         }else{
           return false;
         }
       },
       //修改
-      edit(landSummaryId, landYear){
-        if(!this.handelYear(landYear)){
+      edit(economicsSummaryId, economicsYear){
+        if(!this.handelYear(economicsYear)){
           this.$message.error("当年记录已不满足修改条件")
           return;
         }
         this.$router.push({
-          path:'/infoManage/basics/land/compile',
+          path:'/infoManage/basics/economics/compile',
           query:{
-            landSummaryId
+            economicsSummaryId
           }
         })
       },
       //乡村详细页面
-      details(landSummaryId){
+      details(economicsSummaryId){
         this.$router.push({
-          path:'/infoManage/basics/land/details',
+          path:'/infoManage/basics/economics/details',
           query:{
-            landSummaryId
+            economicsSummaryId
           }
         })
       }

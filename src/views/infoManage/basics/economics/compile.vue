@@ -26,33 +26,48 @@
       </div>
       <el-container >
         <div>
+          <div style="padding-left:200px; margin:8px;font-size:10px;color:red" v-if="active == 2">
+          提示：（蛋、奶的单位为吨，其他为活物数量）
+          </div>
           <el-form class="flex-item" ref="treeFrom" inline :model="form" label-width="120px" >
             <div>
-              <div >
-                <el-form-item  label="乡村名称" >
-                  <el-input v-model="summary.villageName" disabled show-word-limit ></el-input>
-                </el-form-item>
-                <el-form-item  label="年份" >
-                  <el-input v-model="summary.economicsYear" disabled show-word-limit ></el-input>
-                </el-form-item>
+              <div>
+                <div>
+                  <el-form-item  label="乡村名称" >
+                    <!-- <el-input v-model="summary.villageName" disabled show-word-limit ></el-input> -->
+                  </el-form-item>
+                  <el-form-item  >
+                    <el-input v-model="summary.villageName" disabled show-word-limit ></el-input>
+                  </el-form-item>
+                  <el-form-item  label="年份">
+                    <!-- <el-input v-model="summary.economicsYear" disabled show-word-limit ></el-input> -->
+                  </el-form-item>
+                  <el-form-item >
+                    <el-input v-model="summary.economicsYear" disabled show-word-limit ></el-input>
+                  </el-form-item>
+                </div>
               </div>
-              <div v-for="ti in treesInfo" :key="ti.type" class="flex-item">
+              <div v-for="(ti,i) in treesInfo" :key="i" class="flex-item">
                 <div v-for="(item, index) in ti.showLIst" :key="index" >
-                  <el-form-item  :label="item.dictionaryName" v-if="ti.type == active">
+                  <el-form-item  :label="item.addFlag==1?null:item.dictionaryName" v-if="ti.type == active">
+                  </el-form-item>
+                  <el-form-item v-if="(ti.type == 0 || ti.type == 1 || ti.type == 4)&&ti.type == active">
+                    <el-input v-model.trim="item.economicsName" show-word-limit placeholder="请输入名称"></el-input>
+                  </el-form-item>
+                  <el-form-item v-if="(ti.type == 0 || ti.type == 1 || ti.type == 4)&&ti.type == active" >
+                    <el-input-number style="width:145px" :precision="2" :step="0.1" controls-position="right" v-model.trim="item.economicsArea" show-word-limit placeholder="种植面积(亩)"></el-input-number>
                   </el-form-item>
                   <el-form-item v-if="ti.type == active">
-                    <el-input  v-if="ti.type == 0 || ti.type == 1 || ti.type == 4" v-model.trim="item.economicsName" show-word-limit placeholder="请输入名称"></el-input>
-                  </el-form-item>
-                  <el-form-item v-if="ti.type == active">
-                    <el-input v-if="ti.type == 0 || ti.type == 1 || ti.type == 4" v-model.trim="item.economicsArea" show-word-limit placeholder="种植面积(亩)"></el-input>
-                  </el-form-item>
-                  <el-form-item v-if="ti.type == active">
-                    <el-input v-model.trim="item.economicsNumber" show-word-limit :placeholder="getPlaceholder(ti.type)"></el-input>
+                    <el-input-number v-model.trim="item.economicsNumber" style="width:145px" :precision="2" :step="0.1" controls-position="right" show-word-limit :placeholder="getPlaceholder(ti.type)"></el-input-number>
+                  </el-form-item>  
+                  <el-form-item v-if="ti.type == active && (ti.type == 0 || ti.type == 1 || ti.type == 4)" >
+                    <el-button size="small" v-if="item.dictionaryName !=null && item.addFlag!=1 "  @click="addInfo(i,index,item)" >+</el-button>
+                    <el-button size="small" v-if="item.dictionaryName ==null || item.addFlag==1"  @click="reduceInfo(i,index,item)">-</el-button>
                   </el-form-item>
                 </div>
               </div>
             </div>
-            <el-form-item style="width:100%;text-align:center">
+            <el-form-item style="width:100%;padding-left:200px">
               <el-button style="margin-top: 12px;" @click="last" v-if="active>0">上一步</el-button>
               <el-button style="margin-top: 12px;" @click="next" v-if="active<4">下一步</el-button>
               <el-button type="primary"  v-if="active == 4" @click="submitForm">保存</el-button>
@@ -127,17 +142,18 @@ export default {
     },
     //循环取树
     async handelTrees(){
-      await this.treesInfo.forEach(v => {
-        this.getTrees(v.code, v.name)
+      await this.treesInfo.forEach((v,i) => {
+        this.getTrees(v.code, v.name,i)
         .then(vv => {
           v.tree = vv.tree
           v.showLIst = vv.showLIst
           v.checkedIdList = vv.checkedIdList
         })
       })
+      console.info(this.treesInfo)
     },
     //取树
-    async getTrees(code,name){
+    async getTrees(code,name,i){
       let params = {
         dictionaryPcode: code,
       };
@@ -149,15 +165,18 @@ export default {
         let data = v.data.data
         tree = [{"dictionaryId":1, "dictionaryLevel":1, "dictionaryName":name, "item":data}]
         // 右边显示列处理
-        // if(this.summaryId == null){ // 全选默认值
+        if(this.summaryId == null){ // 全选默认值
           data.forEach(res => {
             // 在后台将月份与组织机构代码添加进去 economics_location_id
             showLIst.push(res)
             checkedIdList.push(res.dictionaryId)
           });
-        // }else{
-        //   this.getDetails(this.summaryId)
-        // }
+        }else{
+          this.treesInfo[i].showLIst.forEach(res =>{
+            showLIst.push(res)
+            checkedIdList.push(res.dictionaryId)
+          })
+        }
         this.listLoading = false
       })
       .catch( err => {
@@ -172,8 +191,23 @@ export default {
       }
       return res
     },
-    search(){
-      this.handelTrees()
+    async search(){
+      if(this.summaryId != null){
+        await this.getDetails(this.summaryId)
+        .then(v => {
+          console.info(v)
+          this.summary.villageName = v.economicsVillageName
+          this.summary.economicsYear = v.economicsYear
+
+          this.treesInfo = v.treesInfolist
+          console.info("1",this.treesInfo)
+        })
+        this.handelTrees()
+        console.info("2",this.treesInfo)
+      }else{
+        this.handelTrees()
+      }
+      
     },
     //节点被点击时找到index
     nodeCheck(index){
@@ -230,7 +264,7 @@ export default {
           return "单位产量(棵)"
         break;
         case 2:
-          return "销售数量（蛋、奶的单位为吨，其他为活物数量）"
+          return "销售数量"
         break;
         case 3:
           return "数量"
@@ -240,39 +274,31 @@ export default {
         break;
       }
     },
+    addInfo(treeIndex,showIndex,item){
+      console.info(treeIndex,showIndex,item)
+      this.treesInfo[treeIndex].showLIst.push({"economicsName":'',"economicsArea":null,"economicsNumber":null, "sort":item.sort, "dictionaryId":item.dictionaryId, "addFlag":1})
+      this.treesInfo[treeIndex].showLIst.sort(function(a,b){
+        return a.sort - b.sort;
+      });
+    },
+    reduceInfo(treeIndex,showIndex,item){
+      console.info(treeIndex,showIndex,item)
+      this.treesInfo[treeIndex].showLIst.splice(showIndex,1)
+    },
     // 获取乡村详情
-    getDetails(id) {
+    async getDetails(id) {
       let params = {
         economicsSummaryId: id
       }
       this.checkedIdList = [];
       this.showLIst=[];
-      getEconomicsById(params)
+      let resData = null
+      await getEconomicsById(params)
       .then(res => {
         if (res.data.code == '1'){
           let data = res.data.data
-          this.summary.villageName = data.economicsVillageName
-          this.summary.economicsYear = data.economicsYear
-          // this.showLIst = data
-          let checkedIdList = [];
-          let showLIst=[];
-          data.economicsList.forEach(res => {
-            console.log(res)
-            // 在后台将月份与组织机构代码添加进去 economics_location_id
-            let ress={
-              ...res
-            }
-            showLIst.push(ress)
-            checkedIdList.push(res.dictionaryId)
-            // this.$nextTick(() => {
-            //   this.$refs.tree2.setCheckedKeys(this.checkedIdList);
-            // });
-
-          });
-          this.showLIst=showLIst;
-          this.checkedIdList=checkedIdList;
-          console.info(this.showLIst)
-          console.info(this.checkedIdList)
+          console.info(data)
+          resData = data
         } else {
           this.$message.error(res.data.msg)
         }
@@ -280,131 +306,157 @@ export default {
       .catch(err => {
         console.log(err)
       })
+      return resData
+    },
+    //选中的元素，不能为空/null
+    validateNullCheckout(){ //判断非空
+      let flag = false
+      try{
+        this.treesInfo.forEach(v=>{
+          let flag1 = false
+          let flag2 = false
+          if(v.type == 0 || v.type==1 || v.type == 4){
+            flag1 = v.showLIst.some(vv => {
+              return this.validateNull(vv.economicsArea)
+            })
+            flag2 = v.showLIst.some(vv => {
+              return this.validateNull(vv.economicsName)
+            })
+          }
+          let flag3 = v.showLIst.some(vv => {
+            return this.validateNull(vv.economicsNumber)
+          })
+          if(flag1||flag2||flag3){
+            flag = true
+            throw Error("满足条件终止循环")
+            
+          }
+        })
+      }catch(err){
+        console.log(err)
+      }
+      return flag
+    },
+    // 选中元素不能为null
+    validateNull(number){
+      if(!number){
+        console.info(number)
+        return true
+      }else if(number == null || number =='' || number =='undefined'){
+        console.info(number)
+        
+        return true
+      }else return false
+    },
+    validateNumberCheckout(){
+      let flag = false
+      try{
+        this.treesInfo.forEach(v=>{
+          let flag1 = false
+          if(v.type == 0 || v.type==1 || v.type == 4){
+            flag1 = v.showLIst.some(v=>{
+              return this.validataNumber(v.economicsArea)
+            })
+          }
+          let flag2 = v.showLIst.some(v=>{
+            return this.validataNumber(v.economicsNumber)
+          })
+          if(flag1||flag2){
+            flag = true
+            throw Error("满足条件终止循环")
+            return;
+          }
+        })
+      }catch(err){
+        console.log(err)
+      }
+      return flag;
+    },
+    //请填写不小于零的数字,且小数点不可超过两位
+    validataNumber(number){
+      let flag = !new RegExp("^(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)$").test(number);
+      return flag
+    },
+    validateCheckout(){
+      let flag1 = this.validateNullCheckout()
+      // if(flag1){
+      //   return flag1
+      // }
+      // let flag2 = this.validataNumber()
+      
+      return flag1
     },
     // 提交 todo 需要获取所属地区码与村名
     submitForm(formName) {
-      // if(this.showLIst.length === 0){
-      //   this.$message.error("至少要选一个")
-      //   return;
-      // }
-      // if(this.validateCheckout()){
-        
-      //   return;
-      // }
-      
-      if (this.summaryId){
-            this.editSummary()
-          }else {
-            this.addSummary()
-          }
-      // this.$refs[formName].validate((valid) => {
-      //   if (valid) {
-      //     if (this.summaryId){
-      //       this.editSummary()
-      //     }else {
-      //       this.addSummary()
-      //     }
-      //   } else {
-      //     console.log('error submit!!');
-      //     return false;
-      //   }
-      // });
-    },
-    //选中的元素，不能为空/null
-    validateCheckout(){
-      console.info(this.showLIst)
-      let flag = true;
-      this.showLIst.forEach(v => {
-        if(!v.economicsNumber){
-          console.info(v.economicsNumber)
-          flag = false;
-          return;
-        }
+      let flag = this.treesInfo.some(v=>{
+        console.info(v.showLIst)
+        return v.showLIst.length !=0
       })
-      if(flag){
-        let flag1 = this.showLIst.some(item =>{
-          console.info(item.economicsNumber)
-          item.economicsNumber == null || item.economicsNumber =='' || item.economicsNumber =='undefined'
-        });
-        if(flag1){// 判断是否有元素为空
+      if(!flag){
+        this.$message.error("至少要选一个大类填写")
+        return;
+      }
+      console.info(this.validateCheckout())
+      if(this.validateCheckout()){
           this.$message({
-            message: '选中的元素不能为空，请填写对应数量',
+            message: '选中项不能为空,请填写不小于零的数字,且小数点不可超过两位,且小数点不可超过两位',
             type: 'error'
           })
-          return true;
-        }else{//判断是否有元素不是正整数 RegExp("^[1-9]([0-9])*$")
-            let flag2 = this.showLIst.some(item =>{
-              // let ret='/^([0-9]*)$/';
-              return !new RegExp("^(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)$").test(item.economicsNumber);//请填写不小于零的数字,且小数点不可超过两位
-            });
-            if(flag2){
-              this.$message({
-                message: '请填写不小于零的数字,且小数点不可超过两位,且小数点不可超过两位',
-                type: 'error'
-              })
-            }
-          return flag2
-        }
-      }else{
-        this.$message({
-          message: '选中的元素不能为空，请填写对应数量',
-          type: 'error'
-        })
-        return true;
+        return;
+      }
+      if (this.summaryId){
+        this.editSummary()
+      }else {
+        this.addSummary()
       }
     },
     // 发送新增请求
-      addSummary() {
-        let data = {
-          treesInfolist:this.treesInfo,
-          economicsYear:this.summary.economicsYear,
-          economicsVillageName:this.summary.villageName
-        };
-        console.info(data)
-        // data.foodRelease = this.form.foodRelease ? '1' : '0'
-
-        addEconomics(data)
-          .then(res => {
-            let data = res.data
-            if (data.code == '1') {
-              this.$message({
-                message: data.msg,
-                type: 'success'
-              })
-              this.$router.back()
-            } else {
-              this.$message.error(data.msg)
-            }
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      },
-      editSummary(){
-        // let data = JSON.parse(JSON.stringify(this.form))
-        let data = {
-          economicsList:null,
-          economicsSummaryId:this.summaryId
-        };
-        data.economicsList = this.showLIst
-        // data.foodRelease = this.form.foodRelease ? '1' : '0'
-        updateEconomics(data)
-          .then(res => {
-            let data = res.data
-            if (data.code == '1') {
-              this.$message({
-                message: data.msg,
-                type: 'success'
-              })
-              this.$router.back()
-            } else {
-              this.$message.error(data.msg)
-            }
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      },
+    addSummary() {
+      let data = {
+        treesInfolist:this.treesInfo,
+        economicsYear:this.summary.economicsYear,
+        economicsVillageName:this.summary.villageName
+      };
+      addEconomics(data)
+        .then(res => {
+          let data = res.data
+          if (data.code == '1') {
+            this.$message({
+              message: data.msg,
+              type: 'success'
+            })
+            this.$router.back()
+          } else {
+            this.$message.error(data.msg)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    editSummary(){
+      let data = {
+        economicsSummaryId:this.summaryId,
+        treesInfolist:this.treesInfo
+      };
+      // data.foodRelease = this.form.foodRelease ? '1' : '0'
+      updateEconomics(data)
+        .then(res => {
+          let data = res.data
+          if (data.code == '1') {
+            this.$message({
+              message: data.msg,
+              type: 'success'
+            })
+            this.$router.back()
+          } else {
+            this.$message.error(data.msg)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     // 取消乡村添加
     resetForm(formName) {
       this.$router.back()
@@ -414,6 +466,13 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+
+  .el-form--inline .el-form-item {
+    width: 160px;
+    display: inline-block;
+    margin-right: 10px;
+    vertical-align: top;
+}
   .custom-tree-node {
     position:relative;
     display: flex;

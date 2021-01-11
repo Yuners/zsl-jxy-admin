@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CustomUpload uploadType="video" @succeed="test" @deleteImage="deleteImage"></CustomUpload>
+    <CustomUpload @succeed="test" @deleteImage="deleteImage"></CustomUpload>
   </div>
 </template>
 

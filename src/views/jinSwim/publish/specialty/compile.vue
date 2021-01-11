@@ -28,6 +28,9 @@
               <el-input maxlength="10" style="width: 350px" v-model="form.specialtyLabelTwo"></el-input>
             </el-form-item>
           </div>
+          <el-form-item label="商品图片：" prop="specialtyFileList">
+            <custom-upload @succeed="shopImage" :fileList="form.fileUrlList" @deleteImage="deleteImage" />
+          </el-form-item>
 
           <el-form-item label="产地标注：" prop="specialtyCoordinate">
             <div class="mark">
@@ -167,7 +170,7 @@
                     :fit="'cover'"/>
                 </template>
               </el-table-column>
-              <el-table-column label="文字描述" align="center">
+              <el-table-column label="文字描述" show-overflow-tooltip align="center">
                 <template slot-scope="scope">
                   {{ scope.row.describeContent }}
                 </template>
@@ -183,6 +186,46 @@
                 </template>
               </el-table-column>
             </el-table>
+          </el-form-item>
+        </div>
+        <div class="block">
+          <div class="title">
+            <h3>运费设置</h3>
+          </div>
+          <el-form-item label-width="15px" label=" " prop="specialtyFreightId">
+            <el-select
+              v-model="form.specialtyFreightId"
+              placeholder="请选择运费模板"
+              @change="pickFre"
+            >
+              <el-option
+                v-for="item in freightList"
+                :key="item.freightId"
+                :label="item.freightName"
+                :value="item.freightId">
+              </el-option>
+            </el-select>
+            <span class="tooltip">(初次使用请先前往运营管理创建模板再选择模板名称)</span>
+          </el-form-item>
+        </div>
+        <div class="block">
+          <div class="title">
+            <h3>用户须知</h3>
+          </div>
+          <el-form-item label-width="15px" label=" " prop="specialtyNoticeId">
+            <el-select
+              v-model="form.specialtyNoticeId"
+              placeholder="请选择用户须知模板"
+              @change="pickNot"
+            >
+              <el-option
+                v-for="item in noticeList"
+                :key="item.noticeId"
+                :label="item.noticeName"
+                :value="item.noticeId">
+              </el-option>
+            </el-select>
+            <span class="tooltip">(初次使用请先前往运营管理创建模板再选择模板名称)</span>
           </el-form-item>
         </div>
         <el-form-item label-width="15px">
@@ -210,25 +253,40 @@
 </template>
 
 <script>
-  import { addSpecialty, getSpecialtyDetails, updateSpecialty } from '@/api/Releases/specialty'
+  import {
+    addSpecialty,
+    getSpecialtyDetails,
+    updateSpecialty,
+    getFreightList,
+    getNoticeList
+  } from '@/api/Releases/specialty'
   import { getDictionary } from '@/api/common'
   import Graphic from '@/components/graphic/index'
   import Specification from './components/specification'
   import {MapLoader} from "@/utils/AMap";
+  import CustomUpload from '@/components/CustomUpload'
 
   export default {
     data() {
       return {
+        options: [],
+        freightList:[], // 运费模板
+        noticeList:[], // 用户须知模板
         // 表单字段
         form: {
           specialtyType: '', // 选择分类
           specialtyName: '', // 特产名称
           specialtyLabelOne: '', // 特色一
           specialtyLabelTwo: '', // 特色二
+          fileUrlList: [],
           specsList:[], // 特产规格
           specialtyDescribeList: [], // 图文详情
           specialtyCoordinate: '', // 地图经纬
-          specialtyRelease: false
+          specialtyNoticeId: '', // 用户须知id
+          specialtyNoticeName: '', // 用户须知名字
+          specialtyFreightId: '', // 运费模板id
+          specialtyFreightName: '', // 运费模板名字
+          specialtyRelease: false,
         },
         // 表单验证
         rules: {
@@ -241,11 +299,20 @@
           specialtyLabelOne: [
             {required: true, message: '请填写特色', trigger: 'blur'}
           ],
+          fileUrlList: [
+            {required: true, message: '请填上传商品图片', trigger: 'change'}
+          ],
           specsList: [
             {required: true, message: '请至少添加一个特产规格', trigger: 'change'}
           ],
           specialtyCoordinate: [
             {required: true, message: '请选择产地标注', trigger: 'change'}
+          ],
+          specialtyNoticeId: [
+            {required: true, message: '请选择用户须知模板', trigger: 'change'}
+          ],
+          specialtyFreightId: [
+            {required: true, message: '请选择运费模板', trigger: 'change'}
           ],
           specialtyDescribeList: [
             {required: true, message: '请至少添加一个图文详情', trigger: 'change'}
@@ -268,16 +335,26 @@
     },
     components: {
       Graphic,
-      Specification
+      Specification,
+      CustomUpload
     },
     created() {
       this.getDictionary()
+      this.getFreight()
+      this.getNotice()
       this.specialtyId = this.$route.query.specialtyId
       if (this.specialtyId) {
         this.getDetails(this.specialtyId)
       }
     },
     methods: {
+      // 商品图片删除
+      deleteImage(index){
+        this.form.fileUrlList.splice(index, 1)
+      },
+      shopImage(data){
+        this.form.fileUrlList.push(data)
+      },
       // 逆解析地址
       getAddress(lnglat) {
         let _this = this
@@ -405,6 +482,40 @@
           .catch(err => {
             console.log(err)
           })
+      },
+      // 选择运费
+      pickFre(val){
+        let a = this.freightList.filter( item => {
+          return item.freightId == val
+        })[0]
+        this.form.specialtyFreightName = a.freightName
+      },
+      // 获取运费设置
+      getFreight(){
+          getFreightList()
+            .then( res => {
+              if (res.data.code == '1'){
+                let data = res.data.data
+                this.freightList = data
+              }
+            })
+      },
+      // 选择用户须知
+      pickNot(val){
+        let a = this.noticeList.filter( item => {
+          return item.noticeId == val
+        })[0]
+        this.form.specialtyNoticeName = a.noticeName
+      },
+      // 获取用户须知
+      getNotice(){
+          getNoticeList()
+            .then( res => {
+              if (res.data.code == '1'){
+                let data = res.data.data
+                this.noticeList = data
+              }
+            })
       },
       // 获取特产分类
       getDictionary() {
@@ -736,7 +847,10 @@
         }
       }
     }
-
+    .tooltip{
+      margin-left: 30px;
+      color: #999999;
+    }
   }
 
 </style>

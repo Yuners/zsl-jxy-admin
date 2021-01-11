@@ -45,3 +45,21 @@ export function updateSpecialty(params) {
 export function delSpecialty(params) {
   return request.post('/specialty/delSpecialty', params)
 }
+
+/**
+ * 获取运费模板列表
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export function getFreightList() {
+  return request.get('/freight/getAllFreight')
+}
+
+/**
+ * 获取用户须知列表
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export function getNoticeList(params) {
+  return request.get('/notice/getAllNotice', params)
+}

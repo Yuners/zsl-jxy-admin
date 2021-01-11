@@ -2,7 +2,7 @@
   <div class="is-flex">
     <template v-if="uploadType == 'image'">
       <ul class="upTime" v-show="fileList.length && fileList">
-<!--        <transition-group name="slide-fade">-->
+        <transition-group name="slide-fade">
           <li
             class="upLoad-item"
             v-for="(item, index) in fileList"
@@ -21,7 +21,7 @@
               </span>
             </span>
           </li>
-<!--        </transition-group>-->
+        </transition-group>
       </ul>
     </template>
     <template v-if="uploadType == 'video'">
@@ -65,7 +65,7 @@
       list-type="picture-card"
       :auto-upload="true"
       :limit="limit"
-      v-if="fileShow && !loading"
+      v-if="fileShow && !loading && !disabled"
       :multiple="true"
       :http-request="imagesUpload"
       :on-exceed="handleExceed"
@@ -94,6 +94,10 @@
       limit: {
         type: Number,
         default: 3
+      },
+      disabled: {
+        type: Boolean,
+        default: false
       }
     },
     computed: {
@@ -215,6 +219,7 @@
     .upTime {
       padding: 0;
       margin: 0;
+      display: flex;
 
       span {
         display: flex;
@@ -278,4 +283,18 @@
     }
   }
 
+  .slide-fade-enter-active {
+    transition: all 1s ease;
+  }
+
+  .slide-fade-leave-active {
+    transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+  }
+
+  .slide-fade-enter, .slide-fade-leave-to
+    /* .slide-fade-leave-active for below version 2.1.8 */
+  {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
 </style>

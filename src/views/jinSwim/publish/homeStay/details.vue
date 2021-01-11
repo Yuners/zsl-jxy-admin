@@ -156,6 +156,15 @@
                   {{ scope.row.describeContent }}
                 </template>
               </el-table-column>
+              <el-table-column
+                align="center"
+                label="操作"
+                width="150"
+              >
+                <template slot-scope="scope">
+                  <el-button type="text" @click="check(scope.row)">查看</el-button>
+                </template>
+              </el-table-column>
             </el-table>
           </el-form-item>
         </div>
@@ -210,7 +219,7 @@
         </div>
       </el-form>
     </div>
-
+    <viewDetails ref="viewDetails"></viewDetails>
   </div>
 </template>
 
@@ -218,6 +227,7 @@
   import {MapLoader} from '@/utils/AMap.js'
   import { getBedDetails } from '@/api/Releases/bed'
   import { getDictionary } from '@/api/common'
+  import viewDetails from '../components/viewDetails'
 
   export default {
     data() {
@@ -257,6 +267,9 @@
         roomClassList:[], // 房间类型
       }
     },
+    components:{
+      viewDetails
+    },
     created() {
       this.getDictionary()
       this.bedId = this.$route.query.bedId
@@ -265,6 +278,10 @@
       }
     },
     methods: {
+      // 查看图文详情
+      check(data){
+        this.$refs.viewDetails.open(data)
+      },
       updataString(val){
         let data = JSON.parse(val)
         return data.join()

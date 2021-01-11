@@ -77,36 +77,6 @@
                 </div>
               </div>
             </div>
-            <el-dialog
-              title="请点击地图"
-              :visible.sync="mapShow"
-              width="30%">
-              <div id="map"></div>
-              <span slot="footer" class="dialog-footer">
-                <div class="main">
-                  <div class="item">
-                    <div class="text">
-                      经纬度
-                    </div>
-                    <div class="content">
-                      {{ lnglat }}
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class="text">
-                      地址
-                    </div>
-                    <div class="content">
-                      {{ site }}
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <el-button >取 消</el-button>
-                  <el-button type="primary" >确 定</el-button>
-                </div>
-              </span>
-            </el-dialog>
             <!--            <div id="map"></div>-->
           </el-form-item>
         </div>
@@ -157,12 +127,21 @@
                   {{ scope.row.describeContent }}
                 </template>
               </el-table-column>
+              <el-table-column
+                align="center"
+                label="操作"
+                width="150"
+              >
+                <template slot-scope="scope">
+                  <el-button type="text" @click="check(scope.row)">查看</el-button>
+                </template>
+              </el-table-column>
             </el-table>
           </el-form-item>
         </div>
       </el-form>
     </div>
-
+    <viewDetails ref="viewDetails"></viewDetails>
   </div>
 </template>
 
@@ -170,6 +149,7 @@
   import {MapLoader} from '@/utils/AMap.js'
   import { getSceneryDetails } from '@/api/Releases/scenery'
   import { getDictionary } from '@/api/common'
+  import viewDetails from '../components/viewDetails'
 
   export default {
     data() {
@@ -202,6 +182,9 @@
         sceneryId: '',// 景区id
       }
     },
+    components:{
+      viewDetails
+    },
     created() {
       this.getDictionary()
       this.getFacility()
@@ -211,6 +194,10 @@
       }
     },
     methods: {
+      // 查看图文详情
+      check(data){
+        this.$refs.viewDetails.open(data)
+      },
       // 获取景区详情
       getDetails(id) {
         let params = {

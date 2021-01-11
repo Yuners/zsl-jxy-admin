@@ -11,6 +11,9 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 const whiteList = ['/login','/test'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
+  if (!store.state.city.cityList.length){
+    await store.dispatch('city/getCityList')
+  }
   next()
   /*// start progress bar
   NProgress.start()

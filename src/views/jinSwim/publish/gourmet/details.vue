@@ -77,37 +77,6 @@
                 </div>
               </div>
             </div>
-            <el-dialog
-              title="请点击地图"
-              :visible.sync="mapShow"
-              width="30%">
-              <div id="map"></div>
-              <span slot="footer" class="dialog-footer">
-                <div class="main">
-                  <div class="item">
-                    <div class="text">
-                      经纬度
-                    </div>
-                    <div class="content">
-                      {{ lnglat }}
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class="text">
-                      地址
-                    </div>
-                    <div class="content">
-                      {{ site }}
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <el-button >取 消</el-button>
-                  <el-button type="primary" >确 定</el-button>
-                </div>
-              </span>
-            </el-dialog>
-            <!--            <div id="map"></div>-->
           </el-form-item>
         </div>
         <div class="block">
@@ -157,12 +126,21 @@
                   {{ scope.row.describeContent }}
                 </template>
               </el-table-column>
+              <el-table-column
+                align="center"
+                label="操作"
+                width="150"
+              >
+                <template slot-scope="scope">
+                  <el-button type="text" @click="check(scope.row)">查看</el-button>
+                </template>
+              </el-table-column>
             </el-table>
           </el-form-item>
         </div>
       </el-form>
     </div>
-
+    <viewDetails ref="viewDetails"></viewDetails>
   </div>
 </template>
 
@@ -170,6 +148,7 @@
   import {MapLoader} from '@/utils/AMap.js'
   import { getFoodDetails } from '@/api/Releases/food'
   import { getDictionary } from '@/api/common'
+  import viewDetails from '../components/viewDetails'
 
   export default {
     data() {
@@ -177,7 +156,7 @@
         // 表单字段
         form: {
           foodType: '', // 选择分类
-          foodName: '', // 景区名称
+          foodName: '', // 美食名称
           foodLabelOne: '', // 特色一
           foodLabelTwo: '', // 特色二
           foodPhone: '', // 电话
@@ -199,8 +178,11 @@
           gnote: {},
           address: ''
         }, // 选择位置缓存
-        foodId: '',// 景区id
+        foodId: '',// 美食id
       }
+    },
+    components:{
+      viewDetails
     },
     created() {
       this.getDictionary()
@@ -211,7 +193,11 @@
       }
     },
     methods: {
-      // 获取景区详情
+      // 查看图文详情
+      check(data){
+        this.$refs.viewDetails.open(data)
+      },
+      // 获取美食详情
       getDetails(id) {
         let params = {
           foodId: id
@@ -256,7 +242,7 @@
           })
         })
       },
-      // 获取景区分类
+      // 获取美食分类
       getDictionary() {
         let params = {
           dictionaryPcode: "SHOW_TYPE_FOOD"
@@ -269,7 +255,7 @@
             }
           })
       },
-      // 获取景区设施分类
+      // 获取美食设施分类
       getFacility() {
         let params = {
           dictionaryPcode: "FACILITIES_SERVICES_SCENERY"

@@ -1,62 +1,38 @@
 <template>
   <div class="compile">
     <div class="compileHead">
-      <h1>风景详情</h1>
+      <h1>特产编辑</h1>
     </div>
     <div class="compileMain">
       <el-form label-position="right" :model="form" ref="ruleForm" label-width="110px">
         <div class="block">
           <div class="title">
-            <h3>编辑景区</h3>
+            <h3>编辑特产</h3>
           </div>
-          <el-form-item label="选择分类：" prop="sceneryType">
-            <el-radio-group v-model="form.sceneryType">
+          <el-form-item label="选择分类：" prop="specialtyType">
+            <el-radio-group v-model="form.specialtyType">
               <el-radio disabled v-for="item in classifyList" :key="item.dictionaryId" :label="item.dictionaryId">{{
                 item.dictionaryName }}
               </el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="景区名称：" prop="sceneryName">
-            <el-input :disabled="true" maxlength="20" style="width: 350px" v-model="form.sceneryName"></el-input>
+          <el-form-item label="特产名称：" prop="specialtyName">
+            <el-input disabled maxlength="20" style="width: 350px" v-model="form.specialtyName"></el-input>
           </el-form-item>
           <div class="clearfix feature">
-            <el-form-item label="特色一：" prop="sceneryLabelOne">
-              <el-input :disabled="true" maxlength="10" style="width: 350px" v-model="form.sceneryLabelOne"></el-input>
+            <el-form-item label="特色一：" prop="specialtyLabelOne">
+              <el-input disabled maxlength="10" style="width: 350px" v-model="form.specialtyLabelOne"></el-input>
             </el-form-item>
             <div style="width: 100px"></div>
-            <el-form-item label="特色二：" prop="sceneryLabelTwo">
-              <el-input :disabled="true" maxlength="10" style="width: 350px" v-model="form.sceneryLabelTwo"></el-input>
+            <el-form-item label="特色二：" prop="specialtyLabelTwo">
+              <el-input disabled maxlength="10" style="width: 350px" v-model="form.specialtyLabelTwo"></el-input>
             </el-form-item>
           </div>
-        </div>
-        <div class="block">
-          <div class="title">
-            <h3>用户须知</h3>
-          </div>
-          <el-form-item label="电话：" prop="sceneryPhone">
-            <el-input :disabled="true" maxlength="20" type="number" style="width: 350px" v-model.number="form.sceneryPhone"></el-input>
+          <el-form-item label="商品图片：" prop="fileUrlList">
+            <custom-upload :disabled="true" :fileList="form.fileUrlList" />
           </el-form-item>
-          <el-form-item label="营业时间：" prop="sceneryBusinesshours">
-            <el-input :disabled="true" maxlength="20" style="width: 350px" v-model="form.sceneryBusinesshours"></el-input>
-          </el-form-item>
-          <el-form-item label="价格说明：" prop="sceneryPrice">
-            <el-input :disabled="true" maxlength="20" style="width: 350px" v-model="form.sceneryPrice"></el-input>
-          </el-form-item>
-          <el-form-item label="温馨提示：" prop="sceneryReminder">
-            <el-input :disabled="true" maxlength="200" show-word-limit type="textarea" v-model="form.sceneryReminder"></el-input>
-          </el-form-item>
-        </div>
-        <div class="block">
-          <div class="title">
-            <h3>交通攻略</h3>
-          </div>
-          <el-form-item label="自助游：" prop="sceneryIndependenttravel">
-            <el-input :disabled="true" maxlength="200" show-word-limit type="textarea" v-model="form.sceneryIndependenttravel"></el-input>
-          </el-form-item>
-          <el-form-item label="自驾游：" prop="sceneryRoadtrip">
-            <el-input :disabled="true" maxlength="200" show-word-limit type="textarea" v-model="form.sceneryRoadtrip"></el-input>
-          </el-form-item>
-          <el-form-item label="地图标注：" prop="sceneryCoordinate">
+
+          <el-form-item label="产地标注：" prop="specialtyCoordinate">
             <div class="mark">
               <div class="markMain">
                 <div class="item">
@@ -64,7 +40,7 @@
                     经纬度
                   </div>
                   <div class="content">
-                    {{ form.sceneryCoordinate ? form.sceneryCoordinate.lng + ',' + form.sceneryCoordinate.lat : '' }}
+                    {{ form.specialtyCoordinate ? form.specialtyCoordinate.lng + ',' + form.specialtyCoordinate.lat : '' }}
                   </div>
                 </div>
                 <div class="item">
@@ -77,62 +53,55 @@
                 </div>
               </div>
             </div>
-            <el-dialog
-              title="请点击地图"
-              :visible.sync="mapShow"
-              width="30%">
-              <div id="map"></div>
-              <span slot="footer" class="dialog-footer">
-                <div class="main">
-                  <div class="item">
-                    <div class="text">
-                      经纬度
-                    </div>
-                    <div class="content">
-                      {{ lnglat }}
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class="text">
-                      地址
-                    </div>
-                    <div class="content">
-                      {{ site }}
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <el-button >取 消</el-button>
-                  <el-button type="primary" >确 定</el-button>
-                </div>
-              </span>
-            </el-dialog>
             <!--            <div id="map"></div>-->
           </el-form-item>
         </div>
         <div class="block">
           <div class="title">
-            <h3>设施包含</h3>
+            <h3>规格编辑</h3>
           </div>
-          <el-form-item prop="sceneryFacilities">
-            <el-checkbox-group v-model="form.sceneryFacilities">
-              <el-checkbox
-                v-for="(item,index) of facilityLsit"
-                disabled
-                :label="item.dictionaryName"
-                :key="index"
-                name="type"
-              ></el-checkbox>
-            </el-checkbox-group>
+          <el-form-item label-width="15px" prop="specsList">
+            <el-table
+              :data="form.specsList"
+              border
+              fit
+              highlight-current-row
+            >
+              <el-table-column align="center" label="序号" width="100">
+                <template slot-scope="scope">
+                  {{ scope.$index + 1 }}
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="规格参数">
+                <template slot-scope="scope">
+                  {{ scope.row.specsParam }}
+                </template>
+              </el-table-column>
+              <el-table-column label="单位" align="center" width="150">
+                <template slot-scope="scope">
+                  {{ scope.row.specsUnit }}
+                </template>
+              </el-table-column>
+              <el-table-column label="数量" align="center" width="150">
+                <template slot-scope="scope">
+                  {{ scope.row.specsNumber }}
+                </template>
+              </el-table-column>
+              <el-table-column label="价格" align="center" width="150">
+                <template slot-scope="scope">
+                  {{ scope.row.specsPrice }}
+                </template>
+              </el-table-column>
+            </el-table>
           </el-form-item>
         </div>
         <div class="block">
           <div class="title">
             <h3>图文详情</h3>
           </div>
-          <el-form-item prop="sceneryDescribeList">
+          <el-form-item label-width="15px" prop="specialtyDescribeList">
             <el-table
-              :data="form.sceneryDescribeList"
+              :data="form.specialtyDescribeList"
               border
               fit
               highlight-current-row
@@ -152,87 +121,111 @@
                     :fit="'cover'"/>
                 </template>
               </el-table-column>
-              <el-table-column label="文字描述" align="center">
+              <el-table-column label="文字描述" show-overflow-tooltip align="center">
                 <template slot-scope="scope">
                   {{ scope.row.describeContent }}
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                label="操作"
+                width="150"
+              >
+                <template slot-scope="scope">
+                  <el-button type="text" @click="check(scope.row)">查看</el-button>
                 </template>
               </el-table-column>
             </el-table>
           </el-form-item>
         </div>
+        <div class="block">
+          <div class="title">
+            <h3>运费设置</h3>
+          </div>
+          <el-form-item label-width="15px" label=" " prop="specialtyFreightId">
+            <el-select
+              disabled
+              v-model="form.specialtyFreightName"
+              placeholder="请选择运费模板"
+            >
+            </el-select>
+          </el-form-item>
+        </div>
+        <div class="block">
+          <div class="title">
+            <h3>用户须知</h3>
+          </div>
+          <el-form-item label-width="15px" label=" " prop="specialtyNoticeId">
+            <el-select
+              disabled
+              v-model="form.specialtyNoticeName"
+              placeholder="请选择用户须知模板"
+            >
+            </el-select>
+          </el-form-item>
+        </div>
       </el-form>
     </div>
-
+    <viewDetails ref="viewDetails"></viewDetails>
   </div>
 </template>
 
 <script>
-  import {MapLoader} from '@/utils/AMap.js'
   import { getSpecialtyDetails } from '@/api/Releases/specialty'
   import { getDictionary } from '@/api/common'
+  import {MapLoader} from "@/utils/AMap";
+  import CustomUpload from '@/components/CustomUpload'
+  import viewDetails from '../components/viewDetails'
 
   export default {
     data() {
       return {
         // 表单字段
         form: {
-          sceneryType: '', // 选择分类
-          sceneryName: '', // 景区名称
-          sceneryLabelOne: '', // 特色一
-          sceneryLabelTwo: '', // 特色二
-          sceneryPhone: '', // 电话
-          sceneryBusinesshours: '', // 营业时间
-          sceneryPrice: '', // 价格说明
-          sceneryReminder: '', // 温馨提示
-          sceneryIndependenttravel: '', // 自助游
-          sceneryRoadtrip: '', // 自驾游
-          sceneryCoordinate: '', // 地图经纬
-          sceneryFacilities: [], // 包含设施
-          sceneryDescribeList: [], // 图文详情
-          sceneryRelease: false
+          specialtyType: '', // 选择分类
+          specialtyName: '', // 特产名称
+          specialtyLabelOne: '', // 特色一
+          specialtyLabelTwo: '', // 特色二
+          fileUrlList: [],
+          specsList:[], // 特产规格
+          specialtyDescribeList: [], // 图文详情
+          specialtyCoordinate: '', // 地图经纬
+          specialtyNoticeId: '', // 用户须知id
+          specialtyNoticeName: '', // 用户须知名字
+          specialtyFreightId: '', // 运费模板id
+          specialtyFreightName: '', // 运费模板名字
+          specialtyRelease: false,
         },
         classifyList: [],
-        facilityLsit:[],
+        addShow: false,
+        specifShow: false,
+        graphicData: {},
+        specifData: {},
+        specialtyId: '',// 特产id
+        mapShow: false,
         lnglat: '',
         site: '',
         lnglatCache: {
           gnote: {},
           address: ''
         }, // 选择位置缓存
-        sceneryId: '',// 景区id
       }
+    },
+    components: {
+      CustomUpload,
+      viewDetails
     },
     created() {
       this.getDictionary()
-      this.getFacility()
-      this.sceneryId = this.$route.query.sceneryId
-      if (this.sceneryId) {
-        this.getDetails(this.sceneryId)
+      this.specialtyId = this.$route.query.specialtyId
+      if (this.specialtyId) {
+        this.getDetails(this.specialtyId)
       }
     },
     methods: {
-      // 获取景区详情
-      getDetails(id) {
-        let params = {
-          sceneryId: id
-        }
-        getSceneryDetails(params)
-          .then(res => {
-            let data = res.data.data
-            data.sceneryCoordinate = JSON.parse(data.sceneryCoordinate)
-            data.sceneryFacilities = JSON.parse(data.sceneryFacilities)
-            data.sceneryRelease = data.sceneryRelease ? true : false
-            let formData = JSON.parse(JSON.stringify(data))
-            for (let key in this.form) {
-              this.form[key] = formData[key]
-            }
-            let lnglat = data.sceneryCoordinate.lng + ',' + data.sceneryCoordinate.lat
-            this.getAddress(lnglat)
-            console.log(this.form)
-          })
-          .catch(err => {
-            console.log(err)
-          })
+      // 查看图文详情
+      check(data){
+        this.$refs.viewDetails.open(data)
       },
       // 逆解析地址
       getAddress(lnglat) {
@@ -253,29 +246,47 @@
           })
         })
       },
-      // 获取景区分类
+      // 获取特产详情
+      getDetails(id) {
+        let params = {
+          specialtyId: id
+        }
+        getSpecialtyDetails(params)
+          .then(res => {
+            if (res.data.code == '1'){
+              let data = res.data.data
+              data.specialtyCoordinate = JSON.parse(data.specialtyCoordinate)
+              data.specialtyFacilities = JSON.parse(data.specialtyFacilities)
+              data.specialtyRelease = data.specialtyRelease ? true : false
+              let formData = JSON.parse(JSON.stringify(data))
+              for (let key in this.form) {
+                if (formData[key] != null){
+                  this.form[key] = formData[key]
+                }
+              }
+              if (data.specialtyCoordinate){
+                console.log(data.specialtyCoordinate)
+                let lnglat = data.specialtyCoordinate.lng + ',' + data.specialtyCoordinate.lat
+                this.getAddress(lnglat)
+              }
+            } else {
+              this.$message.error(res.data.msg)
+            }
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      },
+      // 获取特产分类
       getDictionary() {
         let params = {
-          dictionaryPcode: "SHOW_TYPE_PLAY"
+          dictionaryPcode: "SHOW_TYPE_SPECIALTY"
         }
         getDictionary(params)
           .then(res => {
             if (res.data.data.code == 200) {
               let data = res.data.data.data
               this.classifyList = data
-            }
-          })
-      },
-      // 获取景区设施分类
-      getFacility() {
-        let params = {
-          dictionaryPcode: "FACILITIES_SERVICES_SCENERY"
-        }
-        getDictionary(params)
-          .then(res => {
-            if (res.data.data.code == 200) {
-              let data = res.data.data.data
-              this.facilityLsit = data
             }
           })
       },
@@ -414,106 +425,6 @@
       }
     }
 
-    .addGraphic {
-      width: 100%;
-      height: calc(100% - 60px);
-      position: absolute;
-      top: 60px;
-      left: 0;
-      padding: 0 70px;
-      background-color: rgba(0, 0, 0, .2);
-      z-index: 99;
-
-      .addMain {
-        background-color: #ffffff;
-        padding: 70px;
-        margin-top: 150px;
-
-        .is-flex {
-          display: flex;
-
-          .upTime {
-            padding: 0;
-            margin: 0;
-
-            span {
-              display: flex;
-              justify-content: flex-start;
-            }
-
-            .upLoad-item {
-              position: relative;
-              font-size: 14px;
-              color: #606266;
-              line-height: 1.8;
-              overflow: hidden;
-              background-color: #fff;
-              border: 1px solid #c0ccda;
-              border-radius: 6px;
-              box-sizing: border-box;
-              width: 148px;
-              height: 148px;
-              margin: 0 8px 8px 0;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-
-              img {
-                width: 100%;
-                /*height: 100%;*/
-              }
-
-              .masked {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                left: 0;
-                top: 0;
-                cursor: default;
-                text-align: center;
-                color: #fff;
-                opacity: 0;
-                font-size: 20px;
-                background-color: rgba(0, 0, 0, 0.5);
-                transition: opacity 0.3s;
-
-                &:hover {
-                  opacity: 1;
-                }
-
-                .maskedDelet {
-                  position: absolute;
-                  top: 50%;
-                  margin-top: -11px;
-                  left: 50%;
-                  margin-left: -10px;
-                  font-size: inherit;
-
-                  i {
-                    cursor: pointer;
-                  }
-                }
-              }
-            }
-          }
-        }
-
-      }
-    }
   }
 
-  .slide-fade-enter-active {
-    transition: all 1s ease;
-  }
-
-  .slide-fade-leave-active {
-    transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-  }
-
-  .slide-fade-enter, .slide-fade-leave-to
-    /* .slide-fade-leave-active for below version 2.1.8 */
-  {
-    transform: translateY(-10px);
-    opacity: 0;
-  }
 </style>

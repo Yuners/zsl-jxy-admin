@@ -77,11 +77,11 @@
                 <el-button type="primary"  @click="AddCanl">确认</el-button>
              </el-form-item>
         </el-form>
-        
+
       </el-container>
     </el-container>
    </el-dialog>
-   
+
   </div>
 </template>
 
@@ -90,7 +90,7 @@
  import { selectFramework} from '@/api/Role/framework'
  import { getUser,roleList,userCreated,updateUserInfo} from '@/api/Role/user'
  import { isPhones,isPassword,isPathName} from "@/utils/validate";
- 
+
  import sysManageRouter from '@/router/modules/sysManage'
   export default {
     data() {
@@ -177,7 +177,7 @@
       }
     },
     components: {
-      
+
     },
     computed: {
       isBoole(){
@@ -197,7 +197,7 @@
         this.addItemsRules=addItemsRules;
       }
       console.log(this.userId===null)
-      
+
     },
     methods: {
         //初始数据获取
@@ -239,10 +239,10 @@
                 roleIdList.push(roleId)
               }
             }
-            
+
             this.roleList=roleList;
             this.roleIdList=roleIdList;
-            
+
           })
            .catch( err => {
             this.$message.error('服务器错误')
@@ -261,7 +261,7 @@
           this.isframework=true;
         },
         //用户信息初始
-        
+
         getDetails(userId){
           getUser(userId).then(v=>{
             this.addItems=v.data;
@@ -348,7 +348,7 @@
               this.$message({
                   type: 'success',
                   message: '添加成功!'
-                });  
+                });
                 this.$router.back()
           })
           .catch( err => {
@@ -372,9 +372,9 @@
                this.$message({
                   type: 'success',
                   message: '修改成功!'
-                });  
+                });
                 this.$router.back()
-                
+
           })
           .catch( err => {
               this.$message.error('服务器错误')
@@ -402,7 +402,7 @@
             if(max<createdSize)max=createdSize;
             for(let i=0;i<max;i++){
               if(valueSize>i&&created.indexOf(value[i])===-1){
-                add.push(value[i]); 
+                add.push(value[i]);
               }
               if(createdSize>i&&value.indexOf(created[i])===-1){
                 remove.push(created[i]);
@@ -420,9 +420,9 @@
           // console.log(date)
           let directoryTreeIdItems=date.directoryTreeIdItems;
           console.log(directoryTreeIdItems);
-          
+
           if(node.checkedKeys.indexOf(date.directoryTreeId)===-1){
-            console.log("取消")            
+            console.log("取消")
             for(let i=0;i<directoryTreeIdItems.length;i++){
                 let index=this.addJurisdictionList.indexOf(directoryTreeIdItems[i]);
                 if(index===-1){
@@ -431,7 +431,7 @@
                      this.removeJurisdictionList.push(directoryTreeIdItems[i])
                   }
                 }
-                else 
+                else
                 {
                   this.addJurisdictionList.splice(i,1);
                 }
@@ -447,12 +447,12 @@
                      this.addJurisdictionList.push(directoryTreeIdItems[i])
                   }
                 }
-                else 
+                else
                 {
                   this.removeJurisdictionList.splice(i,1);
                 }
             }
-           
+
 
           }
            console.log(this.addJurisdictionList);

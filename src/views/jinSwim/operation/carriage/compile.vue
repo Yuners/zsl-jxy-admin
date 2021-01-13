@@ -245,7 +245,7 @@
           }
           getPcca(params)
             .then(res => {
-              if (res.code == 200 && res.data.length && res.data){
+              if (res.code == 1 && res.data.length && res.data){
                 let data = res.data
                 this.cityList = data
                 resolve()

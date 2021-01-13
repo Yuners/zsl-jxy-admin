@@ -1,12 +1,13 @@
 import request from "@/utils/request";
 
+let index="/role"
 /**
  * 添加目录
  * @param params
  * @returns {AxiosPromise<any>}
  */
 export function addDirectoryTree( params ) {
-  return request.post('/directoryTree/add', params)
+  return request.post(index+'/directoryTree/add', params)
 }
 
 
@@ -16,7 +17,7 @@ export function addDirectoryTree( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function updateDirectoryTree( params ) {
-  return request.post('/directoryTree/update', params)
+  return request.post(index+'/directoryTree/update', params)
 }
 
 
@@ -27,7 +28,7 @@ export function updateDirectoryTree( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function delectDirectoryTree( params ) {
-  return request.post('/directoryTree/delect', params)
+  return request.post(index+'/directoryTree/delect', params)
 }
 
 /**
@@ -36,7 +37,7 @@ export function delectDirectoryTree( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function disabledDirectoryTree( params ) {
-  return request.post('/directoryTree/disabled', params)
+  return request.post(index+'/directoryTree/disabled', params)
 }
 
 /**
@@ -45,5 +46,5 @@ export function disabledDirectoryTree( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function selectDirectoryTree( params ) {
-  return request.post('/directoryTree/select/tree', params)
+  return request.post(index+'/directoryTree/select/tree', params)
 }

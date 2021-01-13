@@ -1,12 +1,12 @@
 import request from "@/utils/request";
-
+let index="/role"
 /**
  * 添加
  * @param params
  * @returns {AxiosPromise<any>}
  */
 export function addFramework( params ) {
-  return request.post('/framework/add', params)
+  return request.post(index+'/framework/add', params)
 }
 
 /**
@@ -15,7 +15,7 @@ export function addFramework( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function updateFramework( params ) {
-  return request.post('/framework/update', params)
+  return request.post(index+'/framework/update', params)
 }
 
 
@@ -26,7 +26,7 @@ export function updateFramework( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function delectFramework( params ) {
-  return request.post('/framework/delect', params)
+  return request.post(index+'/framework/delect', params)
 }
 
 /**
@@ -35,7 +35,7 @@ export function delectFramework( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function disabledFramework( params ) {
-  return request.post('/framework/disabled', params)
+  return request.post(index+'/framework/disabled', params)
 }
 
 /**
@@ -44,5 +44,5 @@ export function disabledFramework( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function selectFramework( params ) {
-  return request.post('/framework/select', params)
+  return request.post(index+'/framework/select', params)
 }

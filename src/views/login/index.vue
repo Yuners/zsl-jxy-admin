@@ -41,7 +41,7 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
 
       <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
@@ -53,29 +53,29 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
-
+import { isMobile,isPassword } from '@/utils/validate'
+ import { userLogin } from '@/api/auth'
 export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+      if (!isMobile(value)) {
+        callback(new Error('请输入手机号'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+      if (!isPassword(value)) {
+        callback(new Error('密码只能输入6-20个字母、数字、下划线'))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        username: '18523882297',
+        password: '123456'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -106,21 +106,51 @@ export default {
       })
     },
     handleLogin() {
-      /*this.$refs.loginForm.validate(valid => {
+      this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
-            this.loading = false
-          }).catch(() => {
-            this.loading = false
+          this.$store.dispatch('user/logout');
+          this.loading = true;
+          let params={
+            userPhone:this.loginForm.username,
+            userPassword:this.loginForm.password
+          };
+          userLogin(params).then(v=>{
+            let date=v.data;
+            console.log(date)
+            if(date.userFlag){
+              if(date.directoryTree===null||date.directoryTree.length===0||date.directoryTree===undefined){
+                  this.$message.error("您没有后端管理权限,请联系管理员"); 
+              }
+              else{
+                  console.log(date.token)
+                  let tokenDate={
+                    roleList:date.roleList,
+                    token:date.token,
+                    user:date.user,
+                    directoryTree:date.directoryTree
+                  }
+                  this.$store.dispatch('user/getToken', tokenDate);
+                  this.$router.push({ path: this.redirect || '/' })
+                  // console.log(this.$store.getters.token);
+              }
+              this.loading = false;
+            }
+            else{
+              this.$message.error(date.msg); 
+              this.loading = false;
+            }
+           
+          })
+          .catch(err => {
+            console.log(err)
+            this.loading = false;
           })
         } else {
           console.log('error submit!!')
           return false
         }
-      })*/
-      this.$router.push({ path: this.redirect || '/' })
+      })
+      // this.$router.push({ path: this.redirect || '/' })
     }
   }
 }

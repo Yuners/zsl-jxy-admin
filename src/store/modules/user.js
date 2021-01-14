@@ -113,7 +113,6 @@ const actions = {
         if (!data) {
           return reject('Verification failed, please Login again.')
         }
-
         commit('SET_USER', data)
         resolve(data)
       }).catch(error => {

@@ -23,13 +23,14 @@ export default {
     window.addEventListener('online', () => {
       this.$message.success('网络已连接');
     })
-    this.initAuth();
+    // this.initAuth();
   },
   methods: {
     initAuth(){
-        // console.log(store.getters.token)
+        console.log(store.getters.token)
         this.loading = true;
-        if (store.getters.token){
+        if (store.getters.token!=null||store.getters.token!=undefined){
+          console.log("sss")
           userOauth().then(v=>{
             this.$store.dispatch('user/logout');
             let date=v.data;
@@ -70,7 +71,9 @@ export default {
           })
         }
         else{
+          console.log("sss")
           this.loading = false;
+          console.log("sss")
           this.$router.push({
             path:'/login',
            })

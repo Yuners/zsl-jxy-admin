@@ -189,6 +189,75 @@ const jinSwimRouter = {
         ]
       },
       {
+        path: '/jinSwim/apply',
+        redirect: '/jinSwim/apply/shop',
+        component: Layout,
+        name: 'apply',
+        meta: {title: '审核管理', icon: 'apply'},
+        children: [
+          {
+            path: 'shop',
+            name: 'Shop',
+            redirect: '/jinSwim/apply/shop/list',
+            component: () => import('@/views/jinSwim/apply/shop'),
+            meta: {title: '申请审核', icon: 'shop'},
+            children: [
+              {
+                path: 'list',
+                name: 'List',
+                component: () => import('@/views/jinSwim/apply/shop/list'),
+                meta: {title: '申请列表'},
+                hidden: true
+              },
+              /* {
+                path: 'compile',
+                name: 'Compile',
+                component: () => import('@/views/jinSwim/operation/carriage/compile'),
+                meta: {title: '申请审核'},
+                hidden: true
+              },
+              {
+                path: 'details',
+                name: 'Details',
+                component: () => import('@/views/jinSwim/operation/carriage/details'),
+                meta: {title: '申请详情'},
+                hidden: true
+              }, */
+            ]
+          },
+          {
+            path: 'release',
+            name: 'Release',
+            redirect: '/jinSwim/apply/release/list',
+            component: () => import('@/views/jinSwim/apply/release'),
+            meta: {title: '发布审核', icon: 'release'},
+            children: [
+              {
+                path: 'list',
+                name: 'List',
+                component: () => import('@/views/jinSwim/apply/release/list'),
+                meta: {title: '发布申请列表'},
+                hidden: true
+              },
+              /* {
+                path: 'compile',
+                name: 'Compile',
+                component: () => import('@/views/jinSwim/operation/userNotes/compile'),
+                meta: {title: '发布申请审核'},
+                hidden: true
+              },
+              {
+                path: 'details',
+                name: 'Details',
+                component: () => import('@/views/jinSwim/operation/carriage/details'),
+                meta: {title: '发布申请详情'},
+                hidden: true
+              }, */
+            ]
+          },
+        ]
+      },
+      {
         path: '/jinSwim/operation',
         redirect: '/jinSwim/operation/carriage',
         component: Layout,

@@ -1,6 +1,7 @@
 import request from '@/utils/request'
 
-let index="/oauth";
+// let index="/oauth";
+let index="http://192.124.1.57:5021/oauth"
 /**
  * 用户登录
  * @param params

@@ -265,6 +265,22 @@ const jinSwimRouter = {
         meta: {title: '运营管理', icon: 'operation'},
         children: [
           {
+            path: 'specialty',
+            name: 'Specialty',
+            redirect: '/jinSwim/operation/specialty/list',
+            component: () => import('@/views/jinSwim/operation/specialty'),
+            meta: {title: '商品管理', icon: 'carriage'},
+            children: [
+              {
+                path: 'list',
+                name: 'List',
+                component: () => import('@/views/jinSwim/operation/specialty/list'),
+                meta: {title: '商品列表'},
+                hidden: true
+              }
+            ]
+          },
+          {
             path: 'carriage',
             name: 'Carriage',
             redirect: '/jinSwim/operation/carriage/list',
@@ -320,6 +336,36 @@ const jinSwimRouter = {
                 name: 'Details',
                 component: () => import('@/views/jinSwim/operation/carriage/details'),
                 meta: {title: '须知详情'},
+                hidden: true
+              },
+            ]
+          },
+          {
+            path: 'order',
+            name: 'Order',
+            redirect: '/jinSwim/operation/order/list',
+            component: () => import('@/views/jinSwim/operation/order'),
+            meta: {title: '订单管理', icon: 'carriage'},
+            children: [
+              {
+                path: 'list',
+                name: 'List',
+                component: () => import('@/views/jinSwim/operation/order/list'),
+                meta: {title: '订单列表'},
+                hidden: true
+              },
+              {
+                path: 'compile',
+                name: 'Compile',
+                component: () => import('@/views/jinSwim/operation/order/compile'),
+                meta: {title: '订单编辑'},
+                hidden: true
+              },
+              {
+                path: 'details',
+                name: 'Details',
+                component: () => import('@/views/jinSwim/operation/carriage/details'),
+                meta: {title: '订单详情'},
                 hidden: true
               },
             ]

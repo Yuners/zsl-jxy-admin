@@ -10,7 +10,7 @@
             clearable
             v-model="param.landLocationId"
             placeholder="选择所属地区"
-            :options="cityList"
+            :options="$store.state.city.cityList"
             :props="props"
             filterable
             @change="selected"
@@ -108,17 +108,17 @@
           children: "items",
           label:"frameworkName",
           value:"frameworkId",
-          // checkStrictly: true,
-          lazy: true, //懒加载
-          lazyLoad (node, resolve) {
-            console.info(node, resolve)
-            const { level } = node;
-            setTimeout(() => {
-              const nodes = node.children
-              // 通过调用resolve将子节点数据返回，通知组件数据加载完成
-              resolve(nodes);
-            }, 500);
-          }
+          checkStrictly: true,
+          // lazy: true, //懒加载
+          // lazyLoad (node, resolve) {
+          //   console.info(node, resolve)
+          //   const { level } = node;
+          //   setTimeout(() => {
+          //     const nodes = node.children
+          //     // 通过调用resolve将子节点数据返回，通知组件数据加载完成
+          //     resolve(nodes);
+          //   }, 500);
+          // }
         }, 
         cityList:[] // 地址选择表
       }

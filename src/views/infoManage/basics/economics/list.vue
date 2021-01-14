@@ -10,7 +10,7 @@
             clearable
             v-model="param.economicsLocationId"
             placeholder="选择所属地区"
-            :options="cityList"
+            :options="$store.state.city.cityList"
             :props="props"
             filterable
             @change="selected"
@@ -108,7 +108,7 @@
           children: "items",
           label:"frameworkName",
           value:"frameworkId",
-          // checkStrictly: true,
+          checkStrictly: true,
           // lazy: true, //懒加载
           // lazyLoad (node, resolve) {
           //   console.info(node, resolve)

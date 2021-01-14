@@ -9,7 +9,7 @@
           clearable
           v-model="param.infrastructureLocationId"
           placeholder="选择所属地区"
-          :options="cityList"
+          :options="$store.state.city.cityList"
           :props="props"
           >
         </el-cascader>
@@ -105,7 +105,8 @@
         props:{ 
           children: "items",
           label:"frameworkName",
-          value:"frameworkId"
+          value:"frameworkId",
+          checkStrictly: true,
         }, 
         cityList:[] // 地址选择表
       }

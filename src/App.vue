@@ -23,7 +23,7 @@ export default {
     window.addEventListener('online', () => {
       this.$message.success('网络已连接');
     })
-    this.initAuth();
+    // this.initAuth();
   },
   methods: {
     initAuth(){

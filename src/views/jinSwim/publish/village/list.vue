@@ -79,9 +79,9 @@
         width="150"
       >
         <template slot-scope="scope">
-          <el-button v-if="scope.row.villageState === 0" type="text" @click="issue(scope.row.villageId)" size="small">发布</el-button>
-          <el-button v-if="scope.row.villageState !== 1" type="text" size="small" @click="editVillage(scope.row.villageId)">编辑</el-button>
-          <el-button v-if="scope.row.villageState !== 1" type="text" size="small" @click="delVillage(scope.row.villageId)">删除</el-button>
+          <el-button v-if="scope.row.villageState === '0'" type="text" @click="issue(scope.row.villageId)" size="small">发布</el-button>
+          <el-button v-if="scope.row.villageState !== '1'" type="text" size="small" @click="editVillage(scope.row.villageId)">编辑</el-button>
+          <el-button v-if="scope.row.villageState !== '1'" type="text" size="small" @click="delVillage(scope.row.villageId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -243,7 +243,7 @@
           villageName: this.villageName
         }
         if (this.status){
-          params.villageState = Number(this.status)
+          params.villageState = this.status
         }
         getVillageList(params)
           .then( res => {

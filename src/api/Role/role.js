@@ -1,12 +1,12 @@
 import request from "@/utils/request";
-
+let index="/role"
 /**
  * 添加角色
  * @param params
  * @returns {AxiosPromise<any>}
  */
 export function addRole( params ) {
-  return request.post('/role/add', params)
+  return request.post(index+'/role/add', params)
 }
 
 /**
@@ -15,7 +15,7 @@ export function addRole( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function updateRole( params ) {
-  return request.post('/role/updateName', params)
+  return request.post(index+'/role/updateName', params)
 }
 
 
@@ -26,7 +26,7 @@ export function updateRole( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function delectRole( params ) {
-  return request.post('/role/delect', params)
+  return request.post(index+'/role/delect', params)
 }
 
 /**
@@ -35,7 +35,7 @@ export function delectRole( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function disabledRole( params ) {
-  return request.post('/role/disabled', params)
+  return request.post(index+'/role/disabled', params)
 }
 
 /**
@@ -44,7 +44,7 @@ export function disabledRole( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function selectRoleList( params ) {
-  return request.post('/role/select/list', params)
+  return request.post(index+'/role/select/list', params)
 }
 
 /**
@@ -53,7 +53,7 @@ export function selectRoleList( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function selectRolePage( params ) {
-  return request.get('/role/select/page', {params})
+  return request.get(index+'/role/select/page', {params})
 }
 /**
  * 查询角色信息
@@ -61,5 +61,5 @@ export function selectRolePage( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function selectRole( params ) {
-  return request.post('/role/select', params)
+  return request.post(index+'/role/select', params)
 }

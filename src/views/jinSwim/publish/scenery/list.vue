@@ -86,9 +86,9 @@
         width="150"
       >
         <template slot-scope="scope">
-          <el-button v-if="scope.row.sceneryState === 0" type="text" @click="issue(scope.row.sceneryId)" size="small">发布</el-button>
-          <el-button v-if="scope.row.sceneryState !== 1" type="text" size="small" @click="editScenery(scope.row.sceneryId)">编辑</el-button>
-          <el-button v-if="scope.row.sceneryState !== 1" type="text" size="small" @click="delScenery(scope.row.sceneryId)">删除</el-button>
+          <el-button v-if="scope.row.sceneryState === '0'" type="text" @click="issue(scope.row.sceneryId)" size="small">发布</el-button>
+          <el-button v-if="scope.row.sceneryState !== '1'" type="text" size="small" @click="editScenery(scope.row.sceneryId)">编辑</el-button>
+          <el-button v-if="scope.row.sceneryState !== '1'" type="text" size="small" @click="delScenery(scope.row.sceneryId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -113,32 +113,32 @@
     filters: {
       statusFilter(status) {
         switch (status) {
-          case 0:
+          case '0':
             return '未提交'
             break;
-          case 1:
+          case '1':
             return '待审核'
             break;
-          case 2:
+          case '2':
             return '通过'
             break;
-          case 3:
+          case '3':
             return '不通过'
             break;
         }
       },
       statusType(status) {
         switch (status) {
-          case 0:
+          case '0':
             return ''
             break;
-          case 1:
+          case '1':
             return 'warning'
             break;
-          case 2:
+          case '2':
             return 'success'
             break;
-          case 3:
+          case '3':
             return 'danger'
             break;
         }
@@ -250,7 +250,7 @@
           sceneryName: this.sceneryName
         }
         if (this.status){
-          params.sceneryState = Number(this.status)
+          params.sceneryState = this.status
         }
         getScenery(params)
           .then( res => {

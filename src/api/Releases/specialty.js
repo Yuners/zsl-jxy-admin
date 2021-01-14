@@ -64,3 +64,11 @@ export function getFreightList() {
 export function getNoticeList(params) {
   return request.get(index+'/notice/getAllNotice', params)
 }
+/**
+ * 特产上下架
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export function putawaySpecialty(params) {
+  return request.post(index+'/specialty/putawaySpecialty', params)
+}

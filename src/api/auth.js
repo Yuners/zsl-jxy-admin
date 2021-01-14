@@ -15,5 +15,5 @@ export function userLogin( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function userOauth( params ) {
-    return request.post(index+'/login/userOauth', params)
+    return request.post(index+'/login/userOauth')
 }

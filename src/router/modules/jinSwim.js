@@ -361,13 +361,13 @@ const jinSwimRouter = {
                 meta: {title: '活动编辑'},
                 hidden: true
               },
-              // {
-              //   path: 'details',
-              //   name: 'Details',
-              //   component: () => import('@/views/jinSwim/operation/carriage/details'),
-              //   meta: {title: '须知详情'},
-              //   hidden: true
-              // },
+              {
+                path: 'details',
+                name: 'Details',
+                component: () => import('@/views/jinSwim/operation/activity/details'),
+                meta: {title: '活动详情'},
+                hidden: true
+              },
             ]
           },
           {

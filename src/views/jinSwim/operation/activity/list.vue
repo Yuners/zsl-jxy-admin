@@ -98,7 +98,8 @@
         <template slot-scope="scope">
           <!-- <el-button style="color:green" v-if="scope.row.specialtyPutaway === 0" type="text" @click="issue(scope.row,1)" size="small">上架</el-button>
           <el-button style="color:red" v-if="scope.row.specialtyPutaway !=0" type="text" @click="issue(scope.row,0)" size="small">取消上架</el-button> -->
-          <el-button type="text" size="small" @click="specialtyDetails(scope.row.activityId)">查看详情</el-button>
+          <el-button type="text" size="small" @click="editSpecialty(scope.row.activityId)">编辑</el-button>
+          <el-button v-if="scope.row.activityIsUp !== 1" type="text" size="small" @click="delScenery(scope.row.activityId)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -117,7 +118,7 @@
 
 <script>
   import { getSpecialty, delSpecialty,putawaySpecialty} from '@/api/Releases/specialty'
-  import { getActivityPage,updateActivityIsUp } from "@/api/Operation/activity";
+  import { getActivityPage,updateActivityIsUp ,delActivityd} from "@/api/Operation/activity";
 
 
   export default {
@@ -231,39 +232,6 @@
         .catch( err => {
         })
       },
-      // 发布
-      issue(date,index){
-        this.$confirm(`是否${index===0?'下架':'上架'}特产:  ${date.specialtyName} ?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          let pages={
-            specialtyId:date.specialtyId,
-            specialtyPutaway:index
-          };
-          console.log(pages)
-          putawaySpecialty(pages)
-            .then(v=>{
-              
-              let data = v.data
-              if (data.code == '1'){
-                // console.log("ss")
-               this.fetchData()
-              } else {
-                this.$message.error(data.msg)
-              }
-            })
-            .catch( err => {
-            })
-        }).catch((e) => {
-          console.log(e)
-          this.$message({
-            type: 'info',
-            message: `已取消${index===0?'下架':'上架'}特产:  ${date.specialtyName}`
-          });
-        });
-      },
       // 查询
       submit(){
         this.pages.pageIndex=1;
@@ -279,14 +247,6 @@
         this.specialtyName = ''
         this.affiliatingArea = ''
         this.status = ''
-      },
-       freightDetails(freightId){
-        this.$router.push({
-          path:'/jinSwim/operation/carriage/details',
-          query:{
-            freightId
-          }
-        })
       },
       handleChange(value) {
         this.$refs.cascader.toggleDropDownVisible(false)
@@ -305,7 +265,7 @@
         }
         getActivityPage(params)
           .then( res => {
-            console.log(res)
+            // console.log(res)
             let data = res.data
             if (data.code == '1'){
               // if (data.data.length){
@@ -322,7 +282,7 @@
           })
       },
       // 删除
-      delSpecialty(id){
+      delScenery(id){
         this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -330,9 +290,9 @@
         })
         .then( () => {
           let params = {
-            specialtyId: id
+            activityId: id
           }
-          delSpecialty(params)
+          delActivityd(params)
             .then( res => {
               if (res.data.code == '1') {
                 this.$message.success(res.data.msg)
@@ -364,19 +324,19 @@
           path
         })
       },
-      editSpecialty(specialtyId){
+      editSpecialty(activityId){
         this.$router.push({
-          path:'/jinSwim/releases/specialty/compile',
+          path:'/jinSwim/operation/activity/compile',
           query:{
-            specialtyId
+            activityId
           }
         })
       },
-      specialtyDetails(specialtyId){
+      specialtyDetails(activityId){
         this.$router.push({
-          path:'/jinSwim/releases/specialty/details',
+          path:'/jinSwim/operation/activity/details',
           query:{
-            specialtyId
+             activityId
           }
         })
       }

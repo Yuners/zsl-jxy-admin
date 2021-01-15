@@ -394,7 +394,7 @@ const jinSwimRouter = {
               {
                 path: 'details',
                 name: 'Details',
-                component: () => import('@/views/jinSwim/operation/carriage/details'),
+                component: () => import('@/views/jinSwim/operation/order/details'),
                 meta: {title: '订单详情'},
                 hidden: true
               },

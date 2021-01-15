@@ -1,23 +1,37 @@
 <template>
   <div class="list">
-    <div class="tableHead">
+    <div>
+        <el-tabs v-model="param.status" @tab-click="search">
+          <el-tab-pane v-for="(item,index) in status" :key="index" :label="item.text" :name="item.value+''"></el-tab-pane>
+        </el-tabs>
+    </div>
+    <div class="tableHead" style="justify-content: flex-start">
       <div class="search">
-          <el-date-picker class="coverStyle"
-            style="width: 350px"
-            v-model="param.villageYear"
-            type="year"
-            value-format='yyyy'
-            placeholder="选择年份">
-          </el-date-picker>
+        <el-input class="coverStyle" v-model="param.orderId" placeholder="订单号"></el-input>
+        <el-input class="coverStyle" v-model="param.realName" placeholder="邮寄用户名"></el-input>
+        <el-input class="coverStyle" v-model="param.userPhone" placeholder="邮寄电话"></el-input>
+        <el-date-picker class="coverStyle"
+          style="width: 350px"
+          v-model="param.orderYear"
+          type="year"
+          value-format='yyyy'
+          placeholder="日期">
+        </el-date-picker>
         <el-button type="info" size="medium" plain @click="clear()">重置</el-button>
         <el-button class="coverBut" type="primary" size="medium" @click="search()">查询</el-button>
       </div>
-      <el-button
+      <!-- <el-button
         class="coverBut"
         type="success"
         size="medium"
-        @click="handleVillageFlag()"
-      >添加</el-button>
+        @click="handleorderFlag()"
+      >添加</el-button> -->
+    </div>
+    <div class="tableHead" v-if="total" style="justify-content: flex-start">
+      <el-tag >订单数:{{total.allOrder}}</el-tag><div style="padding-left:20px"></div>
+      <el-tag >商品数:{{total.allGoodTotal}}</el-tag><div style="padding-left:20px"></div>
+      <el-tag >订单金额:{{total.allPrice}}</el-tag><div style="padding-left:20px"></div>
+      <el-tag >客户数:{{total.allCustTotal}}</el-tag>
     </div>
     <el-table
       v-loading="listLoading"
@@ -32,29 +46,49 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="乡村名称">
+      <el-table-column label="订单号">
         <template slot-scope="scope">
-          <span style="cursor: pointer;color:blue" @click="details(scope.row.villageId)">{{ scope.row.villageName }}</span>
+          <span style="cursor: pointer;color:blue" @click="details(scope.row.id)">{{ scope.row.orderId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="所属地区" width="150" align="center">
-        <template slot-scope="scope">
-          <el-popover trigger="hover" placement="top">
-            <p>{{ scope.row.villageLocationName }}</p>
-            <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.villageLocationName !='' && scope.row.villageLocationName !=null?scope.row.villageLocationName.substring(0,6)+'...':'暂无' }}</el-tag>
-            </div>
-          </el-popover>
-        </template>
-      </el-table-column>
-      <el-table-column label="记录年份">
+      <el-table-column label="用户昵称">
         <template slot-scope="scope" >
-          <span style="cursor: pointer;" >{{ scope.row.villageYear }}</span>
+          <span style="cursor: pointer;" >{{ scope.row.userName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间">
-        <template slot-scope="scope">
-          <span style="cursor: pointer;" >{{scope.row.createdOn|formatDate}}</span>
+      <el-table-column label="邮寄姓名">
+        <template slot-scope="scope" >
+          <span style="cursor: pointer;" >{{ scope.row.realName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="邮寄电话">
+        <template slot-scope="scope" >
+          <span style="cursor: pointer;" >{{ scope.row.userPhone }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="商品信息">
+        <template slot-scope="scope" >
+          <span style="cursor: pointer;" >{{ scope.row.orderYear }}</span>
+        </template>
+      </el-table-column> -->
+      <el-table-column label="数量">
+        <template slot-scope="scope" >
+          <span style="cursor: pointer;" >{{ scope.row.totalNum }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="实际支付">
+        <template slot-scope="scope" >
+          <span style="cursor: pointer;" >{{ scope.row.payPrice }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="订单状态">
+        <template slot-scope="scope" >
+          <span style="cursor: pointer;" >{{ statusMap[scope.row.status].text }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="下单时间">
+        <template slot-scope="scope" >
+          <span style="cursor: pointer;" >{{ scope.row.addTime*1000|formatDate }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -63,11 +97,27 @@
         width="150"
       >
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="edit(scope.row.villageId,scope.row.villageYear)">编辑</el-button>
-          <!-- <el-button type="text" size="small" @click="delVallage(scope.row.villageId)">删除</el-button> -->
+          <el-button type="text" size="small" @click="addDelivery(scope.row.id)">添加订单号</el-button>
+          <el-button type="text" size="small" @click="edit(scope.row.id,scope.row.orderYear)">修改地址</el-button>
+          <el-button type="text" size="small" @click="edit(scope.row.id,scope.row.orderYear)">取消订单</el-button>
+          <!-- <el-button type="text" size="small" @click="delVallage(scope.row.orderId)">删除</el-button> -->
         </template>
       </el-table-column>
     </el-table>
+    <el-dialog style="text-align:center"
+      title="添加快递单号"
+      :visible.sync="ifDelivery"
+      width="80%">
+      <el-form class="flex-item" ref="treeFrom" inline label-width="120px" >
+        <el-form-item  label="快递单号" >
+          <el-input v-model="query.deliveryId" show-word-limit ></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="success" @click="addDeliveryId">确定</el-button>
+        <el-button @click="clearDialog">关闭</el-button>
+      </span>
+    </el-dialog>
     <el-pagination
       class="page"
       background
@@ -83,49 +133,23 @@
 
 <script>
   import { formatDate } from '@/utils/index.js'
-  import { getFreightList, delFreight} from '@/api/Operation/carriage'
-  import { getVillagePage, delVillage, getVillageFlag} from '@/api/infoMng/basics/vallage'
+  import { getOrderList, delOrder, updateAdress, addDeliveryId} from '@/api/Operation/order'
+  import status from "@/views/jinSwim/operation/order/order/order.js";
   export default {
-    filters: {
-      statusFilter(status) {
-        switch (status) {
-          case 0:
-            return '未提交'
-            break;
-          case 1:
-            return '待审核'
-            break;
-          case 2:
-            return '通过'
-            break;
-          case 3:
-            return '不通过'
-            break;
-        }
-      },
-      statusType(status) {
-        switch (status) {
-          case 0:
-            return ''
-            break;
-          case 1:
-            return 'warning'
-            break;
-          case 2:
-            return 'success'
-            break;
-          case 3:
-            return 'danger'
-            break;
-        }
-      }
-    },
     data() {
       return {
         list: null, // 渲染列表
         listLoading: true, // 加载
+        ifDelivery:false,
         param:{
-          villageYear:null
+          orderId:'',
+          status:'100',
+          realName:'',
+          userPhone:''
+        },
+        query:{
+          deliveryId:null,
+          id:null
         },
         pages:{
           pageSize: 10, // 每页多少条
@@ -133,6 +157,67 @@
           pageIndex: 1, // 当前页数
           total: 0, // 总页数
         },
+        statusMap:{
+          ...status
+        },
+        status: [
+          {
+              type: 4, 
+              text: '全部订单',
+              value: 100,
+          },
+          {
+              type: 4, // 代表支付状态
+              text: '未支付',
+              value: 5,
+          },
+          {
+              type: 1,// 代表订单状态
+              text: '待发货',
+              value: 0,
+          },
+          {
+              type: 1,
+              text: '待收货',
+              value: 1,
+          },
+          {
+              type: 1,
+              text: '待评价',// 目前没有评价系统 暂时单做订单完成
+              value: 3,
+          },
+          {
+              type: 1,
+              text: '已收货',
+              value: 2,
+          },
+          {
+              type: 1,
+              text: '订单完成',
+              value: 6,
+          },
+          {
+              type: 1,
+              text: '退货申请',
+              value: -1,
+          },
+          {
+              type: 1,
+              text: '退款中',
+              value: -3,
+          },
+          {
+              type: 1,// 退款状态
+              text: '已退款',
+              value: -4,
+          },
+          {
+              type: 1,//删除状态
+              text: '失效订单',
+              value: 4,
+          }
+        ],
+        total:null
       }
     },
     created() {
@@ -146,41 +231,64 @@
     },
     methods: {
       clear(){
-        this.param.villageYear = null
-      },
-      handleVillageFlag(){
-        let params = {
-          villageYear: new Date().getFullYear(),
-          villageLocationId: '1338353936444280822' // 测试
+        this.param = {
+          orderId:'',
+          status:'100',
+          realName:'',
+          userPhone:''
         }
-        console.info(params)
-        getVillageFlag(params)
+      },
+      clearDialog(){
+        this.ifDelivery = false
+        this.query.deliveryId = null
+      },
+      addDelivery(id){
+        this.query.id =id
+        this.ifDelivery = true
+      },
+      addDeliveryId(){
+        if(this.query.deliveryId == null || this.query.deliveryId == ''){
+          this.$message.error("请添加快递单号")
+          return;
+        }
+        addDeliveryId(this.query)
           .then( res => {
-            let data = res.data.data
-            console.info(data)
-            if(data != null){
-              this.$message.error("该年记录已被录入,有问题请去编辑")
-            }else{
-              this.routingHop('/infoManage/basics/vallage/compile')
+            let data = res.data
+            if (data.code == '1'){
+              if (data.date){
+                this.$message.error("添加快递单号成功")
+              }else{
+                this.$message.error("添加快递单号失败")
+              }
+            } else {
+              this.$message.error(data.msg)
             }
-            
+            this.ifDelivery = false
           })
       },
       search() {
         this.listLoading = true
         let params = {
-          villageYear: this.param.villageYear,
+          status: this.param.status,
           curPage: this.pages.pageIndex,
           pageSize: this.pages.pageSize,
-          isDeleted: 0,
-          isDisabled: 0
+          orderId: this.param.orderId,
+          realName: this.param.realName,
+          userPhone: this.param.userPhone,
+          isDel: 0,
+          isShop: 0
+          // isDisabled: 0
         }
-        getVillagePage(params)
+        getOrderList(params)
           .then( res => {
+            console.info(res)
             let data = res.data
+            this.list = null
+            this.total = null
             if (data.code == '1'){
-              if (data.data.length){
-                this.list = data.data
+              if (data.data.items.length){
+                this.list = data.data.items
+                this.total = data.total
                 this.pages.total = data.page.total
               }
             } else {
@@ -193,7 +301,7 @@
           })
       },
       // 删除
-      delVallage(id){
+      delOrder(id){
         this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -201,9 +309,9 @@
         })
         .then( () => {
           let params = {
-            villageId: id
+            orderId: id
           }
-          delVillage(params)
+          delOrder(params)
             .then( res => {
               if (res.data.code == '1') {
                 this.$message.success(res.data.msg)
@@ -234,36 +342,23 @@
         })
       },
       //判断是否是当年信息。修改只能修改当年的，或者去年的，前提是本年3月份之前。
-      handelYear(villageYear){
+      handelYear(orderYear){
         let dayYear = new Date().getFullYear();
         let dayMonth = new Date().getMonth()+1;
-        if(villageYear == dayYear){
+        if(orderYear == dayYear){
           return true;
-        }else if(villageYear-0+1 == dayYear){// 判断是否为去年的
+        }else if(orderYear-0+1 == dayYear){// 判断是否为去年的
           return dayMonth <3?true:false;
         }else{
           return false;
         }
       },
-      //修改
-      edit(villageId, villageYear){
-        if(!this.handelYear(villageYear)){
-          this.$message.error("当年记录已不满足修改条件")
-          return;
-        }
-        this.$router.push({
-          path:'/infoManage/basics/vallage/compile',
-          query:{
-            villageId
-          }
-        })
-      },
       //乡村详细页面
-      details(villageId){
+      details(orderId){
         this.$router.push({
-          path:'/infoManage/basics/vallage/details',
+          path:'/jinSwim/operation/order/details',
           query:{
-            villageId
+            orderId
           }
         })
       }

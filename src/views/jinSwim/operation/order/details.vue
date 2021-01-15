@@ -1,468 +1,368 @@
 <template>
-  <div class="compile">
-    <div class="compileHead">
-      <h1>乡村详情</h1>
-    </div>
-    <div class="compileMain">
-      <el-form label-position="right" :model="form" ref="ruleForm" label-width="110px">
-        <div class="block">
-          <div class="clearfix feature">
-            <el-form-item label="乡村名称：" prop="villageName">
-              <el-input maxlength="10" style="width: 350px" :disabled="true" v-model="form.villageName"></el-input>
-            </el-form-item>
-            <div style="width: 100px"></div>
-            <el-form-item label="电话区号：" prop="villagePhone">
-              <el-input maxlength="10" style="width: 350px" :disabled="true" v-model="form.villagePhone"></el-input>
-            </el-form-item>
-          </div>
-          <div class="clearfix feature">
-            <el-form-item label="乡村别名：" prop="villageNikeName">
-              <el-input maxlength="10" style="width: 350px" :disabled="true" v-model="form.villageNikeName"></el-input>
-            </el-form-item>
-            <div style="width: 100px"></div>
-            <el-form-item label="邮政编码：" prop="villagePostCode">
-              <el-input maxlength="10" style="width: 350px" :disabled="true" v-model="form.villagePostCode"></el-input>
-            </el-form-item>
-          </div>
-          <div class="clearfix feature">
-            <el-form-item label="所属地区：" prop="villageLocationName">
-              <el-input maxlength="10" style="width: 350px" :disabled="true" v-model="form.villageLocationName" placeholder="xx省xx市xx县/区xx镇/乡"></el-input>
-            </el-form-item>
-            <div style="width: 100px"></div>
-            <el-form-item label="主要特产：" prop="villageMainSpecialty">
-              <el-input maxlength="10" style="width: 350px" :disabled="true" v-model="form.villageMainSpecialty"></el-input>
-            </el-form-item>
-          </div>
-          <div class="clearfix feature">
-            <el-form-item label="面积：" prop="villageArea">
-              <el-input maxlength="10" style="width: 350px" :disabled="true" v-model="form.villageArea" placeholder="平方公里"></el-input>
-            </el-form-item>
-            <div style="width: 100px"></div>
-            <el-form-item label="气温：" prop="villageAverageTemperature">
-              <el-input maxlength="10" style="width: 350px" :disabled="true" v-model="form.villageAverageTemperature" placeholder="年平均气温℃"></el-input>
-            </el-form-item>
-          </div>
-          <div class="clearfix feature">
-            <el-form-item label="下辖村：" prop="villageJurisdiction">
-              <el-input maxlength="10" style="width: 350px" :disabled="true" v-model="form.villageJurisdiction" placeholder="下辖自然村组"></el-input>
-            </el-form-item>
-            <div style="width: 100px"></div>
-            <el-form-item label="年降水量：" prop="villagePrecipitation">
-              <el-input maxlength="10" style="width: 350px" :disabled="true" v-model="form.villagePrecipitation" placeholder="毫米"></el-input>
-            </el-form-item>
-          </div>
-          <div class="clearfix feature">
-            <el-form-item label="方言：" prop="villageDialect">
-              <el-input maxlength="10" style="width: 350px" :disabled="true" v-model="form.villageDialect"></el-input>
-            </el-form-item>
-            <div style="width: 100px"></div>
-            <el-form-item label="海拔：" prop="villageAltitude">
-              <el-input maxlength="10" style="width: 350px" :disabled="true" v-model="form.villageAltitude" placeholder="千米"></el-input>
-            </el-form-item>
-          </div>
-          <div class="clearfix feature">
-            <el-form-item label="地理状况：" prop="villageGeography">
-              <el-input maxlength="10" style="width: 350px" :disabled="true" v-model="form.villageGeography"></el-input>
-            </el-form-item>
-          </div>
+   <el-card class="box-card" v-if="show">
+        <div slot="header" class="clearfix">
+            <span>订单详细</span>
         </div>
-        <div class="block">
-          <el-form-item label="地图标注：" prop="villageCoordinate" >
-            <div class="mark">
-              <div class="markMain">
-                <div class="item">
-                  <div class="text">
-                    经纬度
-                  </div>
-                  <div class="content">
-                    {{ form.villageCoordinate ? toJson(form.villageCoordinate).lng + ',' + toJson(form.villageCoordinate).lat : '' }}
-                  </div>
-                </div>
-                <div class="item">
-                  <div class="text">
-                    地址
-                  </div>
-                  <div class="content">
-                    {{ lnglatCache.address }}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <el-dialog
-              title="请点击地图"
-              
-              width="30%">
-              <div id="map"></div>
-              <span slot="footer" class="dialog-footer">
-                <div class="main">
-                  <div class="item">
-                    <div class="text">
-                      经纬度
-                    </div>
-                    <div class="content">
-                      {{ lnglat }}
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class="text">
-                      地址
-                    </div>
-                    <div class="content">
-                      {{ site }}
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <el-button>取 消</el-button>
-                  <el-button type="primary">确 定</el-button>
-                </div>
-              </span>
-            </el-dialog>
-            <el-form-item style="width:100%;text-align:right;padding-right:150px">
-              <el-button type="info" @click="resetForm">返回</el-button>
-             </el-form-item>
-            <!--            <div id="map"></div>-->
-          </el-form-item>
-        </div>
-      </el-form>
-    </div>
+        <div>
+        <el-card >
+            <div class="font-weight-black" style="font-size: 18px;">商铺信息</div>
+            <el-row>
+                <el-col :span="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">商铺名称：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.shopName}}</span>
+                </el-col>
+                <!-- <el-col cols="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">商家姓名：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.merId}}</span>
+                </el-col> -->
+            </el-row>
+        </el-card>
+        <br/>
+        <el-card >
+            <div class="font-weight-black" style="font-size: 18px;">收货信息</div>
+            <el-row>
+                <el-col :span="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">用户昵称：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.userName}}</span>
+                </el-col>
+                <el-col :span="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">收货人：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.realName}}</span>
+                </el-col>
+                <el-col :span="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">联系电话：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.userPhone}}</span>
+                </el-col>
+                <el-col :span="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">收货地址：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.userAddress}}</span>
+                </el-col>
+            </el-row>
+        </el-card >
+        <br/>
+        <el-card
+            class="mx-auto"
+            max-width="650"
+        >
+            <div class="font-weight-black" style="font-size: 18px;">订单信息</div>
+            <el-row>
+                <el-col :span="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">订单编号：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.orderId}}</span>
+                </el-col>
+                <el-col :span="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">订单状态：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">
+                        {{statusMap[order.status].text}}
+                    </span>
+                </el-col>
+                <el-col :span="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">商品总数：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.totalNum}}</span>
+                </el-col>
+                <el-col :span="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">商品总价：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.totalPrice}}</span>
+                </el-col>
+                <el-col :span="12" v-if="order.couponPrice != 0 && order.couponPrice !=null">
+                    <span class="font-weight-bold" style="font-size: 14px;">商铺优惠金额：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.couponPrice}}</span>
+                </el-col>
+                <el-col :span="12" v-if="order.livePrice != 0 && order.livePrice !=null">
+                    <span class="font-weight-bold" style="font-size: 14px;">拍立减（直播）：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.livePrice}}</span>
+                </el-col>
+                <el-col :span="12" v-if="order.paltCouponPrice != 0 && order.paltCouponPrice !=null">
+                    <span class="font-weight-bold" style="font-size: 14px;">平台优惠金额：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.paltCouponPrice}}</span>
+                </el-col>
+                <el-col :span="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">支付邮费：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.payPostage}}</span>
+                </el-col>
+                <el-col :span="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">实际支付：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.payPrice}}</span>
+                </el-col>
+                <el-col :span="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">创建时间：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.addTime*1000 | formatDate}}</span>
+                </el-col>
+                    <el-col :span="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">支付方式：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{payType(order.isChannel) ==null ?'未支付' : payType(order.isChannel)}}</span>
+                </el-col>
+                <el-col :span="12" v-if="order.payTime">
+                    <span class="font-weight-bold" style="font-size: 14px;">支付时间：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.payTime*1000 | formatDate}}</span>
+                </el-col>
+            </el-row>
+        </el-card>
+        <br/>
+        <el-card
+            class="mx-auto"
+            max-width="650"
+        >
+        <div class="font-weight-black" style="font-size: 18px;">商品信息</div>
+            <el-row>
+                <el-col v-for="(item,index) in order.orderInfoList" :span="12" :key="index">
+                    <span class="font-weight-bold" style="font-size: 14px;">{{goodJson(item.cartInfo).title}}</span>
+                    <span class="font-weight-bold" v-if="goodJson(item.cartInfo).space !=''" style="font-size: 14px;">【{{goodJson(item.cartInfo).space}}】</span>
+                    <span class="font-weight-bold" style="font-size: 14px;">￥{{goodJson(item.cartInfo).price}}</span>
+                    <span class="font-weight-bold" style="font-size: 14px;">﹝{{goodJson(item.cartInfo).number}}个﹞</span>
+                    <el-image
+                        style="width: 100px; height: 100px"
+                        :src="goodJson(item.cartInfo).src">
+                    </el-image>
+                    <!-- <v-img :src="goodJson(item.cartInfo).src" aspect-ratio="1.0"></v-img> -->
+                </el-col>
+            </el-row>
+        </el-card>
+        <br/>
+        <el-card v-if="order.isRefund == 1"
+            class="mx-auto"
+            max-width="650"
+        >
+            <div class="font-weight-black" style="font-size: 18px;" >退款信息</div>
+            <el-row>
+                <el-col cols="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">退货类型：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.refund.refundType}}</span>
+                </el-col>
+                <el-col cols="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">退货图片：</span>
+                    <span v-if="order.refund.refundReasonWapImg == null" class="font-weight-black" style="color: #BD2C00; font-size: 14px;">无</span>
+                    <v-container fluid v-if="order.refund.refundReasonWapImg != null">
+                        <el-row justify="space-around">
+                        <el-col :span="12" v-for="(item, index) in goodJson(order.refund.refundReasonWapImg)" :key="index">
+                            <el-image
+                                style="width: 100px; height: 100px"
+                                :src="goodJson(item).url">
+                            </el-image>
+                        </el-col>
+                        </el-row>
+                    </v-container>
+                </el-col>
+                <el-col cols="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">退货申请时间：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.refund.refundApplyTime|formatDate}}</span>
+                </el-col>
+                <el-col cols="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">快递单号：</span>
+                    <span v-if="order.refund.isDelivery == 1" class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.refund.refundDeliveryId}}</span>
+                    <span v-if="order.refund.isDelivery == 0" class="font-weight-black" style="color: #BD2C00; font-size: 14px;">未填写</span>
+                </el-col>
+                <el-col cols="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">退款金额：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;" v-if="order.refundPrice">{{order.refundPrice}}</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;" v-else>{{order.payPrice}}</span>
+                    
+                </el-col>
+                <el-col cols="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">退货用户说明：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.refund.refundReasonWap}}</span>
+                </el-col>
+                <el-col cols="12" v-show="order.status == -2">
+                    <span class="font-weight-bold" style="font-size: 14px;">不退货原因：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.refund.regoodReason}}</span>
+                </el-col>
+                <el-col cols="12" v-show="order.status == -5">
+                    <span class="font-weight-bold" style="font-size: 14px;">不退款原因：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.refund.refundReason}}</span>
+                </el-col>
+                <el-col cols="12">
+                    <span class="font-weight-bold" style="font-size: 14px;">退款结束时间：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.refund.refundReasonTime*1000 | formatDate}}</span>
+                </el-col>
+                <el-col cols="12" v-if="order.refund.consignee">
+                    <span class="font-weight-bold" style="font-size: 14px;">退货邮寄信息：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.refund.consignee+'('+order.refund.contact+')'+order.refund.address+'【'+order.refund.remark+'】'}}</span>
+                </el-col>
+            </el-row>
+            <el-button style="float: right; padding: 3px 0" type="text" @click="delivery(order.refund.refundDeliveryId)">
+                <span v-if="!ifDelivery">查看物流</span>
+                <span v-if="ifDelivery">关闭物流</span>
+            </el-button>
 
-  </div>
+        </el-card>
+        <br />
+        <el-card
+            class="mx-auto"
+            width="650"
+        >
+            <div class="font-weight-black" style="font-size: 18px;">用户物流信息</div>
+            <el-row>
+                <el-col style="padding:10px" cols="12" >
+                    <span class="font-weight-bold" style="font-size: 14px;">快递公司：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.deliveryName}}</span>
+                </el-col>
+                <el-col cols="12" >
+                    <span class="font-weight-bold" style="font-size: 14px;">快递单号：</span>
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.deliveryId}}</span>
+                </el-col>
+            </el-row>
+            <el-button style="float: right; padding: 3px 0" type="text" @click="delivery(order.deliveryId)">
+                <span v-if="!ifDelivery">查看物流</span>
+                <span v-if="ifDelivery">关闭物流</span>
+            </el-button>
+        </el-card>
+        <el-dialog style="text-align:center"
+            title="物流信息"
+            :visible.sync="ifDelivery"
+            width="80%">
+            <div class="block">
+                <el-timeline >
+                    <el-timeline-item
+                        v-for="(item, index) in expressList"
+                        :key="index"
+                        :type="line.type"
+                        :color="line.color"
+                        :size="line.size"
+                        :timestamp="item.map.time">
+                        {{item.map.status}}
+                    </el-timeline-item>
+                </el-timeline>
+            </div>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="ifDelivery = false">关闭</el-button>
+            </span>
+          </el-dialog>
+        <br/>
+        <el-card
+            class="mx-auto"
+            max-width="650"
+        >
+            <div class="font-weight-black" style="font-size: 18px;">备注信息</div>
+            <el-row>
+                <el-col cols="12">
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.mark}}</span>
+                </el-col>
+            </el-row>
+        </el-card>
+        <br/>
+        <!-- <el-card
+            class="mx-auto"
+            max-width="650"
+        >
+            <div class="font-weight-black" style="font-size: 18px;">商家（管理员）备注信息</div>
+            <el-row>
+                <el-col cols="12">
+                    <span class="font-weight-black" style="color: #BD2C00; font-size: 14px;">{{order.remark}}</span>
+                </el-col>
+            </el-row>
+        </el-card> -->
+        </div>
+    </el-card>
 </template>
 
 <script>
-  import {MapLoader} from '@/utils/AMap.js'
-  import { getVillageById } from '@/api/infoMng/basics/vallage'
-  import { getDictionary } from '@/api/common'
-
-  export default {
-    data() {
-      return {
-        // 表单字段
-        form: {
-          villageName: '', // 乡村名称
-          villageLocationId: '', // 乡村所属行政区划id
-          villageNikeName: '', // 乡村别名
-          villageCoordinate: '', // 乡村坐标
-          villageArea: '', // 面积
-          villageJurisdiction: '', // 下辖自然村组
-          villageDialect: '', // 方言
-          villagePhone: '', // 电话
-          villagePostCode: '', // 邮政编码
-          villageMainSpecialty: '', // 主要特产
-          villageGeography: '', // 地理状况
-          villageAverageTemperature: '', // 年平均气温
-          villagePrecipitation: '', // 年降水量
-          villageAltitude: '', // 海拔
-          foodRelease: false,
-          villageLocationName:'',
-        },
-        lnglat: '',
-        site: '',
-        lnglatCache: {
-          gnote: {},
-          address: ''
-        }, // 选择位置缓存
-        villageId: '',// 乡村id
-      }
-    },
-    created() {
-      this.villageId = this.$route.query.villageId
-      if (this.villageId) {
-        this.getDetails(this.villageId)
-      }
-    },
-    methods: {
-      // 获取景区详情
-      getDetails(id) {
-        let params = {
-          villageId: id
-        }
-        getVillageById(params)
-          .then(res => {
-            console.info(res)
-            if (res.data.code == '1'){
-              let data = res.data.data
-              data.foodRelease = data.foodRelease ? true : false
-              let formData = JSON.parse(JSON.stringify(data))
-              for (let key in this.form) {
-                this.form[key] = formData[key]
-              }
-              console.info(data.villageLocationName)
-              let coordinate = JSON.parse(data.villageCoordinate)
-              let lnglat = coordinate.lng + ',' + coordinate.lat
-              this.getAddress(lnglat)
-            } else {
-              this.$message.error(res.data.msg)
+    import { formatDate } from '@/utils/index.js'
+    import { getOrderDetails, getOrderExpress } from '@/api/Operation/order'
+    import status from "@/views/jinSwim/operation/order/order/order.js";
+    import Vue from 'vue'
+    export default {
+        data() {
+            return {
+                line:{
+                    "color": "blue",
+                    "type": "success",
+                    "size": "normal"
+                },
+                order: null,
+                ifDelivery: false,
+                ifRefundDelivery: false,
+                statusMap:{
+                    ...status
+                },
+                expressList:null,
+                show:false,
+                oId: '',// 订单id
             }
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      },
-      toJson(v){
-
-        return JSON.parse(v)
-      },
-      //返回上一层
-      resetForm(formName) {
-        this.$router.back()
-        // this.$refs[formName].resetFields();
-      },
-      // 逆解析地址
-      getAddress(lnglat) {
-        let _this = this
-        MapLoader().then(AMap => {
-          // let map = new AMap.Map(); // 注册地图
-          AMap.plugin(["AMap.Geocoder"], function () {
-            let geocoder = new AMap.Geocoder();
-            console.info(lnglat)
-            geocoder.getAddress(lnglat, (status, result) => {
-              if (status === 'complete' && result.regeocode) {
-                let address = result.regeocode.formattedAddress;
-                _this.lnglatCache.address = address;
-              } else {
-                _this.$message.error('根据经纬度查询地址失败')
-              }
-            });
-          })
-        })
-      },
+        },
+        created(){
+            this.oId = this.$route.query.orderId
+            this.search()
+        },
+        filters: {
+            formatDate(time) {
+                var date = new Date(time);
+                return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
+            }
+        },
+        methods: {
+            // 物品json装换
+			goodJson(src){
+				return JSON.parse(src)
+            },
+            payType(type){
+                if(type == 1){
+                    return "微信"
+                }
+                if(type == 2){
+                    return "支付宝"
+                }
+                if(type == 3){
+                    return "余额"
+                }
+                if(type == 4){
+                    return "银行卡"
+                }
+                if(type == 5){
+                    return "微信小程序"
+                }
+            },
+            delivery(id){
+                if(id=="" || id==null){
+                    Vue.prototype.$message.error('没有订单号不能查询');
+                    return;
+                }
+                this.ifDelivery = true
+                this.express(id)
+                // if(type==1){
+                //     if(!this.ifRefundDelivery){
+                //         this.ifDelivery = false
+                //         this.express(id)
+                //     }
+                //     this.ifRefundDelivery = !this.ifRefundDelivery
+                // }else{
+                //     if(!this.ifDelivery){
+                //         this.express(id)
+                //         this.ifRefundDelivery = false
+                //     }
+                //     this.ifDelivery = !this.ifDelivery
+                // }
+                
+            },
+            search(){
+                getOrderDetails(this.oId).then(res => {
+                    if (res.data.code == '1'){
+                        this.order = res.data.data
+                    } else {
+                        this.$message.error(res.data.msg)
+                    }
+                }).finally(() => { 
+                    this.show=true; 
+                })
+            },
+            express(id){
+                this.expressList = null
+                getOrderExpress(id).then(v => {
+                    console.info(v)
+                    this.expressList = JSON.parse(v.data.data.resuilt).map.result.map.list.myArrayList;
+                    console.info(JSON.parse(v.data.data.resuilt).map.result.map.list.myArrayList)
+                })
+                .finally(() => {   
+                })
+            }
+        },
     }
-  }
+    // el-row.el-col
 </script>
 
-<style scoped lang="scss">
-  .compile {
-    height: 100%;
-    border: 1px solid #EBEEF5;
-    position: relative;
-
-    .compileHead {
-      width: 100%;
-      height: 60px;
-      border-bottom: 1px solid #EBEEF5;
-      line-height: 60px;
-      background-color: #eeeeee;
-
-      h1 {
-        font-size: 24px;
-        padding-left: 20px;
+<style lang = "scss" scoped>
+  .box-card::v-deep{
+      .el-col{
+          padding: 10px;
       }
-    }
-
-    .compileMain {
-      padding: 50px;
-
-      .handleSave {
-        flex: 1;
-        text-align: center;
-      }
-
-      .feature {
-        display: flex;
-      }
-
-      .graphic {
-        display: flex;
-        align-items: center;
-        margin-bottom: 30px;
-
-        span {
-          margin-right: 4px;
-          font-size: 16px;
-          color: #F56C6C;
-        }
-      }
-
-      .mark {
-        display: flex;
-        align-items: self-start;
-
-        .markMain {
-          margin-left: 30px;
-
-          .item {
-            display: flex;
-            align-items: center;
-            border: 1px solid #ced4da;
-            border-radius: 10px;
-
-            &:first-child {
-              margin-bottom: 10px;
-            }
-
-            .text {
-              text-align: justify;
-              text-align-last: justify;
-              width: 80px;
-              box-sizing: border-box;
-              padding: 0 15px;
-              background-color: #e9ecef;
-              border-radius: 10px 0 0 10px;
-            }
-
-            .content {
-              width: 300px;
-              font-size: 12px;
-              color: #333333;
-              padding-left: 10px;
-              text-align: left;
-              overflow: hidden;
-              white-space: nowrap;
-            }
-          }
-        }
-      }
-
-      #map {
-        width: 100%;
-        height: 300px;
-      }
-
-      .dialog-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        .main {
-          width: 360px;
-          margin-right: 8px;
-
-          .item {
-            display: flex;
-            align-items: center;
-            border: 1px solid #ced4da;
-            border-radius: 10px;
-
-            &:first-child {
-              margin-bottom: 10px;
-            }
-
-            .text {
-              text-align: justify;
-              text-align-last: justify;
-              width: 80px;
-              box-sizing: border-box;
-              padding: 0 15px;
-              background-color: #e9ecef;
-              border-radius: 10px 0 0 10px;
-            }
-
-            .content {
-              flex: 1;
-              font-size: 12px;
-              color: #333333;
-              padding-left: 10px;
-              text-align: left;
-              overflow: hidden;
-              white-space: nowrap;
-            }
-          }
-        }
-      }
-    }
-
-    .addGraphic {
-      width: 100%;
-      height: calc(100% - 60px);
-      position: absolute;
-      top: 60px;
-      left: 0;
-      padding: 0 70px;
-      background-color: rgba(0, 0, 0, .2);
-      z-index: 99;
-
-      .addMain {
-        background-color: #ffffff;
-        padding: 70px;
-        margin-top: 150px;
-
-        .is-flex {
-          display: flex;
-
-          .upTime {
-            padding: 0;
-            margin: 0;
-
-            span {
-              display: flex;
-              justify-content: flex-start;
-            }
-
-            .upLoad-item {
-              position: relative;
-              font-size: 14px;
-              color: #606266;
-              line-height: 1.8;
-              overflow: hidden;
-              background-color: #fff;
-              border: 1px solid #c0ccda;
-              border-radius: 6px;
-              box-sizing: border-box;
-              width: 148px;
-              height: 148px;
-              margin: 0 8px 8px 0;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-
-              img {
-                width: 100%;
-                /*height: 100%;*/
-              }
-
-              .masked {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                left: 0;
-                top: 0;
-                cursor: default;
-                text-align: center;
-                color: #fff;
-                opacity: 0;
-                font-size: 20px;
-                background-color: rgba(0, 0, 0, 0.5);
-                transition: opacity 0.3s;
-
-                &:hover {
-                  opacity: 1;
-                }
-
-                .maskedDelet {
-                  position: absolute;
-                  top: 50%;
-                  margin-top: -11px;
-                  left: 50%;
-                  margin-left: -10px;
-                  font-size: inherit;
-
-                  i {
-                    cursor: pointer;
-                  }
-                }
-              }
-            }
-          }
-        }
-
-      }
-    }
-  }
-
-  .slide-fade-enter-active {
-    transition: all 1s ease;
-  }
-
-  .slide-fade-leave-active {
-    transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-  }
-
-  .slide-fade-enter, .slide-fade-leave-to
-    /* .slide-fade-leave-active for below version 2.1.8 */
-  {
-    transform: translateY(-10px);
-    opacity: 0;
   }
 </style>

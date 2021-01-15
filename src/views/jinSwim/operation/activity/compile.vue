@@ -183,8 +183,8 @@ import { activityMoney } from "@/utils/validate"
         // 表单字段
         form: {
           activityName: '', // 活动名称
-          activityStartTime:'',//开始时间
-          activityEndTime:'',//开始时间
+          stateTime:'',//开始时间
+          endTime:'',//开始时间
           activityTime:'',
           activityType:1,//活动类型
           specialetyList:[],//活动列表
@@ -466,8 +466,8 @@ import { activityMoney } from "@/utils/validate"
               let form ={
                 ...res.data.data
               }
-              form.activityEndTime=new Date(form.activityEndTime)
-              form.activityStartTime=new Date(form.activityStartTime)
+              form.stateTime=new Date(form.activityEndTime)
+              form.endTime=new Date(form.activityStartTime)
               let time=[];
               time.push(form.activityStartTime);
               time.push(form.activityEndTime);
@@ -484,8 +484,8 @@ import { activityMoney } from "@/utils/validate"
       },
       //开始结束时间解析
       getTime(maxDate){
-        this.form.activityStartTime=maxDate[0];
-        this.form.activityEndTime=maxDate[1];
+        this.form.stateTime=maxDate[0];
+        this.form.endTime=maxDate[1];
         console.log(this.form.activityTime)
         // console.log(maxDate)
         // console.log(this.form.activityStartTime)

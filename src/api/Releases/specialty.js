@@ -1,10 +1,6 @@
 import request from "@/utils/request";
 
-<<<<<<< HEAD
 let index="http://192.124.1.57:5021/jxy"
-=======
-let index="http://192.168.31.252:10209"
->>>>>>> b4a55f01d5bcf63afec266b17b1d7b4496435101
 /**
  * 获取景区列表
  * @param params

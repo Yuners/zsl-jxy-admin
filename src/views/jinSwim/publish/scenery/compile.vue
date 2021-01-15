@@ -181,7 +181,9 @@
               <el-switch
                 v-model="form.sceneryRelease"
                 active-color="#13ce66"
-                inactive-color="#eeeeee">
+                inactive-color="#ff4949"
+                :active-value="max"
+                :inactive-value="min">
               </el-switch>
             </div>
             <div class="handleSave">

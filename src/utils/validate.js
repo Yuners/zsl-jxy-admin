@@ -107,6 +107,14 @@ export function isPathName(str) {
   );
 }
 /**
+ * 金额效验，大于等于0小于100000的数
+ * @param str
+ * @returns {boolean}a
+ */
+export function activityMoney(str){
+  return /^[1-9]\d{0,5}$/.test(str); 
+}
+/**
  * 密保问题校验：只能中文，数字，英文且长度为2-20
  * @param str
  * @returns {boolean}a

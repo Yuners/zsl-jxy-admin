@@ -10,7 +10,7 @@
             <h3>编辑特产活动</h3>
           </div>
           <el-form-item label="活动名称：" prop="activityName">
-            <el-input maxlength="20" style="width: 350px" v-model="form.activityName"></el-input>
+            <el-input maxlength="20" style="width: 350px" v-model="form.activityName" disabled></el-input>
           </el-form-item>
           <el-form-item label="活动时间：" prop="activityTime" >
             <el-date-picker
@@ -21,17 +21,18 @@
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               :picker-options="pickerOptions"
-              @change="getTime">
+              disabled
+              >
             </el-date-picker>
           </el-form-item>
           <el-form-item label="活动类型：" prop="activityType" >
-            <el-radio v-model="form.activityType" :label="type.one">满减活动</el-radio>
+            <el-radio v-model="form.activityType" :label="type.one" disabled>满减活动</el-radio>
             <el-radio v-model="form.activityType" :label="type.two" disabled>优惠券</el-radio>
             <el-radio v-model="form.activityType" :label="type.three" disabled>广告</el-radio>
           </el-form-item>
           <el-form-item label="优惠条件：" prop="activityDescribeList" >
             <div class="graphic">
-              <el-button size="medium" @click="addGraphic">新增优惠规则</el-button>
+              <el-button size="medium" disabled>新增优惠规则</el-button>
               <span>(最多可添加5个层级)</span>
             </div>
             <el-table
@@ -59,7 +60,7 @@
                   <span> 元</span>
                 </template>
               </el-table-column>
-               <el-table-column
+               <!-- <el-table-column
                 align="center"
                 label="操作"
                 width="150"
@@ -68,12 +69,12 @@
                 <el-button type="text" @click="dataEdit(scope.$index,scope.row)">编辑</el-button>
                 <el-button type="text" @click="dataDelete(scope.$index)">删除</el-button>
               </template>
-              </el-table-column>
+              </el-table-column> -->
               </el-table>
           </el-form-item>
           <el-form-item label="活动商品：" prop="specialetyList" >
-            <el-select v-model="form.specialetyList"  reserve-keyword filterable placeholder="请选择商品" multiple @change='changeSelect' >
-              <el-checkbox v-model="checked" @change='selectAll'>全选</el-checkbox>
+            <el-select v-model="form.specialetyList"  reserve-keyword filterable placeholder="请选择商品" multiple  disabled>
+              <el-checkbox v-model="checked" >全选</el-checkbox>
               <el-option
                 v-for="item in list"
                 :key="item.specialtyId"
@@ -86,19 +87,19 @@
           <el-form-item>
             <div style="display: flex;">
             <div class="switch_item">
-              <span>发布：</span>
+              <span>上线/下架：</span>
               <el-switch
                 v-model="form.activityIsUp"
                 active-color="#13ce66"
                 inactive-color="#eeeeee"
                 :active-value="max"
-                :inactive-value="min">
+                :inactive-value="min" disabled>
               </el-switch>
             </div>
-            <div class="handleSave">
+            <!-- <div class="handleSave">
               <el-button size="medium" type="primary" @click="submitForm('ruleForm')">保 存</el-button>
               <el-button size="medium" @click="resetForm('ruleForm')">取 消</el-button>
-            </div>
+            </div> -->
             </div>
           </el-form-item>
         </div>
@@ -121,8 +122,8 @@
             </el-input>
           </el-form-item>
           <el-form-item>
-            <el-button @click="sumCanl">取 消</el-button>
-            <el-button type="primary" @click="sumSub">确 定</el-button>
+            <el-button >取 消</el-button>
+            <el-button type="primary" >确 定</el-button>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -280,161 +281,161 @@ import { activityMoney } from "@/utils/validate"
     },
     
     methods: {
-      editScenery(){
-        let pages={
-          ...this.form
-        };
-        updateActivity(pages)
-        .then(res=>{
-            let data = res.data
-            if (data.code == '1') {
-              this.$message({
-                message: data.msg,
-                type: 'success'
-              })
-              this.$router.back()
-            } else {
-              this.$message.error(data.msg)
-            }
-        })
-         .catch(err => {
-            console.log(err)
-          })
-      },
+      // editScenery(){
+      //   let pages={
+      //     ...this.form
+      //   };
+      //   updateActivity(pages)
+      //   .then(res=>{
+      //       let data = res.data
+      //       if (data.code == '1') {
+      //         this.$message({
+      //           message: data.msg,
+      //           type: 'success'
+      //         })
+      //         this.$router.back()
+      //       } else {
+      //         this.$message.error(data.msg)
+      //       }
+      //   })
+      //    .catch(err => {
+      //       console.log(err)
+      //     })
+      // },
       //添加数据
-      addScenery(){
-        let pages={
-          ...this.form
-        };
-        addActivity(pages)
-        .then(res=>{
-            let data = res.data
-            if (data.code == '1') {
-              this.$message({
-                message: data.msg,
-                type: 'success'
-              })
-              this.$router.back()
-            } else {
-              this.$message.error(data.msg)
-            }
-        })
-         .catch(err => {
-            console.log(err)
-          })
-      },
+      // addScenery(){
+      //   let pages={
+      //     ...this.form
+      //   };
+      //   addActivity(pages)
+      //   .then(res=>{
+      //       let data = res.data
+      //       if (data.code == '1') {
+      //         this.$message({
+      //           message: data.msg,
+      //           type: 'success'
+      //         })
+      //         this.$router.back()
+      //       } else {
+      //         this.$message.error(data.msg)
+      //       }
+      //   })
+      //    .catch(err => {
+      //       console.log(err)
+      //     })
+      // },
        // 取消优惠编辑
-      resetForm(formName) {
-        this.$router.back()
-        // this.$refs[formName].resetFields();
-      },
+      // resetForm(formName) {
+      //   this.$router.back()
+      //   // this.$refs[formName].resetFields();
+      // },
       //优惠条件删除
-      dataDelete(index) {
-        this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.form.activityDescribeList.splice(index, 1)
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });
-        });
-      },
+      // dataDelete(index) {
+      //   this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
+      //     confirmButtonText: '确定',
+      //     cancelButtonText: '取消',
+      //     type: 'warning'
+      //   }).then(() => {
+      //     this.form.activityDescribeList.splice(index, 1)
+      //     this.$message({
+      //       type: 'success',
+      //       message: '删除成功!'
+      //     });
+      //   }).catch(() => {
+      //     this.$message({
+      //       type: 'info',
+      //       message: '已取消删除'
+      //     });
+      //   });
+      // },
       //优惠条件编辑
-      dataEdit(index,data){
-          let sum={
-            id:index,
-            describeTotal:data.describeTotal,
-            describeDiscount:data.describeDiscount,
-          };
-          this.sum=sum;
-          this.sumFalg=true;
-        },
+      // dataEdit(index,data){
+      //     let sum={
+      //       id:index,
+      //       describeTotal:data.describeTotal,
+      //       describeDiscount:data.describeDiscount,
+      //     };
+      //     this.sum=sum;
+      //     this.sumFalg=true;
+      //   },
        //优惠条件确认
-      sumSub(){
-        this.$refs['sumForm'].validate((valid) => {
-          if (valid) {
-            if(!activityMoney(this.sum.describeTotal))this.$message.error('优惠门槛金额应为0-99999之间的整数');
-            else if(!activityMoney(this.sum.describeDiscount))this.$message.error('优惠金额应为0-99999之间的整数');
-            else if(parseInt(this.sum.describeDiscount)>parseInt(this.sum.describeTotal))this.$message.error('优惠金额不能大于优惠门槛金额');
-            else{
-              if(this.sum.id===null||this.sum.id===undefined){
+      // sumSub(){
+      //   this.$refs['sumForm'].validate((valid) => {
+      //     if (valid) {
+      //       if(!activityMoney(this.sum.describeTotal))this.$message.error('优惠门槛金额应为0-99999之间的整数');
+      //       else if(!activityMoney(this.sum.describeDiscount))this.$message.error('优惠金额应为0-99999之间的整数');
+      //       else if(parseInt(this.sum.describeDiscount)>parseInt(this.sum.describeTotal))this.$message.error('优惠金额不能大于优惠门槛金额');
+      //       else{
+      //         if(this.sum.id===null||this.sum.id===undefined){
                 
-                this.form.activityDescribeList.push(this.sum);
-                this.$message.success('添加优惠规则成功');
-              }
-              else{
-                this.$set(this.form.activityDescribeList, this.sum.id, this.sum);
-                this.$message.success('编辑优惠规则成功');
-              }
+      //           this.form.activityDescribeList.push(this.sum);
+      //           this.$message.success('添加优惠规则成功');
+      //         }
+      //         else{
+      //           this.$set(this.form.activityDescribeList, this.sum.id, this.sum);
+      //           this.$message.success('编辑优惠规则成功');
+      //         }
              
-              this.sumFalg=false;
-            }
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-      },
+      //         this.sumFalg=false;
+      //       }
+      //     } else {
+      //       console.log('error submit!!');
+      //       return false;
+      //     }
+      //   });
+      // },
       //优惠条件取消
-      sumCanl(){
-        this.sumFalg=false;
-      },
+      // sumCanl(){
+      //   this.sumFalg=false;
+      // },
       //优惠条件唤起
-      addGraphic(){
-        if(this.form.activityDescribeList.length>=5){
-            this.$message.error("优惠条件最多5条")
-        }
-        else{
-          let sum={
-            describeTotal:null,
-            describeDiscount:null,
-          };
-          this.sum=sum;
-          this.sumFalg=true;
-        }
-      },
+      // addGraphic(){
+      //   if(this.form.activityDescribeList.length>=5){
+      //       this.$message.error("优惠条件最多5条")
+      //   }
+      //   else{
+      //     let sum={
+      //       describeTotal:null,
+      //       describeDiscount:null,
+      //     };
+      //     this.sum=sum;
+      //     this.sumFalg=true;
+      //   }
+      // },
       //全选操作
-      selectAll() {
-        this.form.specialetyList = []
-        if (this.checked) {
-          this.list.map((item) => {
-            this.form.specialetyList.push(item.specialtyId)
-          })
-        } else {
-          this.form.specialetyList = []
-        }
-      },
+      // selectAll() {
+      //   this.form.specialetyList = []
+      //   if (this.checked) {
+      //     this.list.map((item) => {
+      //       this.form.specialetyList.push(item.specialtyId)
+      //     })
+      //   } else {
+      //     this.form.specialetyList = []
+      //   }
+      // },
       // 提交
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            if (this.sceneryId){
-              this.editScenery()
-            }else {
-                this.addScenery()
-            }
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-      },
+      // submitForm(formName) {
+      //   this.$refs[formName].validate((valid) => {
+      //     if (valid) {
+      //       if (this.sceneryId){
+      //         this.editScenery()
+      //       }else {
+      //           this.addScenery()
+      //       }
+      //     } else {
+      //       console.log('error submit!!');
+      //       return false;
+      //     }
+      //   });
+      // },
       //全选状态值切换
-      changeSelect(val) {
-        if (val.length === this.list.length) {
-          this.checked = true
-        } else {
-          this.checked = false
-        }
-      },
+      // changeSelect(val) {
+      //   if (val.length === this.list.length) {
+      //     this.checked = true
+      //   } else {
+      //     this.checked = false
+      //   }
+      // },
       //商品数据获取
       getSpecialty(){
         let param={
@@ -483,14 +484,14 @@ import { activityMoney } from "@/utils/validate"
           })
       },
       //开始结束时间解析
-      getTime(maxDate){
-        this.form.activityStartTime=maxDate[0];
-        this.form.activityEndTime=maxDate[1];
-        console.log(this.form.activityTime)
-        // console.log(maxDate)
-        // console.log(this.form.activityStartTime)
-        //  console.log(this.form.activityEndTime)
-      },
+      // getTime(maxDate){
+      //   this.form.activityStartTime=maxDate[0];
+      //   this.form.activityEndTime=maxDate[1];
+      //   console.log(this.form.activityTime)
+      //   // console.log(maxDate)
+      //   // console.log(this.form.activityStartTime)
+      //   //  console.log(this.form.activityEndTime)
+      // },
      
      
 

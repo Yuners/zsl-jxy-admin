@@ -1,12 +1,13 @@
 import request from "@/utils/request";
 
+let index="http://192.124.1.57:5021/jxy"
 /**
  * 获取景区列表
  * @param params
  * @returns {AxiosPromise<any>}
  */
 export function getScenery(params) {
-  return request.get('/scenery/getSceneryPage', {params})
+  return request.get(index+'/scenery/getSceneryPage', {params})
 }
 
 
@@ -16,7 +17,7 @@ export function getScenery(params) {
  * @returns {AxiosPromise<any>}
  */
 export function addScenery(params) {
-  return request.post('/scenery/addScenery', params)
+  return request.post(index+'/scenery/addScenery', params)
 }
 
 /**
@@ -25,7 +26,7 @@ export function addScenery(params) {
  * @returns {AxiosPromise<any>}
  */
 export function getSceneryDetails(params) {
-  return request.post('/scenery/getSceneryById', params)
+  return request.post(index+'/scenery/getSceneryById', params)
 }
 
 /**
@@ -34,7 +35,7 @@ export function getSceneryDetails(params) {
  * @returns {AxiosPromise<any>}
  */
 export function updateScenery(params) {
-  return request.post('/scenery/updateScenery', params)
+  return request.post(index+'/scenery/updateScenery', params)
 }
 
 /**
@@ -43,5 +44,5 @@ export function updateScenery(params) {
  * @returns {AxiosPromise<any>}
  */
 export function delScenery(params) {
-  return request.post('/scenery/delScenery', params)
+  return request.post(index+'/scenery/delScenery', params)
 }

@@ -1,12 +1,17 @@
 import request from "@/utils/request";
 
+<<<<<<< HEAD
+let index="http://192.124.1.57:5021/jxy"
+=======
+let index="http://192.168.31.252:10209"
+>>>>>>> b4a55f01d5bcf63afec266b17b1d7b4496435101
 /**
  * 获取景区列表
  * @param params
  * @returns {AxiosPromise<any>}
  */
 export function getSpecialty(params) {
-  return request.get('/specialty/getSpecialtyPage', {params})
+  return request.get(index+'/specialty/getSpecialtyPage', {params})
 }
 
 
@@ -16,7 +21,7 @@ export function getSpecialty(params) {
  * @returns {AxiosPromise<any>}
  */
 export function addSpecialty(params) {
-  return request.post('/specialty/addSpecialty', params)
+  return request.post(index+'/specialty/addSpecialty', params)
 }
 
 /**
@@ -25,7 +30,7 @@ export function addSpecialty(params) {
  * @returns {AxiosPromise<any>}
  */
 export function getSpecialtyDetails(params) {
-  return request.post('/specialty/getSpecialtyById', params)
+  return request.post(index+'/specialty/getSpecialtyById', params)
 }
 
 /**
@@ -34,7 +39,7 @@ export function getSpecialtyDetails(params) {
  * @returns {AxiosPromise<any>}
  */
 export function updateSpecialty(params) {
-  return request.post('/specialty/updateSpecialty', params)
+  return request.post(index+'/specialty/updateSpecialty', params)
 }
 
 /**
@@ -43,7 +48,7 @@ export function updateSpecialty(params) {
  * @returns {AxiosPromise<any>}
  */
 export function delSpecialty(params) {
-  return request.post('/specialty/delSpecialty', params)
+  return request.post(index+'/specialty/delSpecialty', params)
 }
 
 /**
@@ -52,7 +57,7 @@ export function delSpecialty(params) {
  * @returns {AxiosPromise<any>}
  */
 export function getFreightList() {
-  return request.get('/freight/getAllFreight')
+  return request.get(index+'/freight/getAllFreight')
 }
 
 /**
@@ -61,5 +66,13 @@ export function getFreightList() {
  * @returns {AxiosPromise<any>}
  */
 export function getNoticeList(params) {
-  return request.get('/notice/getAllNotice', params)
+  return request.get(index+'/notice/getAllNotice', params)
+}
+/**
+ * 特产上下架
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export function putawaySpecialty(params) {
+  return request.post(index+'/specialty/putawaySpecialty', params)
 }

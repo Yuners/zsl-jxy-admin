@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-
+let index = 'http://192.168.31.28:10211'
 
 /**
  * 获取订单列表
@@ -7,7 +7,7 @@ import request from '@/utils/request'
  * @returns {AxiosPromise<any>}
  */
 export function getOrderList(params) {
-  return request.get('/order/sList', { params })
+  return request.get(index+'/order/sList', { params })
 }
 
 
@@ -17,7 +17,7 @@ export function getOrderList(params) {
  * @returns {AxiosPromise<any>}
  */
 export function delOrder(params) {
-  return request.get('/order/delOrder', params)
+  return request.get(index+'/order/delOrder', params)
 }
 
 /**
@@ -26,7 +26,7 @@ export function delOrder(params) {
  * @returns {AxiosPromise<any>}
  */
 export function addOrder(params) {
-  return request.post('/order/addOrder', params)
+  return request.post(index+'/order/addOrder', params)
 }
 
 
@@ -36,7 +36,7 @@ export function addOrder(params) {
  * @returns {AxiosPromise<any>}
  */
 export function getOrderDetails(oId) {
-  return request.get('/order/sDetail/'+oId)
+  return request.get(index+'/order/sDetail/'+oId)
 }
 
 /**
@@ -45,7 +45,7 @@ export function getOrderDetails(oId) {
  * @returns {AxiosPromise<any>}
  */
 export function getOrderExpress(deliveryId) {
-  return request.get('/order/express/'+deliveryId)
+  return request.get(index+'/order/express/'+deliveryId)
 }
 
 /**
@@ -54,7 +54,7 @@ export function getOrderExpress(deliveryId) {
  * @returns {AxiosPromise<any>}
  */
 export function updateAdress(params) {
-  return request.post('/order/update/adress', params)
+  return request.post(index+'/order/update/adress', params)
 }
 
 /**
@@ -63,7 +63,16 @@ export function updateAdress(params) {
  * @returns {AxiosPromise<any>}
  */
 export function updateFreight(params) {
-  return request.post('/order/update/freight', params)
+  return request.post(index+'/order/update/freight', params)
+}
+
+/**
+ * 商家快递信息
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export function addDeliveryId(params) {
+  return request.post(index+'/order/addDeliveryId', params)
 }
 
 /**
@@ -72,5 +81,5 @@ export function updateFreight(params) {
  * @returns {AxiosPromise<any>}
  */
 export function cancelOrder(params) {
-  return request.post('/cancel', params)
+  return request.post(index+'/order/cancel', params)
 }

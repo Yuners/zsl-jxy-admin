@@ -341,6 +341,36 @@ const jinSwimRouter = {
             ]
           },
           {
+            path: 'activity',
+            name: 'Activity',
+            redirect: '/jinSwim/operation/activity/list',
+            component: () => import('@/views/jinSwim/operation/activity'),
+            meta: {title: '活动优惠', icon: 'carriage'},
+            children: [
+              {
+                path: 'list',
+                name: 'List',
+                component: () => import('@/views/jinSwim/operation/activity/list'),
+                meta: {title: '优惠列表'},
+                hidden: true
+              },
+              {
+                path: 'compile',
+                name: 'Compile',
+                component: () => import('@/views/jinSwim/operation/activity/compile'),
+                meta: {title: '活动编辑'},
+                hidden: true
+              },
+              // {
+              //   path: 'details',
+              //   name: 'Details',
+              //   component: () => import('@/views/jinSwim/operation/carriage/details'),
+              //   meta: {title: '须知详情'},
+              //   hidden: true
+              // },
+            ]
+          },
+          {
             path: 'order',
             name: 'Order',
             redirect: '/jinSwim/operation/order/list',

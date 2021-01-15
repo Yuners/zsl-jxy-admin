@@ -2,15 +2,15 @@
   <div class="list">
     <div class="tableHead">
       <div class="search">
-        <el-input class="coverStyle" v-model="specialtyName" placeholder="特产名称"></el-input>
-        <el-cascader
+        <el-input class="coverStyle" v-model="activityName" placeholder="活动名称"></el-input>
+        <!-- <el-cascader
           class="coverStyle"
           clearable
           v-model="affiliatingArea"
           placeholder="选择所属地区"
           :props="props"
           :options="$store.state.city.cityList"
-          @change="handleChange"></el-cascader>
+          @change="handleChange"></el-cascader> -->
         <el-select
           class="coverStyle"
           v-model="status"
@@ -27,12 +27,12 @@
         <el-button type="info" size="medium" plain @click="clear()">重置</el-button>
         <el-button class="coverBut" type="primary" size="medium" @click="submit">查询</el-button>
       </div>
-      <!-- <el-button
+      <el-button
         class="coverBut"
         type="success"
         size="medium"
-        @click="routingHop('/jinSwim/releases/specialty/compile')"
-      >添加</el-button> -->
+        @click="routingHop('/jinSwim/operation/activity/compile')"
+      >添加</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -47,51 +47,58 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="特产名称">
+      <el-table-column label="活动名称">
         <template slot-scope="scope">
-          <span style="cursor: pointer" @click="specialtyDetails(scope.row.specialtyId)">{{ scope.row.specialtyName }}</span>
+          <span style="cursor: pointer" @click="specialtyDetails(scope.row.activityId)">{{ scope.row.activityName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="特产类别" width="150" align="center">
+      <el-table-column label="活动类型" width="150" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.specialtyTypeName || '暂无'}}</span>
+          <!-- <span>{{ scope.row.activityType || '暂无'}}</span> -->
+          <el-tag :type="scope.row.activityType | statusType">{{ scope.row.activityType | statusFilter}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="所属地区" width="150" align="center">
+      <el-table-column label="活动状态" width="150" align="center">
         <template slot-scope="scope">
-          {{ scope.row.specialtyLocationName || '暂无' }}
+           <span>{{ isState(scope.row.activityStartTime,scope.row.activityEndTime,scope.row.activityIsUp)}}</span>
         </template>
       </el-table-column>
-       <!-- <el-table-column label="商品价格" width="150" align="center">
+      <el-table-column label="上线/下架" width="150" align="center">
         <template slot-scope="scope">
-          {{ scope.row.specialtyShowPrice || '暂无' }}
-        </template>
-      </el-table-column> -->
-      <el-table-column label="运费模板" width="150" align="center">
-        <template slot-scope="scope">
-          <span style="cursor: pointer" @click="freightDetails(scope.row.specialtyFreightId)">{{ scope.row.specialtyFreightName || '暂无' }}</span>
+          <el-switch
+            v-model="scope.row.activityIsUp"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            :active-value="max"
+            :inactive-value="min"
+            @change="getActivityIsUp(scope.row.activityIsUp,scope.row.activityId)">
+          </el-switch>
+          
+          <!-- <span style="cursor: pointer" @click="freightDetails(scope.row.specialtyFreightId)">{{ scope.row.specialtyFreightName || '暂无' }}</span> -->
           
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="状态" width="110" align="center">
+      <el-table-column class-name="status-col" label="活动开始时间" width="110" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.specialtyPutaway | statusType">{{ scope.row.specialtyPutaway | statusFilter}}</el-tag>
+          <span>{{ isTime(scope.row.activityStartTime) }}</span>
+          <!-- <el-tag :type="scope.row.specialtyPutaway | statusType">{{ scope.row.specialtyPutaway | statusFilter}}</el-tag> -->
         </template>
       </el-table-column>
-      <!-- <el-table-column align="center" prop="created_at" label="反馈信息" width="200">
+      <el-table-column class-name="status-col" label="活动结束时间" width="110" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.applyDescribe || '暂无'}}</span>
+          <span>{{ isTime(scope.row.activityEndTime)}}</span>
+          <!-- <el-tag :type="scope.row.specialtyPutaway | statusType">{{ scope.row.specialtyPutaway | statusFilter}}</el-tag> -->
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column
         align="center"
         label="操作"
         width="150"
       >
         <template slot-scope="scope">
-          <el-button style="color:green" v-if="scope.row.specialtyPutaway === 0" type="text" @click="issue(scope.row,1)" size="small">上架</el-button>
-          <el-button style="color:red" v-if="scope.row.specialtyPutaway !=0" type="text" @click="issue(scope.row,0)" size="small">取消上架</el-button>
-          <el-button type="text" size="small" @click="specialtyDetails(scope.row.specialtyId)">查看详情</el-button>
+          <!-- <el-button style="color:green" v-if="scope.row.specialtyPutaway === 0" type="text" @click="issue(scope.row,1)" size="small">上架</el-button>
+          <el-button style="color:red" v-if="scope.row.specialtyPutaway !=0" type="text" @click="issue(scope.row,0)" size="small">取消上架</el-button> -->
+          <el-button type="text" size="small" @click="specialtyDetails(scope.row.activityId)">查看详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -110,7 +117,7 @@
 
 <script>
   import { getSpecialty, delSpecialty,putawaySpecialty} from '@/api/Releases/specialty'
-  import {issue} from "@/api/Releases";
+  import { getActivityPage,updateActivityIsUp } from "@/api/Operation/activity";
 
 
   export default {
@@ -118,13 +125,15 @@
       statusFilter(status) {
         switch (status) {
           case 0:
-            return '未上架'
+            return '满减活动'
             break;
           case 1:
-            return '已上架'
+            return '优惠劵'
             break;
-         
-        }
+          case 2:
+            return '广告'
+            break;
+          }
       },
       statusType(status) {
         switch (status) {
@@ -133,6 +142,9 @@
             break;
           case 1:
             return 'success'
+            break;
+          case 2:
+            return 'danger'
             break;
         }
       }
@@ -155,10 +167,8 @@
           children:'items',
           emitPath: false,
         },
-        specialtyName: '', // 特产名称
-        affiliatingArea: '' ,// 所属地区
+        activityName: '', // 活动名称
         status: '', // 状态
-        showStateList: ['未提交','待审核','通过','不通过'],//状态类型
         statusList: [
           {
             value: 0,
@@ -167,13 +177,60 @@
             value: 1,
             label: '已上架'
           }
-        ]
+        ],
+        max:1,
+        min:0
       }
     },
     created() {
       this.fetchData()
     },
     methods: {
+      //活动状态获取
+      isState(startTime,endTime,type){
+        console.log(type)
+        if(startTime==null||endTime==null||type===null)return '暂无';
+        var aData = Date.parse(new Date());
+        var aStartTime = Date.parse(startTime);
+        var aEndTime = Date.parse(endTime);
+        if(type===0||!type)return '活动已下架';
+        if(aStartTime>=aEndTime)return '时间有误,开始时间大于等于结束时间';
+        if(aData<aStartTime)return '活动还未开始';
+        if(aData>=aEndTime) return '活动已结束';
+        return '活动进行中';
+      },
+      isTime(startTime){
+        if(startTime==null)return '暂无';
+        // var aStartTime = Date.parse(startTime);
+        var aTime=new Date(startTime)
+        let year = aTime.getFullYear();
+        let month = aTime.getMonth() + 1 < 10 ? "0" + (aTime.getMonth() + 1): aTime.getMonth() + 1;
+        let day = aTime.getDate() < 10 ? "0" + aTime.getDate() : aTime.getDate();
+        let hours =aTime.getHours() < 10 ? "0" + aTime.getHours() : aTime.getHours();
+        let minutes =aTime.getMinutes() < 10 ? "0" + aTime.getMinutes() : aTime.getMinutes();
+        let seconds =aTime.getSeconds() < 10 ? "0" + aTime.getSeconds() : aTime.getSeconds();
+        return (year +"-" +month +"-" +day +" " +hours +":" +minutes +":" +seconds);
+       
+      },
+      //修改上下限状态
+      getActivityIsUp(activityIsUp,activityId){
+        let pages={
+          activityIsUp:activityIsUp,
+          activityId:activityId
+        };
+        // console.log(pages)
+        updateActivityIsUp(pages)
+        .then(res=>{
+            let data = v.data
+              if (data.code == '1'){
+              } else {
+                this.$message.error(data.msg)
+                this.fetchData()
+              }
+        })
+        .catch( err => {
+        })
+      },
       // 发布
       issue(date,index){
         this.$confirm(`是否${index===0?'下架':'上架'}特产:  ${date.specialtyName} ?`, '提示', {
@@ -188,9 +245,10 @@
           console.log(pages)
           putawaySpecialty(pages)
             .then(v=>{
+              
               let data = v.data
               if (data.code == '1'){
-                console.log("ss")
+                // console.log("ss")
                this.fetchData()
               } else {
                 this.$message.error(data.msg)
@@ -240,15 +298,14 @@
           pageSize: this.pages.pageSize,
           isDeleted: 0,
           isDisabled: 0,
-          specialtyLocationId: this.affiliatingArea,
-          specialtyName: this.specialtyName,
-          specialtyState:2
+          activityName: this.activityName,
         }
         if (this.status){
-          params.specialtyPutaway = this.status
+          params.activityIsUp = this.status
         }
-        getSpecialty(params)
+        getActivityPage(params)
           .then( res => {
+            console.log(res)
             let data = res.data
             if (data.code == '1'){
               // if (data.data.length){

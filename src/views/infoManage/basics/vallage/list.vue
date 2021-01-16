@@ -127,6 +127,7 @@
         param:{
           villageYear:null
         },
+        landLocationId:null,
         pages:{
           pageSize: 10, // 每页多少条
           pageCount: 1, // 一共多少页
@@ -136,6 +137,7 @@
       }
     },
     created() {
+      this.landLocationId = this.$store.getters.user.userFrameworkId
       this.search()
     },
     filters: {
@@ -151,7 +153,7 @@
       handleVillageFlag(){
         let params = {
           villageYear: new Date().getFullYear(),
-          villageLocationId: '1338353936444280822' // 测试
+          villageLocationId: this.landLocationId // 测试
         }
         console.info(params)
         getVillageFlag(params)

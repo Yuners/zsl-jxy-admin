@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-let index="http://192.124.1.57:5021/role"
+let index="http://192.124.1.57:5021/jxy"
 /**
  * 根据PCode查询字典，包括子集
  * @param params

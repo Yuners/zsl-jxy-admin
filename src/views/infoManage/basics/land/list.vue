@@ -98,6 +98,7 @@
           landVillageName:'',
           landLocationId:[]
         },
+        landLocationId:null,
         pages:{
           pageSize: 10, // 每页多少条
           pageCount: 1, // 一共多少页
@@ -124,6 +125,7 @@
       }
     },
     created() {
+      this.landLocationId = this.$store.getters.user.userFrameworkId
       this.search()
       this.getCity()
     },
@@ -165,7 +167,7 @@
         // this.routingHop('/infoManage/basics/land/compile')
         let params = {
           landYear: new Date().getFullYear(),
-          landLocationId: '1338353936444280822' // 测试
+          landLocationId: this.landLocationId // 测试
         }
         console.info(params)
         getLandFlag(params)

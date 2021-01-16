@@ -1,12 +1,13 @@
 import request from "@/utils/request";
-
+// let index = 'http://192.168.31.28:10209'
+let index = 'jxy'
 /**
  * 新增乡村信息
  * @param params
  * @returns {AxiosPromise<any>}
  */
 export function addVillage( params ) {
-  return request.post('/village/addVillage', params)
+  return request.post(index+'/village/addVillage', params)
 }
 
 /**
@@ -15,7 +16,7 @@ export function addVillage( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function delVillage( params ) {
-  return request.post('/village/delVillage', params)
+  return request.post(index+'/village/delVillage', params)
 }
 
 /**
@@ -24,7 +25,7 @@ export function delVillage( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function getVillageById( params ) {
-  return request.post('/village/getVillageById', params)
+  return request.post(index+'/village/getVillageById', params)
 }
 
 /**
@@ -33,7 +34,7 @@ export function getVillageById( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function getVillagePage( params ) {
-  return request.get('/village/getVillagePage', { params })
+  return request.get(index+'/village/getVillagePage', { params })
 }
 
 /**
@@ -42,7 +43,7 @@ export function getVillagePage( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function updateVillage( params ) {
-  return request.post('/village/updateVillage', params)
+  return request.post(index+'/village/updateVillage', params)
 }
 
 /**
@@ -51,5 +52,5 @@ export function updateVillage( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function getVillageFlag( params ) {
-  return request.post('/village/getVillageFlag', params)
+  return request.post(index+'/village/getVillageFlag', params)
 }

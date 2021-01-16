@@ -1,12 +1,13 @@
 import request from "@/utils/request";
-
+let index = 'http://192.168.31.28:10209'
+// let index = '/jxy'
 /**
  * 新增土地信息
  * @param params
  * @returns {AxiosPromise<any>}
  */
 export function addLand( params ) {
-  return request.post('/land/addLand', params)
+  return request.post(index+'/land/addLand', params)
 }
 
 /**
@@ -15,7 +16,7 @@ export function addLand( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function delLand( params ) {
-  return request.post('/land/delLand', params)
+  return request.post(index+'/land/delLand', params)
 }
 
 /**
@@ -24,7 +25,7 @@ export function delLand( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function getLandById( params ) {
-  return request.post('/land/getLandById', params)
+  return request.post(index+'/land/getLandById', params)
 }
 
 /**
@@ -33,7 +34,7 @@ export function getLandById( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function getLandPage( params ) {
-  return request.get('/land/getLandPage', { params })
+  return request.get(index+'/land/getLandPage', { params })
 }
 
 /**
@@ -42,7 +43,7 @@ export function getLandPage( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function updateLand( params ) {
-  return request.post('/land/updateLand', params)
+  return request.post(index+'/land/updateLand', params)
 }
 
 /**
@@ -51,5 +52,5 @@ export function updateLand( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function getLandFlag( params ) {
-  return request.post('/land/getLandFlag', params)
+  return request.post(index+'/land/getLandFlag', params)
 }

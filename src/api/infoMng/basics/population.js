@@ -1,12 +1,13 @@
 import request from "@/utils/request";
-
+// let index = 'http://192.168.31.28:10209'
+let index = 'jxy'
 /**
  * 新增人口信息
  * @param params
  * @returns {AxiosPromise<any>}
  */
 export function addPopulation( params ) {
-  return request.post('/population/addPopulation', params)
+  return request.post(index+'/population/addPopulation', params)
 }
 
 /**
@@ -15,7 +16,7 @@ export function addPopulation( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function delPopulation( params ) {
-  return request.post('/population/delPopulation', params)
+  return request.post(index+'/population/delPopulation', params)
 }
 
 /**
@@ -24,7 +25,7 @@ export function delPopulation( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function getPopulationById( params ) {
-  return request.post('/population/getPopulationById', params)
+  return request.post(index+'/population/getPopulationById', params)
 }
 
 /**
@@ -33,7 +34,7 @@ export function getPopulationById( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function getPopulationPage( params ) {
-  return request.get('/population/getPopulationPage', { params })
+  return request.get(index+'/population/getPopulationPage', { params })
 }
 
 /**
@@ -42,7 +43,7 @@ export function getPopulationPage( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function updatePopulation( params ) {
-  return request.post('/population/updatePopulation', params)
+  return request.post(index+'/population/updatePopulation', params)
 }
 
 /**
@@ -51,5 +52,5 @@ export function updatePopulation( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function getPopulationFlag( params ) {
-  return request.post('/population/getPopulationFlag', params)
+  return request.post(index+'/population/getPopulationFlag', params)
 }

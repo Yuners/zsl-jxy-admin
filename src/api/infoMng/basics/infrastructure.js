@@ -1,12 +1,13 @@
 import request from "@/utils/request";
-
+let index = 'http://192.168.31.28:10209'
+// let index = 'jxy'
 /**
  * 新增基础建设信息
  * @param params
  * @returns {AxiosPromise<any>}
  */
 export function addInfrastructure( params ) {
-  return request.post('/infrastructure/addInfrastructure', params)
+  return request.post(index+'/infrastructure/addInfrastructure', params)
 }
 
 /**
@@ -15,7 +16,7 @@ export function addInfrastructure( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function delInfrastructure( params ) {
-  return request.post('/infrastructure/delInfrastructure', params)
+  return request.post(index+'/infrastructure/delInfrastructure', params)
 }
 
 /**
@@ -24,7 +25,7 @@ export function delInfrastructure( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function getInfrastructureById( params ) {
-  return request.post('/infrastructure/getInfrastructureById', params)
+  return request.post(index+'/infrastructure/getInfrastructureById', params)
 }
 
 /**
@@ -33,7 +34,7 @@ export function getInfrastructureById( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function getInfrastructurePage( params ) {
-  return request.get('/infrastructure/getInfrastructurePage', { params })
+  return request.get(index+'/infrastructure/getInfrastructurePage', { params })
 }
 
 /**
@@ -42,7 +43,7 @@ export function getInfrastructurePage( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function updateInfrastructure( params ) {
-  return request.post('/infrastructure/updateInfrastructure', params)
+  return request.post(index+'/infrastructure/updateInfrastructure', params)
 }
 
 /**
@@ -51,5 +52,5 @@ export function updateInfrastructure( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function getInfrastructureFlag( params ) {
-  return request.post('/infrastructure/getInfrastructureFlag', params)
+  return request.post(index+'/infrastructure/getInfrastructureFlag', params)
 }

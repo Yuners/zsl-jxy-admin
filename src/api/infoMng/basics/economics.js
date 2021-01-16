@@ -1,12 +1,13 @@
 import request from "@/utils/request";
-
+// let index = 'http://192.168.31.28:10209'
+let index = 'jxy'
 /**
  * 新增经济管理信息
  * @param params
  * @returns {AxiosPromise<any>}
  */
 export function addEconomics( params ) {
-  return request.post('/economics/addEconomics', params)
+  return request.post(index+'/economics/addEconomics', params)
 }
 
 /**
@@ -15,7 +16,7 @@ export function addEconomics( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function delEconomics( params ) {
-  return request.post('/economics/delEconomics', params)
+  return request.post(index+'/economics/delEconomics', params)
 }
 
 /**
@@ -24,7 +25,7 @@ export function delEconomics( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function getEconomicsById( params ) {
-  return request.post('/economics/getEconomicsById', params)
+  return request.post(index+'/economics/getEconomicsById', params)
 }
 
 /**
@@ -33,7 +34,7 @@ export function getEconomicsById( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function getEconomicsPage( params ) {
-  return request.get('/economics/getEconomicsPage', { params })
+  return request.get(index+'/economics/getEconomicsPage', { params })
 }
 
 /**
@@ -42,7 +43,7 @@ export function getEconomicsPage( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function updateEconomics( params ) {
-  return request.post('/economics/updateEconomics', params)
+  return request.post(index+'/economics/updateEconomics', params)
 }
 
 /**
@@ -51,5 +52,5 @@ export function updateEconomics( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function getEconomicsFlag( params ) {
-  return request.post('/economics/getEconomicsFlag', params)
+  return request.post(index+'/economics/getEconomicsFlag', params)
 }

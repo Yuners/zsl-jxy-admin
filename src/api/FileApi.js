@@ -35,6 +35,7 @@ let uploadAudio = (file,name,output,quality) => {
  * @returns {AxiosPromise<any>}
  */
 let uploadImage = (file,compress) => {
+  console.log(file)
     let formData=new FormData();
     formData.append('compress',compress||true);
     formData.append('file',file.file);

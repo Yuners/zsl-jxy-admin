@@ -188,6 +188,7 @@
     },
     methods: {
       // 发布
+     
       issue(id){
         this.$confirm('是否确认发布审核此信息?', '提示', {
           confirmButtonText: '确定',

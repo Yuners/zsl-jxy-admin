@@ -1,6 +1,6 @@
 import request from "@/utils/request";
-// let index="/role"
-let index="http://192.168.31.252:10207"
+let index="/role"
+// let index="http://192.168.31.252:10207"
 /**
  * 添加角色
  * @param params

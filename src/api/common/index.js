@@ -6,7 +6,7 @@ import request from "@/utils/request";
  * @returns {AxiosPromise<any>}
  */
 export function getDictionary(params) {
-  return request.post('/dictionary/getDictionaryByCode', params)
+  return request.post('/role/dictionary/getDictionaryByCode', params)
 }
 
 /**

@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-
+let index="/jxy"
 
 /**
  * 获取运费列表
@@ -7,7 +7,7 @@ import request from '@/utils/request'
  * @returns {AxiosPromise<any>}
  */
 export function getFreightList(params) {
-  return request.get('/freight/getFreightPage', { params })
+  return request.get(index+'/freight/getFreightPage', { params })
 }
 
 
@@ -17,7 +17,7 @@ export function getFreightList(params) {
  * @returns {AxiosPromise<any>}
  */
 export function delFreight(params) {
-  return request.get('/freight/delFreight', params)
+  return request.get(index+'/freight/delFreight', params)
 }
 
 /**
@@ -26,7 +26,7 @@ export function delFreight(params) {
  * @returns {AxiosPromise<any>}
  */
 export function addFreight(params) {
-  return request.post('/freight/addFreight', params)
+  return request.post(index+'/freight/addFreight', params)
 }
 
 
@@ -36,7 +36,7 @@ export function addFreight(params) {
  * @returns {AxiosPromise<any>}
  */
 export function getFreightDetails(params) {
-  return request.post('/freight/getFreightById', params)
+  return request.post(index+'/freight/getFreightById', params)
 }
 
 
@@ -46,5 +46,5 @@ export function getFreightDetails(params) {
  * @returns {AxiosPromise<any>}
  */
 export function updateFreight(params) {
-  return request.post('/freight/updateFreight', params)
+  return request.post(index+'/freight/updateFreight', params)
 }

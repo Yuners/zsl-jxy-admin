@@ -429,16 +429,8 @@ export default {
   }
 }
 </script>
-<style>
-  .custom-tree-node {
-    position:relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 14px;
-    padding-right: 8px;
-   
-  }
+<style scoped lang="scss">
+  
   .block{
     width: 40%;
     height: 100%;

@@ -15,7 +15,7 @@
       <div class="right-menu">
         <el-dropdown class="avatar-container" trigger="click">
           <div class="avatar-wrapper">
-            <img :src="$store.getters.user.userPhoto" class="user-avatar">
+            <img :src="$store.getters.user.userPhoto" class="user-avatar" onerror="this.src='../../../state/jxy.jpg';this.οnerrοr=null">
             <i class="el-icon-caret-bottom" />
           </div>
           <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -46,9 +46,9 @@
   export default {
     data(){
       return{
-        title: '数字乡村管理系统',
+        title: '众森联数字乡村管理云平台',
         logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png',
-        systemName: '数字乡村管理系统'
+        systemName: '众森联数字乡村管理云平台'
       }
     },
     components: {

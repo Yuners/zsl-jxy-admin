@@ -1,13 +1,13 @@
 import request from '@/utils/request'
 
-
+let index="/jxy"
 /**
  * 获取用户须知列表
  * @param params
  * @returns {AxiosPromise<any>}
  */
 export function getNoticeList(params) {
-  return request.get('/notice/getNoticePage', { params })
+  return request.get(index+'/notice/getNoticePage', { params })
 }
 
 
@@ -17,7 +17,7 @@ export function getNoticeList(params) {
  * @returns {AxiosPromise<any>}
  */
 export function delNotice(params) {
-  return request.post('/notice/delNotice', params)
+  return request.post(index+'/notice/delNotice', params)
 }
 
 /**
@@ -26,7 +26,7 @@ export function delNotice(params) {
  * @returns {AxiosPromise<any>}
  */
 export function addNotice(params) {
-  return request.post('/notice/addNotice', params)
+  return request.post(index+'/notice/addNotice', params)
 }
 
 /**
@@ -35,7 +35,7 @@ export function addNotice(params) {
  * @returns {AxiosPromise<any>}
  */
 export function updateNotice(params) {
-  return request.post('/notice/updateNotice', params)
+  return request.post(index+'/notice/updateNotice', params)
 }
 
 /**
@@ -44,5 +44,5 @@ export function updateNotice(params) {
  * @returns {AxiosPromise<any>}
  */
 export function getNoticeDetails(params) {
-  return request.post('/notice/getNoticeById', params)
+  return request.post(index+'/notice/getNoticeById', params)
 }

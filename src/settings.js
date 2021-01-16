@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '数字乡村管理系统',
+  title: '众森联数字乡村管理云平台',
 
   /**
    * @type {boolean} true | false

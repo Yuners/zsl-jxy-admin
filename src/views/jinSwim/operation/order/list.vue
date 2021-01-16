@@ -47,7 +47,7 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="订单号">
+      <el-table-column label="订单号" show-overflow-tooltip>
         <template slot-scope="scope">
           <span style="cursor: pointer;color:blue" @click="details(scope.row.id)">{{ scope.row.orderId }}</span>
         </template>
@@ -92,7 +92,7 @@
           <span style="cursor: pointer;" >{{ statusMap[scope.row.status].text }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="下单时间">
+      <el-table-column label="下单时间" show-overflow-tooltip>
         <template slot-scope="scope" >
           <span style="cursor: pointer;" >{{ scope.row.addTime*1000|formatDate }}</span>
         </template>

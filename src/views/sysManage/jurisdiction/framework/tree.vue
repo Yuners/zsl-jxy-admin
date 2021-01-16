@@ -361,8 +361,8 @@ export default {
   }
 }
 </script>
-<style>
-  .custom-tree-node {
+<style scoped lang="scss">
+  /* .custom-tree-node {
     position:relative;
     display: flex;
     align-items: center;
@@ -370,7 +370,7 @@ export default {
     font-size: 14px;
     padding-right: 8px;
    
-  }
+  } */
   .block{
     width: 40%;
     height: 100%;

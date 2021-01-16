@@ -1,7 +1,6 @@
 import request from "@/utils/request";
-
-let index="http://192.124.1.57:5021/jxy"
-// let index="http://192.168.31.161:10209"
+let index="/jxy"
+// let index="http://192.168.31.252:10209"
 /**
  * 获取景区列表
  * @param params
@@ -79,4 +78,3 @@ export function putawaySpecialty(params) {
 export function getSpecialtyList(params) {
   return request.get(index+'/specialty/getSpecialtyList', {params})
 }
-

@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-let index="http://192.168.31.252:10209"
+let index="/jxy"
 /**
  * 发布
  * @param params

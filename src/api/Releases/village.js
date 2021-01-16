@@ -1,13 +1,14 @@
 import request from "@/utils/request";
 
-
+let index="/jxy"
+// let index="http://192.168.31.252:10209"
 /**
  * 新增乡村简介
  * @param params
  * @returns {AxiosPromise<any>}
  */
 export function addVillage( params ) {
-  return request.post('/villageDescrible/addVillage', params )
+  return request.post(index+'/villageDescrible/addVillage', params )
 }
 
 /**
@@ -16,7 +17,7 @@ export function addVillage( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function delVillage( params ) {
-  return request.post('/villageDescrible/delVillage', params )
+  return request.post(index+'/villageDescrible/delVillage', params )
 }
 
 /**
@@ -25,7 +26,7 @@ export function delVillage( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function getVillageDetails( params ) {
-  return request.post('/villageDescrible/getVillageById', params )
+  return request.post(index+'/villageDescrible/getVillageById', params )
 }
 
 /**
@@ -34,7 +35,7 @@ export function getVillageDetails( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function getVillageList( params ) {
-  return request.get('/villageDescrible/getVillagePage', { params } )
+  return request.get(index+'/villageDescrible/getVillagePage', { params } )
 }
 
 /**
@@ -43,6 +44,5 @@ export function getVillageList( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function updateVillage( params ) {
-  return request.post('/villageDescrible/updateVillage', params )
+  return request.post(index+'/villageDescrible/updateVillage', params )
 }
-

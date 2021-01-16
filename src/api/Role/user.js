@@ -1,6 +1,6 @@
 import request from "@/utils/request"
 // let index="/user"
-let index="http://192.124.1.57:5021/user"
+let index="http://192.168.31.252:10202"
 /**
  * 查询权限用户列表
  * @param params

@@ -1,6 +1,6 @@
 import request from "@/utils/request";
 
-let index="http://192.124.1.57:5021/jxy"
+let index="/jxy"
 /**
  * 获取景区列表
  * @param params

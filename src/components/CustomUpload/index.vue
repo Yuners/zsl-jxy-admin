@@ -194,10 +194,20 @@
           this.loading = true
           FileApi.uploadVideo(param)
             .then( res => {
+              if (res.data) {
+                let data = res.data
+                let params = {
+                  fileLable: data.ext, // 图片标签
+                  fileName: data.name, // 附件名称
+                  fileOldName: data.name, // 文件原名称
+                  fileType: "video/mp4", // 文件类型（图片、视频）
+                  fileUrl: data.url, // 文件url
+                }
+                this.$emit('succeed', params)
+              } else {
+                this.$message.error('上传失败')
+              }
               this.loading = false
-              let data = res.data
-              // this.fileList.push(data)
-              this.$emit('succeed', data)
             })
         }
       },

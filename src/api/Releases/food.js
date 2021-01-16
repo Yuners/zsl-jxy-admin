@@ -1,12 +1,12 @@
 import request from "@/utils/request";
-
+let index="/jxy"
 /**
  * 新增美食
  * @param params
  * @returns {AxiosPromise<any>}
  */
 export function addFood( params ) {
-  return request.post('/food/addFood', params)
+  return request.post(index + '/food/addFood', params)
 }
 
 /**
@@ -15,7 +15,7 @@ export function addFood( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function delFood( params ) {
-  return request.post('/food/delFood', params)
+  return request.post(index + '/food/delFood', params)
 }
 
 /**
@@ -24,7 +24,7 @@ export function delFood( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function getFoodDetails( params ) {
-  return request.post('/food/getFoodById', params)
+  return request.post(index + '/food/getFoodById', params)
 }
 
 /**
@@ -33,7 +33,7 @@ export function getFoodDetails( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function getFoodList( params ) {
-  return request.get('/food/getFoodPage', { params })
+  return request.get(index + '/food/getFoodPage', { params })
 }
 
 /**
@@ -42,5 +42,5 @@ export function getFoodList( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function updateFood( params ) {
-  return request.post('/food/updateFood', params)
+  return request.post(index + '/food/updateFood', params)
 }

@@ -18,3 +18,11 @@ export function userLogin( params ) {
 export function userOauth( params ) {
     return request.post(index+'/login/userOauth')
 }
+/**
+ * 退出登录
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export function userEnd(  ) {
+    return request.post(index+'/login/userEnd')
+}

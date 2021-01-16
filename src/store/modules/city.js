@@ -12,15 +12,14 @@ const mutations = {
 }
 
 const actions = {
-  getCityList({ commit }) {
+  getCityList({ commit }, id) {
     let params = {
-      id: '1338353936444280803'
+      id: id
     }
     return new Promise( (resolve, reject) => {
       getArea(params)
         .then( res => {
           let data = res.data.items
-          console.log(res)
           commit('SET_CITY', data)
           resolve()
         })

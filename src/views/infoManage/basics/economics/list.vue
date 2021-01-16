@@ -104,6 +104,7 @@
           pageIndex: 1, // 当前页数
           total: 0, // 总页数
         },
+        landLocationId:null,
         props:{ 
           children: "items",
           label:"frameworkName",
@@ -126,6 +127,7 @@
     created() {
       this.search()
       this.getCity()
+      this.landLocationId = this.$store.getters.user.userFrameworkId
     },
     filters: {
         formatDate(time) {
@@ -164,7 +166,7 @@
       handleVillageFlag(){
         let params = {
           economicsYear: new Date().getFullYear(),
-          economicsLocationId: '1338353936444280822' // 测试
+          economicsLocationId: this.landLocationId // 测试
         }
         console.info(params)
         getEconomicsFlag(params)

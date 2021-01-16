@@ -1,7 +1,8 @@
 import service from "../utils/request";
 let host = ''
 if (process.env.NODE_ENV == 'development'){
-  host = 'http://192.168.31.252:10206/'
+//   host = 'http://192.168.31.252:10206/'
+  host = 'http://192.124.1.57:5021/file/'
 }else {
   host = 'file/'
 }
@@ -35,6 +36,7 @@ let uploadAudio = (file,name,output,quality) => {
  * @returns {AxiosPromise<any>}
  */
 let uploadImage = (file,compress) => {
+  console.log(file)
     let formData=new FormData();
     formData.append('compress',compress||true);
     formData.append('file',file.file);

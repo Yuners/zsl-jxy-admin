@@ -1,6 +1,6 @@
 import request from '@/utils/request'
-let index = 'http://192.168.31.28:10211'
-
+// let index = 'http://192.168.31.28:10211'
+let index = '/order'
 /**
  * 获取订单列表
  * @param params

@@ -6,31 +6,31 @@
       </div>
 
       <div class="systemName">
-        <template v-for="route of routes">
-          <app-link v-if="!route.hidden" :to="route.path">{{ route.meta.title }}</app-link>
+        <template v-for="route of routes" >
+          <app-link v-if="!route.hidden" :to="route.path"  :key="route.path">{{ route.meta.title }}</app-link>
+          <div style="width: 10px;" :key="route.path"/>
         </template>
       </div>
 
       <div class="right-menu">
         <el-dropdown class="avatar-container" trigger="click">
           <div class="avatar-wrapper">
-            <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+            <img :src="$store.getters.user.userPhoto" class="user-avatar">
             <i class="el-icon-caret-bottom" />
           </div>
           <el-dropdown-menu slot="dropdown" class="user-dropdown">
-            <router-link to="/">
+            <router-link to="/sysManage/platform/setting/compile">
               <el-dropdown-item>
-                Home
+                 个人信息
               </el-dropdown-item>
             </router-link>
-            <a target="_blank" href="https://github.com/PanJiaChen/vue-admin-template/">
-              <el-dropdown-item>Github</el-dropdown-item>
-            </a>
-            <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
-              <el-dropdown-item>Docs</el-dropdown-item>
-            </a>
-            <el-dropdown-item divided @click.native="logout">
-              <span style="display:block;">Log Out</span>
+             <router-link to="/sysManage/platform/password/compile">
+              <el-dropdown-item>
+                 修改密码
+              </el-dropdown-item>
+            </router-link>
+            <el-dropdown-item divided @click.native="logout" >
+              <span style="display:block;color:red">退出登录</span>
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -41,12 +41,12 @@
 <script>
   import { mapGetters } from 'vuex'
   import AppLink from '../Sidebar/Link'
-
+  import { userEnd } from '@/api/auth'
 
   export default {
     data(){
       return{
-        title: 'Vue Admin Template',
+        title: '数字乡村管理系统',
         logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png',
         systemName: '数字乡村管理系统'
       }
@@ -62,6 +62,25 @@
         return this.$router.options.routes
       },
     },
+    methods: {
+      logout(){
+        userEnd().then(v=>{
+            if(v.data.userFlag){
+              this.$message.success(v.data.msg);
+              this.$store.dispatch('user/resetToken');
+              this.$router.push({
+                path:'/login',
+              })
+            }
+            else{
+              this.$message.error(v.data.msg)
+            }
+        })
+        .catch( err => {
+          console.log(err)
+        })
+      },
+    }
   }
 </script>
 
@@ -79,7 +98,7 @@
     align-items: center;
     background-color: $headBg;
     z-index: 999;
-
+    
     .logo{
       margin-left: 20px;
       display: flex;

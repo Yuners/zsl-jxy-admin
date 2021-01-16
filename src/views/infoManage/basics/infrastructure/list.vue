@@ -96,6 +96,7 @@
           infrastructureVillageName:'',
           infrastructureLocationId:[]
         },
+        landLocationId:null,
         pages:{
           pageSize: 10, // 每页多少条
           pageCount: 1, // 一共多少页
@@ -114,6 +115,7 @@
     created() {
       this.search()
       this.getCity()
+      this.landLocationId = this.$store.getters.user.userFrameworkId
     },
     filters: {
         formatDate(time) {

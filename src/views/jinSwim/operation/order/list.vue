@@ -52,6 +52,11 @@
           <span style="cursor: pointer;color:blue" @click="details(scope.row.id)">{{ scope.row.orderId }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="商铺名称" v-if="isShop == 0">
+        <template slot-scope="scope" >
+          <span style="cursor: pointer;" >{{ scope.row.shopName }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="用户昵称">
         <template slot-scope="scope" >
           <span style="cursor: pointer;" >{{ scope.row.userName }}</span>
@@ -92,7 +97,7 @@
           <span style="cursor: pointer;" >{{ scope.row.addTime*1000|formatDate }}</span>
         </template>
       </el-table-column>
-      <el-table-column
+      <el-table-column v-if="isShop == 1"
         align="center"
         label="操作"
         width="150"
@@ -161,8 +166,9 @@
           status:'100',
           realName:'',
           userPhone:'',
-          seaDate:[]
+          seaDate:[],
         },
+        isShop:null,
         query:{
           deliveryId:null,
           id:null,
@@ -239,6 +245,13 @@
       }
     },
     created() {
+      let accountId = this.$store.getters.user.userAccountId
+      if(accountId == null){
+        this.isShop = 0// 判断商户 还是管理员 1-商户 2-管理员
+      }else{
+        this.isShop = 1// 判断商户 还是管理员 1-商户 2-管理员
+      }
+      console.info(this.isShop)
       this.search()
     },
     filters: {
@@ -337,7 +350,7 @@
           startTime: this.param.seaDate[0],
           endTime: this.param.seaDate[1],
           isDel: 0,
-          isShop: 0
+          isShop: this.isShop // 0-管理员 1-商户
           // isDisabled: 0
         }
         // if(this.param.seaDate.length != 0){

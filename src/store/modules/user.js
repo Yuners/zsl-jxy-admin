@@ -21,7 +21,7 @@ const getDefaultState = () => {
       userSex:null,//用户性别0男1女
       userAccountId:null,//归属商铺
       userAccountName:null,//归属商铺名称
-      userFrameworkId:null,//组织机构
+      userFrameworkId:null,//组织机构id
       userFrameworkName:null,//组织机构名称
     },
     roleList:[{

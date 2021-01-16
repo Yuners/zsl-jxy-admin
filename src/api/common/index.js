@@ -15,7 +15,7 @@ export function getDictionary(params) {
  * @returns {AxiosPromise<any>}
  */
 export function getArea( params ) {
-  return request.post('http://192.168.31.252:10207/framework/select', params)
+  return request.post('/role/framework/select', params)
 }
 
 /**
@@ -24,5 +24,5 @@ export function getArea( params ) {
  * @returns {AxiosPromise<any>}
  */
 export function getPcca( params ) {
-  return request.post('http://192.168.31.252:10207/framework/select/rank', params)
+  return request.post('/role/framework/select/rank', params)
 }

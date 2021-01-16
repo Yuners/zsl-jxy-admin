@@ -13,9 +13,6 @@ const whiteList = ['/login','/test'] // no redirect whitelist
 let loading=false;
 
 router.beforeEach(async(to, from, next) => {
-  if (!store.state.city.cityList.length){
-    // await store.dispatch('city/getCityList')
-  }
   // next()
   // start progress bar
   NProgress.start()
@@ -39,7 +36,7 @@ router.beforeEach(async(to, from, next) => {
             if(date.userFlag){
               if(date.directoryTree===null||date.directoryTree.length===0||date.directoryTree===undefined){
                 next(`/login?redirect=${to.path}`)
-                  // this.$message.error("您没有后端管理权限,请联系管理员"); 
+                  // this.$message.error("您没有后端管理权限,请联系管理员");
               }
               else{
                   // console.log(date.token)
@@ -50,6 +47,7 @@ router.beforeEach(async(to, from, next) => {
                     directoryTree:date.directoryTree
                   }
                   store.dispatch('user/getToken', tokenDate);
+                  store.dispatch('city/getCityList', date.user.userFrameworkId)
                   next()
               }
               loading = true;

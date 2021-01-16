@@ -6,8 +6,9 @@
       </div>
 
       <div class="systemName">
-        <template v-for="route of routes">
-          <app-link v-if="!route.hidden" :to="route.path">{{ route.meta.title }}</app-link>
+        <template v-for="route of routes" >
+          <app-link v-if="!route.hidden" :to="route.path"  :key="route.path">{{ route.meta.title }}</app-link>
+          <div style="width: 10px;" :key="route.path"/>
         </template>
       </div>
 
@@ -97,7 +98,7 @@
     align-items: center;
     background-color: $headBg;
     z-index: 999;
-
+    
     .logo{
       margin-left: 20px;
       display: flex;

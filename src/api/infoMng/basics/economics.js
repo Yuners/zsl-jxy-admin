@@ -1,6 +1,6 @@
 import request from "@/utils/request";
 // let index = 'http://192.168.31.28:10209'
-let index = 'jxy'
+let index = '/jxy'
 /**
  * 新增经济管理信息
  * @param params

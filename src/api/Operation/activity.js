@@ -1,7 +1,7 @@
 import request from "@/utils/request";
 
 // let index="http://192.168.31.161:10209"
-let index="http://192.124.1.57:5021/jxy"
+let index="/jxy"
 /**
  * 获取活动列表
  * @param params

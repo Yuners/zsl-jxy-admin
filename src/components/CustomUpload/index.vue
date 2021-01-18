@@ -12,7 +12,7 @@
               :src="item.fileUrl"
               alt=""
             />
-            <span class="masked">
+            <span class="masked" v-if="!disabled">
               <span
                 class="maskedDelet"
                 @click="handleRemove(index)"
@@ -47,7 +47,7 @@
             >
               您的浏览器不支持 video 标签。
             </video>
-            <span class="masked">
+            <span class="masked" v-if="!disabled">
               <span
                 class="maskedDelet"
                 @click="handleRemove(index)"

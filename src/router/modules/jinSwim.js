@@ -51,13 +51,13 @@ const jinSwimRouter = {
                 meta: {title: '乡村编辑'},
                 hidden: true
               },
-              /*{
+              {
                 path: 'details',
                 name: 'Details',
                 component: () => import('@/views/jinSwim/publish/village/details'),
                 meta: {title: '乡村详情'},
                 hidden: true
-              },*/
+              },
             ]
           },
           {
@@ -334,7 +334,7 @@ const jinSwimRouter = {
               {
                 path: 'details',
                 name: 'Details',
-                component: () => import('@/views/jinSwim/operation/carriage/details'),
+                component: () => import('@/views/jinSwim/operation/userNotes/details'),
                 meta: {title: '须知详情'},
                 hidden: true
               },

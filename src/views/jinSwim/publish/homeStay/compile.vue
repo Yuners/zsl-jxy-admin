@@ -355,6 +355,9 @@
           bedLabelOne: [
             {required: true, message: '请填写特色', trigger: 'blur'}
           ],
+          bedCoordinate: [
+            {required: true, message: '请选择地图标注', trigger: 'change'}
+          ],
           bedPhone: [
             {required: true, message: '请输入电话', trigger: 'blur'},
             {validator: validatePhone, trigger: "blur"}

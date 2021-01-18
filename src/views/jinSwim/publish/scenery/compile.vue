@@ -81,7 +81,8 @@
             <el-dialog
               title="请点击地图"
               :visible.sync="mapShow"
-              width="30%">
+              width="50%">
+              <!--<input id="keyword" type="text">-->
               <div id="map"></div>
               <span slot="footer" class="dialog-footer">
                 <div class="main">
@@ -181,9 +182,7 @@
               <el-switch
                 v-model="form.sceneryRelease"
                 active-color="#13ce66"
-                inactive-color="#ff4949"
-                :active-value="max"
-                :inactive-value="min">
+                inactive-color="#ff4949">
               </el-switch>
             </div>
             <div class="handleSave">
@@ -244,6 +243,9 @@
           sceneryLabelOne: [
             {required: true, message: '请填写特色', trigger: 'blur'}
           ],
+          sceneryCoordinate: [
+            {required: true, message: '请选择地图标注', trigger: 'change'}
+          ],
           sceneryPhone: [
             {required: true, message: '请输入电话', trigger: 'blur'},
             {validator: validatePhone, trigger: "blur"}
@@ -283,6 +285,7 @@
         }, // 选择位置缓存
         graphicData: {},
         sceneryId: '',// 景区id
+        keyword: '',//
       }
     },
     components: {
@@ -391,11 +394,14 @@
         this.site = ''
         this.lnglatCache = {}
       },
+      // 地图搜索
       // 调用地图
       init() {
         let _this = this
         MapLoader().then(AMap => {
-          let map = new AMap.Map('map'); // 注册地图
+          let map = new AMap.Map('map',{
+            resizeEnable: true
+          }); // 注册地图
 
           // 标记地址与逆解析
           let regeoCode = (lnglat) => {
@@ -410,6 +416,26 @@
               }
             });
           }
+          // 搜索
+          AMap.plugin(['AMap.Autocomplete','AMap.PlaceSearch'],function(){
+            let autoOptions = {
+              input: "keyword"//使用联想输入的input的id
+            };
+            let autocomplete= new AMap.Autocomplete(autoOptions);
+            let placeSearch = new AMap.PlaceSearch({
+              city:'北京',
+              map:map
+            })
+            AMap.event.addListener(autocomplete, "select", function(e){
+              console.log(e)
+              //TODO 针对选中的poi实现自己的功能
+              placeSearch.setCity(e.poi.adcode);
+              placeSearch.search(e.poi.name)
+            });
+            AMap.event.addListener(placeSearch,"markerClick",(e)=>{
+              console.log(e.data.location.lng,e.data.location.lat) // 经纬度
+            })
+          });
           // 获取当前位置
           map.plugin('AMap.Geolocation', function () {
             let geolocation = new AMap.Geolocation({
@@ -671,7 +697,7 @@
 
       #map {
         width: 100%;
-        height: 300px;
+        height: 500px;
       }
 
       .dialog-footer {

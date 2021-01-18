@@ -1,235 +1,299 @@
 <template>
   <div class="compile">
     <div class="compileHead">
-      <h1>风景详情</h1>
+      <h1>运费模板编辑</h1>
     </div>
     <div class="compileMain">
-      <el-form label-position="right" :model="form" ref="ruleForm" label-width="110px">
-        <div class="block">
-          <div class="title">
-            <h3>编辑景区</h3>
-          </div>
-          <el-form-item label="选择分类：" prop="sceneryType">
-            <el-radio-group v-model="form.sceneryType">
-              <el-radio disabled v-for="item in classifyList" :key="item.dictionaryId" :label="item.dictionaryId">{{
-                item.dictionaryName }}
-              </el-radio>
+      <el-form :model="carriageForm" :rules="carriageRules" ref="ruleForm" label-width="150px" class="demo-ruleForm">
+        <el-form-item label="模板名称：" prop="freightName">
+          <el-input disabled style="width: 350px;" v-model="carriageForm.freightName"></el-input>
+        </el-form-item>
+        <el-form-item label="选择包邮地区：" prop="freightIsAllFree">
+          <el-radio-group v-model="carriageForm.freightIsAllFree">
+            <el-radio disabled :label="1" border>全国包邮</el-radio>
+            <el-radio disabled :label="0" border>自定义</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <div class="block" v-if="carriageForm.freightIsAllFree == 0">
+          <el-form-item label="计费方式：" prop="freightChargingType">
+            <el-radio-group v-model="carriageForm.freightChargingType">
+              <el-radio disabled :label="0">按件计费</el-radio>
+              <el-radio disabled :label="1">按重量计费</el-radio>
+              <el-radio disabled :label="2">按体积计费</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="景区名称：" prop="sceneryName">
-            <el-input :disabled="true" maxlength="20" style="width: 350px" v-model="form.sceneryName"></el-input>
-          </el-form-item>
-          <div class="clearfix feature">
-            <el-form-item label="特色一：" prop="sceneryLabelOne">
-              <el-input :disabled="true" maxlength="10" style="width: 350px" v-model="form.sceneryLabelOne"></el-input>
-            </el-form-item>
-            <div style="width: 100px"></div>
-            <el-form-item label="特色二：" prop="sceneryLabelTwo">
-              <el-input :disabled="true" maxlength="10" style="width: 350px" v-model="form.sceneryLabelTwo"></el-input>
-            </el-form-item>
-          </div>
-        </div>
-        <div class="block">
-          <div class="title">
-            <h3>用户须知</h3>
-          </div>
-          <el-form-item label="电话：" prop="sceneryPhone">
-            <el-input :disabled="true" maxlength="20" type="number" style="width: 350px" v-model.number="form.sceneryPhone"></el-input>
-          </el-form-item>
-          <el-form-item label="营业时间：" prop="sceneryBusinesshours">
-            <el-input :disabled="true" maxlength="20" style="width: 350px" v-model="form.sceneryBusinesshours"></el-input>
-          </el-form-item>
-          <el-form-item label="价格说明：" prop="sceneryPrice">
-            <el-input :disabled="true" maxlength="20" style="width: 350px" v-model="form.sceneryPrice"></el-input>
-          </el-form-item>
-          <el-form-item label="温馨提示：" prop="sceneryReminder">
-            <el-input :disabled="true" maxlength="200" show-word-limit type="textarea" v-model="form.sceneryReminder"></el-input>
-          </el-form-item>
-        </div>
-        <div class="block">
-          <div class="title">
-            <h3>交通攻略</h3>
-          </div>
-          <el-form-item label="自助游：" prop="sceneryIndependenttravel">
-            <el-input :disabled="true" maxlength="200" show-word-limit type="textarea" v-model="form.sceneryIndependenttravel"></el-input>
-          </el-form-item>
-          <el-form-item label="自驾游：" prop="sceneryRoadtrip">
-            <el-input :disabled="true" maxlength="200" show-word-limit type="textarea" v-model="form.sceneryRoadtrip"></el-input>
-          </el-form-item>
-          <el-form-item label="地图标注：" prop="sceneryCoordinate">
-            <div class="mark">
-              <div class="markMain">
-                <div class="item">
-                  <div class="text">
-                    经纬度
-                  </div>
-                  <div class="content">
-                    {{ form.sceneryCoordinate ? form.sceneryCoordinate.lng + ',' + form.sceneryCoordinate.lat : '' }}
-                  </div>
-                </div>
-                <div class="item">
-                  <div class="text">
-                    地址
-                  </div>
-                  <div class="content">
-                    {{ lnglatCache.address }}
-                  </div>
-                </div>
-              </div>
+          <el-form-item label="配送区域及运费：" prop="freightDistributionList">
+            <div class="reminder">
+              <span>(首件及首费是基础运费，如2件以内10元，续1件续费1元，买4件商品的运费就是12元。)</span>
             </div>
-            <el-dialog
-              title="请点击地图"
-              :visible.sync="mapShow"
-              width="30%">
-              <div id="map"></div>
-              <span slot="footer" class="dialog-footer">
-                <div class="main">
-                  <div class="item">
-                    <div class="text">
-                      经纬度
-                    </div>
-                    <div class="content">
-                      {{ lnglat }}
-                    </div>
-                  </div>
-                  <div class="item">
-                    <div class="text">
-                      地址
-                    </div>
-                    <div class="content">
-                      {{ site }}
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <el-button >取 消</el-button>
-                  <el-button type="primary" >确 定</el-button>
-                </div>
-              </span>
-            </el-dialog>
-            <!--            <div id="map"></div>-->
-          </el-form-item>
-        </div>
-        <div class="block">
-          <div class="title">
-            <h3>设施包含</h3>
-          </div>
-          <el-form-item prop="sceneryFacilities">
-            <el-checkbox-group v-model="form.sceneryFacilities">
-              <el-checkbox
-                v-for="(item,index) of facilityLsit"
-                disabled
-                :label="item.dictionaryName"
-                :key="index"
-                name="type"
-              ></el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-        </div>
-        <div class="block">
-          <div class="title">
-            <h3>图文详情</h3>
-          </div>
-          <el-form-item prop="sceneryDescribeList">
             <el-table
-              :data="form.sceneryDescribeList"
+              style="width: 1000px;"
+              :data="carriageForm.freightDistributionList"
               border
               fit
               highlight-current-row
             >
-              <el-table-column align="center" label="序号" width="95">
+              <el-table-column align="center" label="可配送地区" width="150">
                 <template slot-scope="scope">
-                  {{ scope.$index + 1 }}
+                  {{ scope.row.distributionRegionName | ArrToStr }}
                 </template>
               </el-table-column>
-              <el-table-column label="图片" align="center">
+              <el-table-column :label="carriageForm.freightChargingType == 0 ? '首件' : carriageForm.freightChargingType == 1 ? '首件重量(KG)' : '首件体积(m³)' " align="center">
                 <template slot-scope="scope">
-                  <el-image
-                    v-for="(item,index) in scope.row.fileList"
-                    style="width: 50px; height: 50px;margin-right: 5px"
-                    :key="index"
-                    :src="item.fileUrl"
-                    :fit="'cover'"/>
+                  {{ scope.row.distributionFirstWeight }}
                 </template>
               </el-table-column>
-              <el-table-column label="文字描述" align="center">
+              <el-table-column label="首费(元)" align="center">
                 <template slot-scope="scope">
-                  {{ scope.row.describeContent }}
+                  {{ scope.row.distributionFirstPrice }}
+                </template>
+              </el-table-column>
+              <el-table-column :label="carriageForm.freightChargingType == 0 ? '续件' : carriageForm.freightChargingType == 1 ? '续件重量(KG)' : '续件体积(m³)' " align="center">
+                <template slot-scope="scope">
+                  {{ scope.row.distributionContinuationWeight }}
+                </template>
+              </el-table-column>
+              <el-table-column label="续费(元)" align="center">
+                <template slot-scope="scope">
+                  {{ scope.row.distributionContinuationPrice }}
                 </template>
               </el-table-column>
             </el-table>
           </el-form-item>
+          <el-form-item label="按条件包邮：" prop="freightParcelList">
+            <div class="reminder">
+              <el-radio-group v-model="pinkage">
+                <el-radio disabled :label="true">有</el-radio>
+                <el-radio disabled :label="false">无</el-radio>
+              </el-radio-group>
+              <span class="text">(若其中有条件为0，则表示满足不为0的条件即可包邮，否则满足全部条件才可包邮。)</span>
+            </div>
+            <template v-if="pinkage">
+              <el-table
+                style="width: 800px;"
+                :data="carriageForm.freightParcelList"
+                border
+                fit
+                highlight-current-row
+              >
+                <el-table-column align="center" label="区域选择" width="150">
+                  <template slot-scope="scope">
+                    {{ scope.row.parcelRegionName | ArrToStr }}
+                  </template>
+                </el-table-column>
+                <el-table-column :label="carriageForm.freightChargingType == 0 ? '包邮件数' : carriageForm.freightChargingType == 1 ? '包邮重量(KG)' : '包邮体积(m³)' " align="center">
+                  <template slot-scope="scope">
+                    {{ scope.row.parcelWeight }}
+                  </template>
+                </el-table-column>
+                <el-table-column label="包邮金额" align="center">
+                  <template slot-scope="scope">
+                    {{ scope.row.parcelPrice }}
+                  </template>
+                </el-table-column>
+              </el-table>
+            </template>
+          </el-form-item>
         </div>
+        <el-form-item class="noFreight" label="不配送区域选择：" prop="freightNotDistribution">
+          <div class="reminder">
+            <span>(如果全国可配送，则不用选择)</span>
+          </div>
+          <div class="freightMain">
+            <div class="noCity">
+              <el-tag class="tagCity" v-for="item of carriageForm.freightNotDistribution" :key="item">{{ cityName(item) }}</el-tag>
+            </div>
+          </div>
+        </el-form-item>
       </el-form>
     </div>
-
   </div>
 </template>
 
 <script>
-  import {MapLoader} from '@/utils/AMap.js'
-  import { getSceneryDetails } from '@/api/Releases/scenery'
-  import { getDictionary } from '@/api/common'
+  import SelectCity from './components/selectCity'
+  import { getPcca } from "@/api/common";
+  import { addFreight, getFreightDetails, updateFreight } from '@/api/Operation/carriage'
 
   export default {
     data() {
       return {
-        // 表单字段
-        form: {
-          sceneryType: '', // 选择分类
-          sceneryName: '', // 景区名称
-          sceneryLabelOne: '', // 特色一
-          sceneryLabelTwo: '', // 特色二
-          sceneryPhone: '', // 电话
-          sceneryBusinesshours: '', // 营业时间
-          sceneryPrice: '', // 价格说明
-          sceneryReminder: '', // 温馨提示
-          sceneryIndependenttravel: '', // 自助游
-          sceneryRoadtrip: '', // 自驾游
-          sceneryCoordinate: '', // 地图经纬
-          sceneryFacilities: [], // 包含设施
-          sceneryDescribeList: [], // 图文详情
-          sceneryRelease: false
+        pinkage: false,
+        carriageForm:{
+          freightName: '', // 模板名称
+          freightIsAllFree: 1, // 是否全国包邮
+          freightChargingType: 0, // 0、按件计费 1、按重量计费 2、按体积计费
+          freightDistributionList: [
+            {
+              distributionRegionId:['1338353936444280801'], // id
+              distributionRegionName: ['默认全国'], // name
+              distributionFirstWeight: 1, // 首件
+              distributionFirstPrice: 0, // 首费
+              distributionContinuationWeight: 1, // 续重
+              distributionContinuationPrice: 0, // 续费
+            }
+          ], // 配送表
+          freightParcelList: [], // 包邮条件
+          freightNotDistribution: [], // 不配送区域
         },
-        classifyList: [],
-        facilityLsit:[],
-        lnglat: '',
-        site: '',
-        lnglatCache: {
-          gnote: {},
-          address: ''
-        }, // 选择位置缓存
-        sceneryId: '',// 景区id
+        carriageRules:{
+          freightName:[
+            {required: true, message: '请输入模板名称', trigger: 'blur'}
+          ]
+        },
+        cityList:[], // 城市数据
+        deliveryList:[], // 配送区域城市数据
+        deliveryShow:false, // 配送区域
+        delivery:[], // 配送区域
+        noDeliveryList: [], // 不配送区域城市数据
+        noDeliveryShow: false, // 不配送区域
+        noDelivery:[], // 不配送区域
+        conditionList: [], // 条件包邮区域城市数据
+        conditionShow: false, // 条件包邮区域
+        condition: [], // 条件包邮区域
+        freightId: '', // 运费id
       }
     },
-    created() {
-      this.getDictionary()
-      this.getFacility()
-      this.sceneryId = this.$route.query.sceneryId
-      if (this.sceneryId) {
-        this.getDetails(this.sceneryId)
+    filters: {
+      ArrToStr(val){
+        return val.join()
+      }
+    },
+    components: {
+      SelectCity
+    },
+    async created() {
+      await this.getPcca()
+      this.freightId = this.$route.query.freightId
+      if (this.freightId) {
+        this.getDetails(this.freightId)
       }
     },
     methods: {
       // 获取景区详情
       getDetails(id) {
         let params = {
-          sceneryId: id
+          freightId: id
         }
-        getSceneryDetails(params)
+        getFreightDetails(params).then( res => {
+          if (res.data.code == '1'){
+            let data = res.data.data
+            if (data.freightDistributionList != 0){
+              data.freightDistributionList.map( (item,index) => {
+                data.freightDistributionList[index].distributionRegionId = JSON.parse(item.distributionRegionId)
+                data.freightDistributionList[index].distributionRegionName = JSON.parse(item.distributionRegionName)
+              })
+            }
+            if (data.freightParcelList.length != 0){
+              this.pinkage = true
+              data.freightParcelList.map( (item,index) => {
+                data.freightParcelList[index].parcelRegionId = JSON.parse(item.parcelRegionId)
+                data.freightParcelList[index].parcelRegionName = JSON.parse(item.parcelRegionName)
+              })
+            }
+            data.freightNotDistribution = JSON.parse(data.freightNotDistribution)
+            data.freightChargingType = Number(data.freightChargingType)
+            let formData = JSON.parse(JSON.stringify(data))
+            for (let key in this.carriageForm) {
+              if (formData[key] != null){
+                this.carriageForm[key] = formData[key]
+              }
+            }
+          } else {
+            this.$message.error(res.data.msg)
+          }
+        })
+      },
+      cityName(id){
+        let data = this.cityList.filter( item => {
+          return item.frameworkId == id
+        })[0]
+        return data.frameworkName
+      },
+      getPcca() {
+        return new Promise((resolve, reject) => {
+          let params = {
+            id: "1338353936444280801"
+          }
+          getPcca(params)
+            .then(res => {
+              if (res.code == 1 && res.data.length && res.data){
+                let data = res.data
+                this.cityList = data
+                resolve()
+              }
+            })
+            .catch(err => {
+              reject(err)
+            })
+        })
+      },
+      // 表单保存
+      saveForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            if (this.freightId){
+              this.editFreight()
+            } else {
+              this.addFreight()
+            }
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      // 提交新增请求
+      addFreight(){
+        let params = JSON.parse(JSON.stringify(this.carriageForm))
+        params.freightDistributionList.map( (item,index) => {
+          params.freightDistributionList[index].distributionRegionId = JSON.stringify(item.distributionRegionId)
+          params.freightDistributionList[index].distributionRegionName = JSON.stringify(item.distributionRegionName)
+        })
+        if (params.freightParcelList.length != 0){
+          params.freightParcelList.map( (item,index) => {
+            params.freightParcelList[index].parcelRegionId = JSON.stringify(item.parcelRegionId)
+            params.freightParcelList[index].parcelRegionName = JSON.stringify(item.parcelRegionName)
+          })
+        }
+        params.freightNotDistribution = JSON.stringify(params.freightNotDistribution)
+        addFreight(params)
+          .then( res => {
+            let data = res.data
+            if (data.code == '1') {
+              this.$message({
+                message: data.msg,
+                type: 'success'
+              })
+              this.$router.back()
+            } else {
+              this.$message.error(data.msg)
+            }
+          })
+          .catch( err => {})
+      },
+      editFreight(){
+        let params = JSON.parse(JSON.stringify(this.carriageForm))
+        params.freightDistributionList.map( (item,index) => {
+          params.freightDistributionList[index].distributionRegionId = JSON.stringify(item.distributionRegionId)
+          params.freightDistributionList[index].distributionRegionName = JSON.stringify(item.distributionRegionName)
+        })
+        if (params.freightParcelList.length != 0){
+          params.freightParcelList.map( (item,index) => {
+            params.freightParcelList[index].parcelRegionId = JSON.stringify(item.parcelRegionId)
+            params.freightParcelList[index].parcelRegionName = JSON.stringify(item.parcelRegionName)
+          })
+        }
+        params.freightNotDistribution = JSON.stringify(params.freightNotDistribution)
+        params.freightId = this.freightId
+        updateFreight(params)
           .then(res => {
             if (res.data.code == '1'){
-              let data = res.data.data
-              data.sceneryCoordinate = JSON.parse(data.sceneryCoordinate)
-              data.sceneryFacilities = JSON.parse(data.sceneryFacilities)
-              data.sceneryRelease = data.sceneryRelease ? true : false
-              let formData = JSON.parse(JSON.stringify(data))
-              for (let key in this.form) {
-                this.form[key] = formData[key]
-              }
-              let lnglat = data.sceneryCoordinate.lng + ',' + data.sceneryCoordinate.lat
-              this.getAddress(lnglat)
-            } else {
+              this.$message.success(res.data.msg)
+              setTimeout(() => {
+                this.$router.back()
+              },500)
+            }else {
               this.$message.error(res.data.msg)
             }
           })
@@ -237,50 +301,37 @@
             console.log(err)
           })
       },
-      // 逆解析地址
-      getAddress(lnglat) {
-        let _this = this
-        MapLoader().then(AMap => {
-          // let map = new AMap.Map(); // 注册地图
-          AMap.plugin(["AMap.Geocoder"], function () {
-            let geocoder = new AMap.Geocoder();
-
-            geocoder.getAddress(lnglat, (status, result) => {
-              if (status === 'complete' && result.regeocode) {
-                let address = result.regeocode.formattedAddress;
-                _this.lnglatCache.address = address;
-              } else {
-                _this.$message.error('根据经纬度查询地址失败')
-              }
-            });
-          })
+      // 表单取消
+      cancelForm() {
+        this.$router.back()
+      },
+      // 过滤已选择城市
+      filterCity(type){
+        let cityList = JSON.parse(JSON.stringify(this.cityList))
+        let toList = JSON.parse(JSON.stringify(this.carriageForm.freightDistributionList))
+        let newList = []
+        toList.forEach( item => {
+          newList = newList.concat(item.distributionRegionId)
         })
-      },
-      // 获取景区分类
-      getDictionary() {
-        let params = {
-          dictionaryPcode: "SHOW_TYPE_PLAY"
-        }
-        getDictionary(params)
-          .then(res => {
-            if (res.data.data.code == 200) {
-              let data = res.data.data.data
-              this.classifyList = data
-            }
+        let noList = JSON.parse(JSON.stringify(this.carriageForm.freightNotDistribution))
+        let filterList = newList.concat(noList)
+        // 如果为no 再次过滤条件包邮内容
+        if (type == 'no'){
+          let pinkageList = JSON.parse(JSON.stringify(this.carriageForm.freightParcelList))
+          let pinkage = []
+          pinkageList.forEach( item => {
+            pinkage = pinkage.concat(item.parcelRegionId)
           })
-      },
-      // 获取景区设施分类
-      getFacility() {
-        let params = {
-          dictionaryPcode: "FACILITIES_SERVICES_SCENERY"
+          filterList = filterList.concat(pinkage)
         }
-        getDictionary(params)
-          .then(res => {
-            if (res.data.data.code == 200) {
-              let data = res.data.data.data
-              this.facilityLsit = data
-            }
+        if (filterList.length >= 1) {
+          filterList.map( item => {
+            cityList = cityList.filter( city => {
+              return city.frameworkId != item
+            })
           })
+        }
+        return cityList
       },
     }
   }
@@ -308,215 +359,48 @@
     .compileMain {
       padding: 50px;
 
-      .handleSave {
-        flex: 1;
-        text-align: center;
-      }
+      .reminder{
+        font-size: 14px;
+        color: #999999;
 
-      .feature {
-        display: flex;
-      }
-
-      .graphic {
-        display: flex;
-        align-items: center;
-        margin-bottom: 30px;
-
-        span {
-          margin-right: 4px;
-          font-size: 16px;
-          color: #F56C6C;
+        .text{
+          margin-left: 20px;
         }
       }
 
-      .mark {
-        display: flex;
-        align-items: self-start;
+      .noFreight{
 
-        .markMain {
-          margin-left: 30px;
+        .noCity{
+          padding-top: 15px;
 
-          .item {
-            display: flex;
-            align-items: center;
-            border: 1px solid #ced4da;
-            border-radius: 10px;
-
-            &:first-child {
-              margin-bottom: 10px;
-            }
-
-            .text {
-              text-align: justify;
-              text-align-last: justify;
-              width: 80px;
-              box-sizing: border-box;
-              padding: 0 15px;
-              background-color: #e9ecef;
-              border-radius: 10px 0 0 10px;
-            }
-
-            .content {
-              width: 300px;
-              font-size: 12px;
-              color: #333333;
-              padding-left: 10px;
-              text-align: left;
-              overflow: hidden;
-              white-space: nowrap;
-            }
+          .tagCity{
+            margin-right: 15px;
           }
         }
       }
 
-      #map {
-        width: 100%;
-        height: 300px;
+      .itemTitle{
+        font-size: 16px;
+        text-align: justify;
+        -moz-text-align-last: justify;
+        text-align-last: justify;
+        color: #606266;
+        line-height: 40px;
+        box-sizing: border-box;
+        padding-left: 15px;
+        width: 180px;
+        font-weight: 700;
       }
 
-      .dialog-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+      .cityItem{
+        padding-top: 10px;
+      }
 
-        .main {
-          width: 360px;
-          margin-right: 8px;
-
-          .item {
-            display: flex;
-            align-items: center;
-            border: 1px solid #ced4da;
-            border-radius: 10px;
-
-            &:first-child {
-              margin-bottom: 10px;
-            }
-
-            .text {
-              text-align: justify;
-              text-align-last: justify;
-              width: 80px;
-              box-sizing: border-box;
-              padding: 0 15px;
-              background-color: #e9ecef;
-              border-radius: 10px 0 0 10px;
-            }
-
-            .content {
-              flex: 1;
-              font-size: 12px;
-              color: #333333;
-              padding-left: 10px;
-              text-align: left;
-              overflow: hidden;
-              white-space: nowrap;
-            }
-          }
-        }
+      .monad{
+        padding: 0 10px;
       }
     }
 
-    .addGraphic {
-      width: 100%;
-      height: calc(100% - 60px);
-      position: absolute;
-      top: 60px;
-      left: 0;
-      padding: 0 70px;
-      background-color: rgba(0, 0, 0, .2);
-      z-index: 99;
-
-      .addMain {
-        background-color: #ffffff;
-        padding: 70px;
-        margin-top: 150px;
-
-        .is-flex {
-          display: flex;
-
-          .upTime {
-            padding: 0;
-            margin: 0;
-
-            span {
-              display: flex;
-              justify-content: flex-start;
-            }
-
-            .upLoad-item {
-              position: relative;
-              font-size: 14px;
-              color: #606266;
-              line-height: 1.8;
-              overflow: hidden;
-              background-color: #fff;
-              border: 1px solid #c0ccda;
-              border-radius: 6px;
-              box-sizing: border-box;
-              width: 148px;
-              height: 148px;
-              margin: 0 8px 8px 0;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-
-              img {
-                width: 100%;
-                /*height: 100%;*/
-              }
-
-              .masked {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                left: 0;
-                top: 0;
-                cursor: default;
-                text-align: center;
-                color: #fff;
-                opacity: 0;
-                font-size: 20px;
-                background-color: rgba(0, 0, 0, 0.5);
-                transition: opacity 0.3s;
-
-                &:hover {
-                  opacity: 1;
-                }
-
-                .maskedDelet {
-                  position: absolute;
-                  top: 50%;
-                  margin-top: -11px;
-                  left: 50%;
-                  margin-left: -10px;
-                  font-size: inherit;
-
-                  i {
-                    cursor: pointer;
-                  }
-                }
-              }
-            }
-          }
-        }
-
-      }
-    }
   }
 
-  .slide-fade-enter-active {
-    transition: all 1s ease;
-  }
-
-  .slide-fade-leave-active {
-    transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-  }
-
-  .slide-fade-enter, .slide-fade-leave-to
-    /* .slide-fade-leave-active for below version 2.1.8 */
-  {
-    transform: translateY(-10px);
-    opacity: 0;
-  }
 </style>

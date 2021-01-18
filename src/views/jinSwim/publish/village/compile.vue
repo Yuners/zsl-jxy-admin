@@ -50,7 +50,7 @@
         <div class="switch_item">
           <span>发布：</span>
           <el-switch
-            v-model="form.sceneryRelease"
+            v-model="form.villageRelease"
             active-color="#13ce66"
             inactive-color="#eeeeee">
           </el-switch>

@@ -114,7 +114,7 @@ export default {
             userPhone:this.loginForm.username,
             userPassword:this.loginForm.password
           };
-          userLogin(params).then(v=>{
+          userLogin(params).then( async v=>{
             let date=v.data;
             console.log(date)
             if(date.userFlag){
@@ -129,7 +129,7 @@ export default {
                     user:date.user,
                     directoryTree:date.directoryTree
                   }
-                  this.$store.dispatch('user/getToken', tokenDate);
+                  await this.$store.dispatch('user/getToken', tokenDate);
                   this.$router.push({ path: this.redirect || '/' })
                   // console.log(this.$store.getters.token);
               }

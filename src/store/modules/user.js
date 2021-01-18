@@ -79,11 +79,19 @@ const mutations = {
 const actions = {
   getToken({ commit }, tokenDate){
     // console.log(token)
-    commit('SET_TOKEN', tokenDate.token);
-    commit('SET_USER', tokenDate.user);
-    commit('SET_ROLELIST', tokenDate.roleList);
-    commit('SET_DIRECTORYTREE', tokenDate.directoryTree);
-    setToken(tokenDate.token);
+     return new Promise((resolve, reject) => {
+       try {
+          commit('SET_TOKEN', tokenDate.token);
+          commit('SET_USER', tokenDate.user);
+          commit('SET_ROLELIST', tokenDate.roleList);
+          commit('SET_DIRECTORYTREE', tokenDate.directoryTree);
+          setToken(tokenDate.token);
+          resolve()
+       } catch(err) {
+         reject(err)
+       }
+      
+     })
   },
     // user logout
   logout({ commit, state }) {

@@ -1,14 +1,20 @@
 import { getArea } from '@/api/common'
 
-
-const state = {
-  cityList:[]
+const getDetailsState = () => {
+  return {
+    cityList:[]
+  }
 }
+
+const state = getDetailsState()
 
 const mutations = {
   SET_CITY: (state, list) => {
     state.cityList = list
-  }
+  },
+  RESET_CITY: (state) => {
+    Object.assign(state, getDetailsState())
+  },
 }
 
 const actions = {
@@ -28,6 +34,9 @@ const actions = {
           reject(err)
         })
     })
+  },
+  resetCity( { commit } ) {
+    commit('RESET_CITY')
   }
 }
 

@@ -116,13 +116,11 @@ export default {
           };
           userLogin(params).then( async v=>{
             let date=v.data;
-            console.log(date)
             if(date.userFlag){
               if(date.directoryTree===null||date.directoryTree.length===0||date.directoryTree===undefined){
-                  this.$message.error("您没有后端管理权限,请联系管理员"); 
+                  this.$message.error("您没有后端管理权限,请联系管理员");
               }
               else{
-                  console.log(date.token)
                   let tokenDate={
                     roleList:date.roleList,
                     token:date.token,
@@ -136,10 +134,10 @@ export default {
               this.loading = false;
             }
             else{
-              this.$message.error(date.msg); 
+              this.$message.error(date.msg);
               this.loading = false;
             }
-           
+
           })
           .catch(err => {
             console.log(err)

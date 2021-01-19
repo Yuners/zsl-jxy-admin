@@ -13,6 +13,7 @@ const whiteList = ['/login','/test'] // no redirect whitelist
 let loading=false;
 
 router.beforeEach(async(to, from, next) => {
+  console.log(from)
   // next()
   // start progress bar
   NProgress.start()
@@ -30,25 +31,26 @@ router.beforeEach(async(to, from, next) => {
       NProgress.done()
     } else {
       if(!loading){
-      await userOauth().then(v=>{
-            store.dispatch('user/logout');
+        if (from.path != '/login'){
+          await userOauth().then( async v=>{
+            await store.dispatch('user/logout');
+            store.dispatch('city/resetCity')
             let date=v.data;
             if(date.userFlag){
               if(date.directoryTree===null||date.directoryTree.length===0||date.directoryTree===undefined){
                 next(`/login?redirect=${to.path}`)
-                  // this.$message.error("您没有后端管理权限,请联系管理员");
+                // this.$message.error("您没有后端管理权限,请联系管理员");
               }
               else{
-                  // console.log(date.token)
-                  let tokenDate={
-                    roleList:date.roleList,
-                    token:date.token,
-                    user:date.user,
-                    directoryTree:date.directoryTree
-                  }
-                  store.dispatch('user/getToken', tokenDate);
-                  store.dispatch('city/getCityList', date.user.userFrameworkId)
-                  next()
+                // console.log(date.token)
+                let tokenDate={
+                  roleList:date.roleList,
+                  token:date.token,
+                  user:date.user,
+                  directoryTree:date.directoryTree
+                }
+                await store.dispatch('user/getToken', tokenDate);
+                next()
               }
               loading = true;
             }
@@ -57,12 +59,13 @@ router.beforeEach(async(to, from, next) => {
               loading = true;
             }
           })
-          .catch(err => {
-            store.dispatch('user/logout');
-            // console.log(err)
-            loading = true;
-            next(`/login?redirect=${to.path}`)
-          })
+            .catch(err => {
+              store.dispatch('user/logout');
+              // console.log(err)
+              loading = true;
+              next(`/login?redirect=${to.path}`)
+            })
+        }
       }
       const hasGetUserInfo = store.getters.user
       if (hasGetUserInfo) {
@@ -96,7 +99,12 @@ router.beforeEach(async(to, from, next) => {
   }
 })
 
-router.afterEach(() => {
+router.afterEach((to, from) => {
+  if (to.path != "/login" && !store.state.city.cityList.length){
+    let cityId = store.getters.user.userFrameworkId
+    store.dispatch('city/getCityList', cityId)
+  }
+
   // finish progress bar
   NProgress.done()
 })
